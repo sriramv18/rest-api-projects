@@ -1,0 +1,8 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+api/application/vendor/
+api/application/logs/*
+api/application/syslogs/*
+!api/application/logs/index.html
+!api/application/logs/.htaccess
+!api/application/syslogs/index.html
+!api/application/syslogs/.htaccess
