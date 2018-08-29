@@ -14,7 +14,7 @@ YQIDAQAB
 * Increase this value as per requirement for production
 */
 $config['token_timeout'] = 1;
-$config['authorization_key'] = 'apollo123';
+$config['authorization_key'] = 'sparqvenba2018';
 
 /* End of file jwt.php */
 /* Location: ./application/config/jwt.php */

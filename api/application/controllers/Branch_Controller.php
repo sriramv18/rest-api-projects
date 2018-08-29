@@ -36,7 +36,9 @@ class Branch_Controller extends REST_Controller {
 
         // load the model
         $this->load->model('Branch_model', 'branch_model');
-		$this->load->library('aws_s3');
+		//$this->load->library('AWS_S3');
+		//$this->load->library('AWS_SNS');
+		$this->load->library('AWS_SES');
     }
     /*
      * get branch details
@@ -103,15 +105,17 @@ class Branch_Controller extends REST_Controller {
 		/* STORE FILE TO S3*/
 		
 		/* GET FILE FROM S3*/
-		$res = $this->aws_s3->getSingleObjectInaBucket();
-		//print_r($res);
-		//echo "\n\n\n\n\n<br>";
-		 //header("Content-Type:{$res['ContentType']}");
-		header("Content-Disposition:attachment; filename='woodgrass1.jpg'");
+		// $res = $this->aws_s3->getSingleObjectInaBucket();
+		// //print_r($res);
+		// //echo "\n\n\n\n\n<br>";
+		 // //header("Content-Type:{$res['ContentType']}");
+		// header("Content-Disposition:attachment; filename='woodgrass1.jpg'");
 
-		 echo $res['Body'];
+		 // echo $res['Body'];
 		
 		/* GET FILE FROM S3*/
+		
+		echo "SNS";
 		
 	}
 	

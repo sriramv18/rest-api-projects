@@ -70,10 +70,54 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
-$active_group = 'default';
+$active_group = 'dev';
 $query_builder = TRUE;
 
-$db['default'] = array(
+$db['dev'] = array(
+	'dsn'	=> '',
+    'hostname' => 'sine-edge-dev.cya6cheplup2.ap-south-1.rds.amazonaws.com',
+    'username' => 'sparqdev_mas001',
+    'password' => 'sparqvenba',
+    'database' => 'sine_edge_dev',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+
+$db['test'] = array(
+	'dsn'	=> '',
+    'hostname' => 'apollodec.com',
+    'username' => 'apollod4_DEV',
+    'password' => 'apollo1234',
+    'database' => 'apollod4_ApolloDECDev',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+
+$db['prod'] = array(
 	'dsn'	=> '',
     'hostname' => 'apollodec.com',
     'username' => 'apollod4_DEV',
