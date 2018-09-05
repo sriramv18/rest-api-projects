@@ -85,48 +85,17 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 // define login route name for token verification
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'login'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListOfMaster'); // no errors
+defined('ROUTE_LOGIN2')        OR define('ROUTE_LOGIN2', 'login2'); // no errors
+defined('ROUTE_LOGIN3')        OR define('ROUTE_LOGIN3', 'login3'); // no errors
 
 
 
 
 
 //encript database table name
-defined('LOGIN') OR define('LOGIN','T_Login');
-defined('BRANCH') OR define('BRANCH','T_BranchMaster');
-defined('STAFF') OR define('STAFF','T_StaffDetails');
-defined('STAFF_BRANCH') OR define('STAFF_BRANCH','T_Staff_BranchAccess');
-defined('UNIVERSITY') OR define('UNIVERSITY','T_UniversityMaster');
-defined('COURSE') OR define('COURSE','T_CourseMaster');
-defined('COURSE_FEES') OR define('COURSE_FEES','T_Course_Fees_Details');
-defined('LEAD_DETAILS') OR define('LEAD_DETAILS','T_Lead_Details');
-defined('LEAD_TRACKING') OR define('LEAD_TRACKING','T_Lead_Tracking');
-defined('LEAD_TRACKING_FOLLOWUP') OR define('LEAD_TRACKING_FOLLOWUP','T_Lead_Tracking_Followup');
-defined('PICK_LIST_DETAILS') OR define('PICK_LIST_DETAILS','T_PickListDetails');
-defined('BATCH') OR define('BATCH','T_BatchMaster');
-defined('STUDENTCOURSE') OR define('STUDENTCOURSE','T_Student_CourseDetails');
-defined('STUDENTS') OR define('STUDENTS','T_StudentDetails');
-defined('ANNOUNCEMENT') OR define('ANNOUNCEMENT','T_AnnouncementDetails');
-defined('ACTIVITY') OR define('ACTIVITY','T_ActivityMaster');
-defined('ACTIVITY_STATUS') OR define('ACTIVITY_STATUS','T_Activity_Status');
-defined('ANSWER_BOOKLET') OR define('ANSWER_BOOKLET','T_AnswerBookletStatus');
-defined('APPLICATION_STATUS') OR define('APPLICATION_STATUS','T_ApplicationStatus');
-defined('CERTIFICATION_STATUS') OR define('CERTIFICATION_STATUS','T_CertificationStatus');
-defined('STUDENTS_FEES_STATUS') OR define('STUDENTS_FEES_STATUS','T_Students_Fees_Status');
-defined('STUDENTS_FEES_PAID') OR define('STUDENTS_FEES_PAID','T_Students_Fees_PaidDetails');
-defined('STUDY_MATERIAL_STATUS') OR define('STUDY_MATERIAL_STATUS','T_StudyMaterialStatus');
-defined('CERTIFICATION') OR define('CERTIFICATION','T_CertificationMaster');
-defined('DEFAULTACTIVITY') OR define('DEFAULTACTIVITY','T_StatusMaster');
-defined('CERTIFICATION_MASTER') OR define('CERTIFICATION_MASTER','T_CertificationMaster');
-defined('DAYBOOKMASTER') OR define('DAYBOOKMASTER','T_DayBookMaster');
-defined('INCOMEOUTCOMEMASTER') OR define('INCOMEOUTCOMEMASTER','T_Income_Outcome_Master');
-defined('FEES_INSTALLMENT') OR define('FEES_INSTALLMENT','T_Fees_Installments');
-defined('CENTER') OR define('CENTER','T_CenterMaster');
-defined('SUBJECTMASTER') OR define('SUBJECTMASTER','T_SubjectMaster');
-defined('SESSIONMASTER') OR define('SESSIONMASTER','T_Session_Master');
-defined('SESSIONDETAILS') OR define('SESSIONDETAILS','T_SessionDetails');
-defined('COURSESUBJECT') OR define('COURSESUBJECT','T_CourseSubject_Details');
-defined('SESSIONSCHEDULE') OR define('SESSIONSCHEDULE','T_SessionSchedule_Master');
-defined('SESSIONSCHEDULEDETAILS') OR define('SESSIONSCHEDULEDETAILS','T_SessionSchedule_Details');
-defined('STUDENTDOCUMENTDETAILS') OR define('STUDENTDOCUMENTDETAILS','T_StudentDocumentsDetails');
-defined('STUDENTDOCUMENTTRACKDETAILS') OR define('STUDENTDOCUMENTTRACKDETAILS','T_Student_DocumentTrack_Details');
+defined('INDUSTRYCLASSIFICATION') OR define('INDUSTRYCLASSIFICATION','m_industry_classification');
+defined('INDUSTRYCLASSIFICATIONID') OR define('INDUSTRYCLASSIFICATIONID','industry_classification_id');
+
+defined('PRODUCTS') OR define('PRODUCTS','m_products');
+defined('PRODUCTSID') OR define('PRODUCTSID','product_id');

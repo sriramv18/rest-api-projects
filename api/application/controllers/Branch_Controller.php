@@ -38,7 +38,7 @@ class Branch_Controller extends REST_Controller {
         $this->load->model('Branch_model', 'branch_model');
 		//$this->load->library('AWS_S3');
 		//$this->load->library('AWS_SNS');
-		$this->load->library('AWS_SES');
+		//$this->load->library('AWS_SES');
     }
     /*
      * get branch details
@@ -115,8 +115,46 @@ class Branch_Controller extends REST_Controller {
 		
 		/* GET FILE FROM S3*/
 		
-		echo "SNS";
+		/*
+		$id = MYDB::saveRecords(array('city_name'=>'salem'),'t_city_master');
+		print_r($id);
+		*/
 		
+		/*
+		$where_condition_array = array();
+		$id = MYDB::selectRecords($where_condition_array,'t_city_master',$print_query = '');
+		print_r($id);
+		*/
+		
+		
+		//$data = MYDB::updateRecords($record_data = array(),$table_name,$where_condition_array = array(),$print_query = '')
+		
+		/*
+		$where= array('city_name'=>'chennai','fk_state_id'=>'1');
+		
+		$or_where = array('city_name'=>'salem','fk_state_id'=>'4');
+		$or_where_total[] = $or_where;
+		$or_where = array('city_name'=>'erode');
+		$or_where_total[] = $or_where;
+		
+		$fields = array('city_name','fk_state_id');
+		$id = MYDB::selectCustomRecords($fields , $where,$or_where_total,$table = 't_city_master', $limit = '', $order_by_colum_name = 'fk_state_id', $order_by = '',$group_by = 'fk_state_id',$print_query = '');
+		print_r($id);
+		*/
+		
+		/*
+		$columns = array('city_name','state_name');
+		$table = 't_states_master';
+		$joins = array(
+			array(
+				'table' => 't_city_master',
+				'condition' => 't_city_master.fk_state_id = t_states_master.state_id',
+				'jointype' => 'INNER'
+			),
+		);
+		$id = MYDB::getJoinRecords($columns,$table,$joins,$print_query = '');
+		print_r($id);
+		*/
 	}
 	
 	public function testPDF_get()

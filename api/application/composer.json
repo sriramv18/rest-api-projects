@@ -16,7 +16,9 @@
 		"smalot/pdfparser": "^0.13.2",
 		"monolog/monolog": "^1.23",
 		"ddeboer/tesseract": "^1.1",
-		"aws/aws-sdk-php": "^3.64"
+		"aws/aws-sdk-php": "^3.64",
+		"amphp/amp": "^1.2"
+		
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

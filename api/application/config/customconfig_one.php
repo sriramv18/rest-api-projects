@@ -1,5 +1,9 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+
+
+/* public key for encrypt AWS JWT token
+*/
 $config['jwt_public_key'] = '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy7kgZrHJIliQXFJNCGMV
 v9HoGJAziKKEAyF8nW7nvLgtulJ7IUMiLzhmTeB74RVrvphM1ALEtk/BdQegMYXl
