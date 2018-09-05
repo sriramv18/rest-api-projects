@@ -96,11 +96,11 @@ $route['saveCustomerBehaviour'] = 'Common_Masters_Controller/saveCustomerBehavio
 $route['getListOfRegions'] = 'Common_Masters_Controller/getListOfRegions'; 
 $route['saveRegion'] = 'Common_Masters_Controller/saveRegion';
 
-$route['getListOfCites'] = 'Common_Masters_Controller/getListOfCites'; 
+ $route['getListOfCites'] = 'Common_Masters_Controller/getListOfCites'; 
 $route['saveCity'] = 'Common_Masters_Controller/saveCity'; 
 
-$route['getListOfCites'] = 'Common_Masters_Controller/getListOfCites'; 
-$route['saveCity'] = 'Common_Masters_Controller/saveCity'; 
+// $route['getListOfCites'] = 'Common_Masters_Controller/getListOfCites'; 
+// $route['saveCity'] = 'Common_Masters_Controller/saveCity'; 
 
 $route['getListOfBranches'] = 'Common_Masters_Controller/getListOfBranches'; 
 $route['saveBranch'] = 'Common_Masters_Controller/saveBranch'; 
