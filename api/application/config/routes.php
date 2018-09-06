@@ -61,46 +61,9 @@ $route['translate_uri_dashes'] = FALSE;
 */
 /* Routes regards Common Masters CRUD operations*/
 
-$route['getListOfMasters'] = 'Common_Masters_Controller/getListOfMasters'; 
+$route['saveNewUser'] = 'Common_Masters_Controller/saveNewUser'; 
+$route['listAllUsers'] = 'Common_Masters_Controller/listAllUsers'; 
 
-$route['getListOfIndustryClassifications'] = 'Common_Masters_Controller/getListOfIndustryClassifications'; 
-$route['saveIndustryClassification'] = 'Common_Masters_Controller/saveIndustryClassification'; 
-
-$route['getListOfProducts'] = 'Common_Masters_Controller/getListOfProducts'; 
-$route['saveProducts'] = 'Common_Masters_Controller/saveProducts'; 
-
-$route['getListOfSubProducts'] = 'Common_Masters_Controller/getListOfSubProducts'; 
-$route['saveSubProducts'] = 'Common_Masters_Controller/saveSubProducts'; 
-
-$route['getListOfUOM'] = 'Common_Masters_Controller/getListOfUOM'; 
-$route['saveUOM'] = 'Common_Masters_Controller/saveUOM'; 
-
-$route['getListOfOccupationNonEarningMembers'] = 'Common_Masters_Controller/getListOfOccupationNonEarningMembers'; 
-$route['saveOccupationNonEarningMembers'] = 'Common_Masters_Controller/saveOccupationNonEarningMembers'; 
-
-$route['getListOfTypeOfActivities'] = 'Common_Masters_Controller/getListOfTypeOfActivities'; 
-$route['saveTypeOfActivity'] = 'Common_Masters_Controller/saveTypeOfActivity'; 
-
-$route['getListOfTitles'] = 'Common_Masters_Controller/getListOfTitles'; 
-$route['saveTitle'] = 'Common_Masters_Controller/saveTitle'; 
-
-$route['getListOfRelationships'] = 'Common_Masters_Controller/getListOfRelationships'; 
-$route['saveRelationship'] = 'Common_Masters_Controller/saveRelationship';
-
-$route['getListOfFrequencies'] = 'Common_Masters_Controller/getListOfFrequencies'; 
-$route['saveFrequency'] = 'Common_Masters_Controller/saveFrequency';
-
-$route['getListOfCustomerBehaviours'] = 'Common_Masters_Controller/getListOfCustomerBehaviours'; 
-$route['saveCustomerBehaviour'] = 'Common_Masters_Controller/saveCustomerBehaviour';
-
-$route['getListOfRegions'] = 'Common_Masters_Controller/getListOfRegions'; 
-$route['saveRegion'] = 'Common_Masters_Controller/saveRegion';
-
- $route['getListOfCites'] = 'Common_Masters_Controller/getListOfCites'; 
-$route['saveCity'] = 'Common_Masters_Controller/saveCity'; 
-
-// $route['getListOfCites'] = 'Common_Masters_Controller/getListOfCites'; 
-// $route['saveCity'] = 'Common_Masters_Controller/saveCity'; 
 
 $route['getListOfBranches'] = 'Common_Masters_Controller/getListOfBranches'; 
 $route['saveBranch'] = 'Common_Masters_Controller/saveBranch'; 
@@ -108,5 +71,5 @@ $route['saveBranch'] = 'Common_Masters_Controller/saveBranch';
 $route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
 $route['saveMaster'] = 'Common_Masters_Controller/saveMaster'; 
 
-//$route['login'] = 'User_Management_Controller/saveNewUser';
+
 

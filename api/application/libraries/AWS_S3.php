@@ -56,16 +56,24 @@ class AWS_S3
 	
 	public function uploadFileToS3Bucket($data)
 	{
+		$result = "";
+		try {
 			
-			$result = $this->S3->putObject([
-			'Bucket'     => $data['bucket_name'],
-			'Key'        => $data['key'],
-			'SourceFile' => $data['sourcefile'],
-			'ContentType' => '*/*',
-			'StorageClass' => 'STANDARD',
-			'ACL'=>'public-read'
-			]);
-			return $result;
+				$result = $this->S3->putObject([
+				'Bucket'     => $data['bucket_name'],
+				'Key'        => $data['key'],
+				'SourceFile' => $data['sourcefile'],
+				'ContentType' => '*/*',
+				'StorageClass' => 'STANDARD',
+				'ACL'=>'public-read'
+				]);
+			
+			} catch (AwsException $e) 
+			{
+				$result =  false;;
+			}
+			
+		return $result;	
 	}
 	
 	public function getSingleObjectInaBucket()

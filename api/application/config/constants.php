@@ -85,17 +85,98 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 // define login route name for token verification
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListOfMaster'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'login'); // no errors
 defined('ROUTE_LOGIN2')        OR define('ROUTE_LOGIN2', 'login2'); // no errors
 defined('ROUTE_LOGIN3')        OR define('ROUTE_LOGIN3', 'login3'); // no errors
 
+//AWS resources Constants
+defined('PROFILEPICTUREBUCKETNAME') OR define('PROFILEPICTUREBUCKETNAME','sineedgedevprofilepic');
 
 
 
-
-//encript database table name
+//Define Constants for Table Names and Primarykeys
 defined('INDUSTRYCLASSIFICATION') OR define('INDUSTRYCLASSIFICATION','m_industry_classification');
 defined('INDUSTRYCLASSIFICATIONID') OR define('INDUSTRYCLASSIFICATIONID','industry_classification_id');
 
 defined('PRODUCTS') OR define('PRODUCTS','m_products');
 defined('PRODUCTSID') OR define('PRODUCTSID','product_id');
+
+defined('UOM') OR define('UOM','m_uom');
+defined('UOMID') OR define('UOMID','uom_id');
+
+defined('SUBPRODUCTS') OR define('SUBPRODUCTS','m_subproducts');
+defined('SUBPRODUCTSID') OR define('SUBPRODUCTSID','subproduct_id');
+
+defined('OCCUPATIONMEMBERS') OR define('OCCUPATIONMEMBERS','m_occupation_non_earning_members');
+defined('OCCUPATIONMEMBERSID') OR define('OCCUPATIONMEMBERSID','occupation_non_earning_member_id');
+
+defined('TYPEOFACTIVITY') OR define('TYPEOFACTIVITY','m_type_of_activity');
+defined('TYPEOFACTIVITYID') OR define('TYPEOFACTIVITYID','type_of_activity_id');
+
+defined('TYPEOFACTIVITY') OR define('TYPEOFACTIVITY','m_type_of_activity');
+defined('TYPEOFACTIVITYID') OR define('TYPEOFACTIVITYID','type_of_activity_id');
+
+defined('TITLES') OR define('TITLES','m_titles');
+defined('TITLESID') OR define('TITLESID','title_id');
+
+defined('RELATIONSHIPS') OR define('RELATIONSHIPS','m_relationships');
+defined('RELATIONSHIPSID') OR define('RELATIONSHIPSID','relationship_id');
+
+defined('FREQUENCY') OR define('FREQUENCY','m_frequency');
+defined('FREQUENCYID') OR define('FREQUENCYID','frequency_id');
+
+defined('CUSTOMERBEHAVIOUR') OR define('CUSTOMERBEHAVIOUR','m_customer_behaviour');
+defined('CUSTOMERBEHAVIOURID') OR define('CUSTOMERBEHAVIOURID','customer_behaviour_id');
+
+defined('REGIONS') OR define('REGIONS','m_regions');
+defined('REGIONSID') OR define('REGIONSID','region_id');
+
+defined('STATE') OR define('STATE','m_states');
+defined('STATEID') OR define('STATEID','state_id');
+
+defined('CITY') OR define('CITY','m_city');
+defined('CITYID') OR define('CITYID','city_id');
+
+defined('BRANCH') OR define('BRANCH','m_branch');
+defined('BRANCHID') OR define('BRANCHID','branch_id');
+
+defined('PDLOCATIONAPPROACH') OR define('PDLOCATIONAPPROACH','m_pd_location_approach');
+defined('PDLOCATIONAPPROACHID') OR define('PDLOCATIONAPPROACHID','pd_location_approach_id');
+
+defined('LISTOFMASTERS') OR define('LISTOFMASTERS','m_list_of_masters');
+defined('LISTOFMASTERSID') OR define('LISTOFMASTERSID','master_id');
+
+defined('COMMENTSONLOCALITY') OR define('COMMENTSONLOCALITY','m_comments_on_locality');
+defined('COMMENTSONLOCALITYID') OR define('COMMENTSONLOCALITYID','comments_on_locality_id');
+
+defined('ENTITYTYPE') OR define('ENTITYTYPE','m_entity_type');
+defined('ENTITYTYPEID') OR define('ENTITYTYPEID','entity_type_id');
+
+defined('COMPANY') OR define('COMPANY','m_company');
+defined('COMPANYID') OR define('COMPANYID','company_id');
+
+defined('DESIGNATION') OR define('DESIGNATION','m_designation');
+defined('DESIGNATIONID') OR define('DESIGNATIONID','designation_id');
+
+defined('LENDERHIERARCHY') OR define('LENDERHIERARCHY','m_lender_hierarchy');
+defined('LENDERHIERARCHYID') OR define('LENDERHIERARCHYID','lender_hierarchy_id');
+
+defined('USERPROFILE') OR define('USERPROFILE','m_user_profile');
+defined('USERPROFILEID') OR define('USERPROFILEID','userid');
+
+defined('ENTITY') OR define('ENTITY','m_entities');
+defined('ENTITYID') OR define('ENTITYID','entity_id');
+
+defined('ENTITYCHILD') OR define('ENTITYCHILD','m_entity_child');
+defined('ENTITYCHILDID') OR define('ENTITYCHILDID','entity_child_id');
+
+defined('USERPROFILEHIERARCHY') OR define('USERPROFILEHIERARCHY','m_user_lender_hierarchy');
+defined('USERPROFILEHIERARCHYID') OR define('USERPROFILEHIERARCHYID','user_lender_hierarchy_id');
+
+defined('USERPROFILEROLES') OR define('USERPROFILEROLES','m_user_roles');
+defined('USERPROFILEROLESID') OR define('USERPROFILEROLESID','user_role_id');
+
+defined('LENDER') OR define('LENDER','m_lender');
+defined('LENDERID') OR define('LENDERID','lender_id');
+
+

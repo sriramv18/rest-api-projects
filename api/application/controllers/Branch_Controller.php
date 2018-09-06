@@ -36,7 +36,7 @@ class Branch_Controller extends REST_Controller {
 
         // load the model
         $this->load->model('Branch_model', 'branch_model');
-		//$this->load->library('AWS_S3');
+		$this->load->library('AWS_S3');
 		//$this->load->library('AWS_SNS');
 		//$this->load->library('AWS_SES');
     }
@@ -70,7 +70,7 @@ class Branch_Controller extends REST_Controller {
             }
     }
 	
-	public function testAWSS3_get()
+	public function testAWSS3_post()
 	{
 		/* CREATE NEW BUCKETS*/
 		// $b = $this->aws_s3->createNewBucket('thecucumber');
@@ -92,15 +92,24 @@ class Branch_Controller extends REST_Controller {
 		
 		/* STORE FILE TO S3*/
 		
-		// $file = $_FILES['myfile']['tmp_name'];
-		// $file2 = $_FILES['myfile']['name'];
+		$file = $_FILES['myfile']['tmp_name'];
+		$file2 = $_FILES['myfile']['name'];
 		//print_r($file);
-		// print_r($file2);
+		//print_r($file2);
 		
-		// $s3pathname = 'byapi/'.$file2;
-		// $data = array('bucket_name'=>'thecucumber','key'=>$s3pathname,'sourcefile'=>$file);
-		// $res = $this->aws_s3->uploadFileToS3Bucket($data);
-		// print_r($res);
+		$s3pathname = 'byapi/'.$file2;
+		$data = array('bucket_name'=>'thecucumber','key'=>$s3pathname,'sourcefile'=>$file);
+		$res = $this->aws_s3->uploadFileToS3Bucket($data);
+		//print_r($res);
+		echo is_object($res);
+		echo is_array($res);
+		echo "*********\n\n";
+		echo $res['ObjectURL'];
+		echo $res['@metadata']['statusCode'];
+		// foreach($res as $key => $value)
+		// {
+			// echo $key."\n\n";
+		// }
 		
 		/* STORE FILE TO S3*/
 		

@@ -20,950 +20,950 @@ class Common_Masters_Controller extends REST_Controller {
 		$this->load->model('Common_Masters_Model');
         
     }
-   
-	/*  Get List Of Mastsers for DropDown  */
-	public function getListOfMasters_get()
-	{
-		$result = $this->Common_Masters_Model->getListOfMasters();
-		if(count($result) > 0)
-		{
-			$data['dataStatus'] = true;
-			$data['status'] = REST_Controller::HTTP_OK;
-			$data['records'] = $result;
-			$this->response($data,REST_Controller::HTTP_OK);
+ 
+	// /*  Get List Of Mastsers for DropDown  */
+	// public function getListOfMasters_get()
+	// {
+		// $result = $this->Common_Masters_Model->getListOfMasters();
+		// if(count($result) > 0)
+		// {
+			// $data['dataStatus'] = true;
+			// $data['status'] = REST_Controller::HTTP_OK;
+			// $data['records'] = $result;
+			// $this->response($data,REST_Controller::HTTP_OK);
 			
-		}
-		else
-		{
-			$data['dataStatus'] = false;
-			$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-			$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-		}
+		// }
+		// else
+		// {
+			// $data['dataStatus'] = false;
+			// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+			// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+		// }
 			
-	}
+	// }
 	
-	/* Industry Classification Masters */
+	// /* Industry Classification Masters */
 	
 	
-	public function getListOfIndustryClassifications_get()
-	{
-		$result = $this->Common_Masters_Model->selectRecords('m_industry_classification');
-		if(count($result) > 0)
-		{
-			$data['dataStatus'] = true;
-			$data['status'] = REST_Controller::HTTP_OK;
-			$data['records'] = $result;
-			$this->response($data,REST_Controller::HTTP_OK);
-		}
-		else
-		{
-			$data['dataStatus'] = false;
-			$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-			$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-		}
-	}
+	// public function getListOfIndustryClassifications_get()
+	// {
+		// $result = $this->Common_Masters_Model->selectRecords('m_industry_classification');
+		// if(count($result) > 0)
+		// {
+			// $data['dataStatus'] = true;
+			// $data['status'] = REST_Controller::HTTP_OK;
+			// $data['records'] = $result;
+			// $this->response($data,REST_Controller::HTTP_OK);
+		// }
+		// else
+		// {
+			// $data['dataStatus'] = false;
+			// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+			// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+		// }
+	// }
 	
-	public function saveIndustryClassification_post()
-	{
-		$industryClassifications = $this->post('industryClassifications');
+	// public function saveIndustryClassification_post()
+	// {
+		// $industryClassifications = $this->post('industryClassifications');
 		
-		if($industryClassifications['industry_classification_id'])  //Update Record
-		{
-			$where_condition_array = array('industry_classification_id'=>$industryClassificationData['industry_classification_id']);
+		// if($industryClassifications['industry_classification_id'])  //Update Record
+		// {
+			// $where_condition_array = array('industry_classification_id'=>$industryClassificationData['industry_classification_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($industryClassifications,'m_industry_classification',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($industryClassifications,'m_industry_classification',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record
-		{
-			$result = $this->Common_Masters_Model->saveRecords($industryClassifications,'m_industry_classification');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($industryClassifications,'m_industry_classification');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
-	/* End Of Industry Classification Masters */
+	// /* End Of Industry Classification Masters */
 	
 	
 	
 	
-	/* Producsts Masters */
+	// /* Producsts Masters */
 	
-	public function getListOfProducts_get()
-	{
-		$result = $this->Common_Masters_Model->selectRecords('m_products');
-		if(count($result) > 0)
-		{
-			$data['dataStatus'] = true;
-			$data['status'] = REST_Controller::HTTP_OK;
-			$data['records'] = $result;
-			$this->response($data,REST_Controller::HTTP_OK);
-		}
-		else
-		{
-			$data['dataStatus'] = false;
-			$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-			$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-		}
-	}
+	// public function getListOfProducts_get()
+	// {
+		// $result = $this->Common_Masters_Model->selectRecords('m_products');
+		// if(count($result) > 0)
+		// {
+			// $data['dataStatus'] = true;
+			// $data['status'] = REST_Controller::HTTP_OK;
+			// $data['records'] = $result;
+			// $this->response($data,REST_Controller::HTTP_OK);
+		// }
+		// else
+		// {
+			// $data['dataStatus'] = false;
+			// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+			// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+		// }
+	// }
 	
-	public function saveProducts_post()
-	{
-		$products = $this->post('products');
+	// public function saveProducts_post()
+	// {
+		// $products = $this->post('products');
 		
-		if($products['product_id'])  //Update Record
-		{
-			$where_condition_array = array('product_id'=>$products['product_id']);
+		// if($products['product_id'])  //Update Record
+		// {
+			// $where_condition_array = array('product_id'=>$products['product_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($products,'m_products',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($products,'m_products',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record
-		{
-			$result = $this->Common_Masters_Model->saveRecords($products,'m_products');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($products,'m_products');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 
 	
-	/* End Of Producsts Masters */
+	// /* End Of Producsts Masters */
 	
 	
 	
 	
-	/* Sub - producsts Master */
+	// /* Sub - producsts Master */
 	
-	public function getListOfSubProducts_get()
-	{
-		$result = $this->Common_Masters_Model->selectRecords('m_subproducts');
-		if(count($result) > 0)
-		{
-			$data['dataStatus'] = true;
-			$data['status'] = REST_Controller::HTTP_OK;
-			$data['records'] = $result;
-			$this->response($data,REST_Controller::HTTP_OK);
-		}
-		else
-		{
-			$data['dataStatus'] = false;
-			$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-			$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-		}
-	}
+	// public function getListOfSubProducts_get()
+	// {
+		// $result = $this->Common_Masters_Model->selectRecords('m_subproducts');
+		// if(count($result) > 0)
+		// {
+			// $data['dataStatus'] = true;
+			// $data['status'] = REST_Controller::HTTP_OK;
+			// $data['records'] = $result;
+			// $this->response($data,REST_Controller::HTTP_OK);
+		// }
+		// else
+		// {
+			// $data['dataStatus'] = false;
+			// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+			// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+		// }
+	// }
 	
-	public function saveSubProducts_post()
-	{
-		$subproducts = $this->post('subproducts');
+	// public function saveSubProducts_post()
+	// {
+		// $subproducts = $this->post('subproducts');
 		
-		if($subproducts['subproduct_id'])  //Update Record
-		{
-			$where_condition_array = array('subproduct_id'=>$subproducts['subproduct_id']);
+		// if($subproducts['subproduct_id'])  //Update Record
+		// {
+			// $where_condition_array = array('subproduct_id'=>$subproducts['subproduct_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($subproducts,'m_subproducts',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($subproducts,'m_subproducts',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record
-		{
-			$result = $this->Common_Masters_Model->saveRecords($subproducts,'m_subproducts');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($subproducts,'m_subproducts');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
-	/* End Of Sub - producsts Master */
+	// /* End Of Sub - producsts Master */
 	
 	
 	
-	/*  UOM Master */
+	// /*  UOM Master */
 	
-	public function getListOfUOM_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_uom');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfUOM_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_uom');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveUOM_post()
-	{
-		$uom = $this->post('uom');
+	// public function saveUOM_post()
+	// {
+		// $uom = $this->post('uom');
 		
-		if($uom['uom_id'])  //Update Record
-		{
-			$where_condition_array = array('uom_id'=>$uom['uom_id']);
+		// if($uom['uom_id'])  //Update Record
+		// {
+			// $where_condition_array = array('uom_id'=>$uom['uom_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($uom,'m_uom',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($uom,'m_uom',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($uom,'m_uom');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($uom,'m_uom');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
-	/*  End Of  UOM Master */
+	// /*  End Of  UOM Master */
 	
 	
 	
-	/*  Occupation_non_earning_members  Master */
+	// /*  Occupation_non_earning_members  Master */
 	
 	
-	public function getListOfOccupationNonEarningMembers_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_occupation_non_earning_members');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfOccupationNonEarningMembers_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_occupation_non_earning_members');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveOccupationNonEarningMembers_post()
-	{
-		$occupationnonearningmembers = $this->post('occupationnonearningmembers');
+	// public function saveOccupationNonEarningMembers_post()
+	// {
+		// $occupationnonearningmembers = $this->post('occupationnonearningmembers');
 		
-		if($occupationnonearningmembers['occupation_non_earning_member_id'])  //Update Record
-		{
-			$where_condition_array = array('occupation_non_earning_member_id'=>$occupationnonearningmembers['occupation_non_earning_member_id']);
+		// if($occupationnonearningmembers['occupation_non_earning_member_id'])  //Update Record
+		// {
+			// $where_condition_array = array('occupation_non_earning_member_id'=>$occupationnonearningmembers['occupation_non_earning_member_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($occupationnonearningmembers,'m_occupation_non_earning_members',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($occupationnonearningmembers,'m_occupation_non_earning_members',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($occupationnonearningmembers,'m_occupation_non_earning_members');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($occupationnonearningmembers,'m_occupation_non_earning_members');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
-	/*  End Of  Occupation_non_earning_members Master */
+	// /*  End Of  Occupation_non_earning_members Master */
 	
 	
-	/*  Type Of Activity Master */
+	// /*  Type Of Activity Master */
 	
 	
-	public function getListOfTypeOfActivities_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_type_of_activity');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfTypeOfActivities_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_type_of_activity');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveTypeOfActivity_post()
-	{
-		$typeofactivity = $this->post('typeofactivity');
+	// public function saveTypeOfActivity_post()
+	// {
+		// $typeofactivity = $this->post('typeofactivity');
 		
-		if($typeofactivity['type_of_activity_id'])  //Update Record
-		{
-			$where_condition_array = array('type_of_activity_id'=>$typeofactivity['type_of_activity_id']);
+		// if($typeofactivity['type_of_activity_id'])  //Update Record
+		// {
+			// $where_condition_array = array('type_of_activity_id'=>$typeofactivity['type_of_activity_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($typeofactivity,'m_type_of_activity',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($typeofactivity,'m_type_of_activity',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($typeofactivity,'m_type_of_activity');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($typeofactivity,'m_type_of_activity');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
-	/*  End Of  Type Of Activity Master */
+	// /*  End Of  Type Of Activity Master */
 	
 	
-	/*  Titles Master */
+	// /*  Titles Master */
 	
 	
-	public function getListOfTitles_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_titles');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfTitles_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_titles');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveTitle_post()
-	{
-		$title = $this->post('title');
+	// public function saveTitle_post()
+	// {
+		// $title = $this->post('title');
 		
-		if($title['title_id'])  //Update Record
-		{
-			$where_condition_array = array('title_id'=>$title['title_id']);
+		// if($title['title_id'])  //Update Record
+		// {
+			// $where_condition_array = array('title_id'=>$title['title_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($title,'m_titles',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($title,'m_titles',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($title,'m_titles');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($title,'m_titles');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
-	/*  End Of  Titles Master */
+	// /*  End Of  Titles Master */
 	
 	
 	
-	/*  Relationships Master */
+	// /*  Relationships Master */
 	
 	
-	public function getListOfRelationships_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_relationships');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfRelationships_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_relationships');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveRelationship_post()
-	{
-		$relationship = $this->post('relationship');
+	// public function saveRelationship_post()
+	// {
+		// $relationship = $this->post('relationship');
 		
-		if($relationship['relationship_id'])  //Update Record
-		{
-			$where_condition_array = array('relationships'=>$relationship['relationship_id']);
+		// if($relationship['relationship_id'])  //Update Record
+		// {
+			// $where_condition_array = array('relationships'=>$relationship['relationship_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($relationship,'m_relationship',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($relationship,'m_relationship',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($relationship,'m_relationship');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($relationship,'m_relationship');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
-	/*  End Of  Relationships Master */
+	// /*  End Of  Relationships Master */
 	
 	
 	
-	/*  Frequency Master */
+	// /*  Frequency Master */
 	
 	
-	public function getListOfFrequencies_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_frequency');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfFrequencies_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_frequency');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveFrequency_post()
-	{
-		$frequency = $this->post('frequency');
+	// public function saveFrequency_post()
+	// {
+		// $frequency = $this->post('frequency');
 		
-		if($frequency['frequency_id'])  //Update Record
-		{
-			$where_condition_array = array('frequency_id'=>$frequency['frequency_id']);
+		// if($frequency['frequency_id'])  //Update Record
+		// {
+			// $where_condition_array = array('frequency_id'=>$frequency['frequency_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($frequency,'m_frequency',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($frequency,'m_frequency',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($frequency,'m_frequency');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($frequency,'m_frequency');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
-	/*  End Of  Frequency Master */
+	// /*  End Of  Frequency Master */
 	
 	
-	/*  Customer Behaviour Master */
+	// /*  Customer Behaviour Master */
 	
 	
-	public function getListOfCustomerBehaviours_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_customer_behaviour');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfCustomerBehaviours_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_customer_behaviour');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveCustomerBehaviour_post()
-	{
-		$customerbehaviour = $this->post('customerbehaviour');
+	// public function saveCustomerBehaviour_post()
+	// {
+		// $customerbehaviour = $this->post('customerbehaviour');
 		
-		if($customerbehaviour['customer_behaviour_id'])  //Update Record
-		{
-			$where_condition_array = array('customer_behaviour_id'=>$customerbehaviour['customer_behaviour_id']);
+		// if($customerbehaviour['customer_behaviour_id'])  //Update Record
+		// {
+			// $where_condition_array = array('customer_behaviour_id'=>$customerbehaviour['customer_behaviour_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($customerbehaviour,'m_customer_behaviour',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($customerbehaviour,'m_customer_behaviour',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($customerbehaviour,'m_customer_behaviour');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($customerbehaviour,'m_customer_behaviour');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
-	/*  End Of  Customer Behaviour Master */
+	// /*  End Of  Customer Behaviour Master */
 	
 	
 	
-	/*  Zonal/Regional  Master */
+	// /*  Zonal/Regional  Master */
 	
 	
-	public function getListOfRegions_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_regions');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfRegions_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_regions');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveRegion_post()
-	{
-		$region = $this->post('region');
+	// public function saveRegion_post()
+	// {
+		// $region = $this->post('region');
 		
-		if($region['region_id'])  //Update Record
-		{
-			$where_condition_array = array('region_id'=>$region['region_id']);
+		// if($region['region_id'])  //Update Record
+		// {
+			// $where_condition_array = array('region_id'=>$region['region_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($region,'m_regions',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($region,'m_regions',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($region,'m_regions');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($region,'m_regions');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
-	/*  End Of  Zonal/Regional Master */
+	// /*  End Of  Zonal/Regional Master */
 	
 	
 	
-	/*  States  Master */
+	// /*  States  Master */
 	
 	
-	public function getListOfStates_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_states');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfStates_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_states');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveState_post()
-	{
-		$state = $this->post('state');
+	// public function saveState_post()
+	// {
+		// $state = $this->post('state');
 		
-		if($state['state_id'])  //Update Record
-		{
-			$where_condition_array = array('state_id'=>$state['state_id']);
+		// if($state['state_id'])  //Update Record
+		// {
+			// $where_condition_array = array('state_id'=>$state['state_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($state,'m_states',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($state,'m_states',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($state,'m_states');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($state,'m_states');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
-	/*  End Of  States Master */
+	// /*  End Of  States Master */
 	
 	
-	/*  City  Master */
+	// /*  City  Master */
 	
 	
-	public function getListOfCites_get()
-		{
-			$result = $this->Common_Masters_Model->selectRecords('m_city');
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
-			}
-		}
+	// public function getListOfCites_get()
+		// {
+			// $result = $this->Common_Masters_Model->selectRecords('m_city');
+			// if(count($result) > 0)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				// $this->response($data,REST_Controller::HTTP_NO_CONTENT);
+			// }
+		// }
 	
-	public function saveCity_post()
-	{
-		$city = $this->post('city');
+	// public function saveCity_post()
+	// {
+		// $city = $this->post('city');
 		
-		if($city['city_id'])  //Update Record
-		{
-			$where_condition_array = array('city_id'=>$city['city_id']);
+		// if($city['city_id'])  //Update Record
+		// {
+			// $where_condition_array = array('city_id'=>$city['city_id']);
 			
-			$result = $this->Common_Masters_Model->updateRecords($city,'m_city',$where_condition_array);
+			// $result = $this->Common_Masters_Model->updateRecords($city,'m_city',$where_condition_array);
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else  
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
-			}
-		}
-		else 	// Insert Record	
-		{
-			$result = $this->Common_Masters_Model->saveRecords($city,'m_city');
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else  
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				// $this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+			// }
+		// }
+		// else 	// Insert Record	
+		// {
+			// $result = $this->Common_Masters_Model->saveRecords($city,'m_city');
 			
-			if($result)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
-			}
-		}
+			// if($result)
+			// {
+				// $data['dataStatus'] = true;
+				// $data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result;
+				// $this->response($data,REST_Controller::HTTP_OK);
+			// }
+			// else
+			// {
+				// $data['dataStatus'] = false;
+				// $data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				// $this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+			// }
+		// }
 		
-	}
+	// }
 	
 	
 	
@@ -971,7 +971,7 @@ class Common_Masters_Controller extends REST_Controller {
 	
 	
 	
-	/*  Branch  Master */
+	/*  For Save,Update and Retrieve all  Master  Tables*/
 	
 	
 	public function getListOfMaster_post()
@@ -1050,7 +1050,7 @@ class Common_Masters_Controller extends REST_Controller {
 	
 	
 	
-	/*  End Of  Branch Master */
+	/*  End Of  Save,Update and Retrieve all  Master  Tables */
 		
 	 
    
