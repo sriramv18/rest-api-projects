@@ -113,9 +113,6 @@ defined('OCCUPATIONMEMBERSID') OR define('OCCUPATIONMEMBERSID','occupation_non_e
 defined('TYPEOFACTIVITY') OR define('TYPEOFACTIVITY','m_type_of_activity');
 defined('TYPEOFACTIVITYID') OR define('TYPEOFACTIVITYID','type_of_activity_id');
 
-defined('TYPEOFACTIVITY') OR define('TYPEOFACTIVITY','m_type_of_activity');
-defined('TYPEOFACTIVITYID') OR define('TYPEOFACTIVITYID','type_of_activity_id');
-
 defined('TITLES') OR define('TITLES','m_titles');
 defined('TITLESID') OR define('TITLESID','title_id');
 
@@ -149,7 +146,7 @@ defined('LISTOFMASTERSID') OR define('LISTOFMASTERSID','master_id');
 defined('COMMENTSONLOCALITY') OR define('COMMENTSONLOCALITY','m_comments_on_locality');
 defined('COMMENTSONLOCALITYID') OR define('COMMENTSONLOCALITYID','comments_on_locality_id');
 
-defined('ENTITYTYPE') OR define('ENTITYTYPE','m_entity_type');
+defined('ENTITYTYPE') OR define('ENTITYTYPE','c_entity_type');
 defined('ENTITYTYPEID') OR define('ENTITYTYPEID','entity_type_id');
 
 defined('COMPANY') OR define('COMPANY','m_company');
@@ -178,5 +175,17 @@ defined('USERPROFILEROLESID') OR define('USERPROFILEROLESID','user_role_id');
 
 defined('LENDER') OR define('LENDER','m_lender');
 defined('LENDERID') OR define('LENDERID','lender_id');
+
+defined('QUESTIONS') OR define('QUESTIONS','m_questions');
+defined('QUESTIONSID') OR define('QUESTIONSID','question_id');
+
+defined('QUESTIONANSWERTYPE') OR define('QUESTIONANSWERTYPE','m_question_answer_type');
+defined('QUESTIONANSWERTYPEID') OR define('QUESTIONANSWERTYPEID','question_answer_type_id');
+
+defined('QUESTIONANSWERS') OR define('QUESTIONANSWERS','m_question_answers');
+defined('QUESTIONANSWERSID') OR define('QUESTIONANSWERSID','question_answer_id');
+
+defined('QUESTIONCATEGORY') OR define('QUESTIONCATEGORY','m_question_category');
+defined('QUESTIONCATEGORYID') OR define('QUESTIONCATEGORYID','question_categroy_id');
 
 

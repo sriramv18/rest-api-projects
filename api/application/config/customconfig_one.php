@@ -5,14 +5,36 @@
 /* public key for encrypt AWS JWT token
 */
 $config['jwt_public_key'] = '-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy7kgZrHJIliQXFJNCGMV
-v9HoGJAziKKEAyF8nW7nvLgtulJ7IUMiLzhmTeB74RVrvphM1ALEtk/BdQegMYXl
-KFmMKLDLVPlZULje1cQRJHkXV4kcjSOxPslH2M+MzSa6sjN6DX7tfjvihrYdJ+wo
-VZFhITjOcUF0d/w2rp3/uelrk85qn8ap7UWkFAWWg+N4v+LuvBNBDLv0Y0dYiAFP
-bY06D285xmGrko7eXBlKV6tBXaZ29zWD1JOD8uDAgLRNb2S6hpBHfJdNF+BcVNnR
-cdGx2GbBVHHqHMbYisiVZhgVd6KY4N6vYFl3B/sJDXgl9Ek+PKzeCrRPT9D+8Ibf
-YQIDAQAB
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqTsyy4r3nrjumED4To7w
+r1rfjMEzL+hcF8OwGm89aHoEzKLZqr12uQw3eK7tVV97QV8aYOi0zUinHlOVx1PM
+Dgik5jW8aCBvGM5S6PAZXn3fj59HYtKL0HIQ1cxaoIUVXjRHD/QkcCEZuG5dIxij
+8NOCnE+Ip2nVm9WXbKSb/KXuF+p69Osm8VpVz7hpa/Hcf50iOe3R82dpCytUKBX4
+eq0HukzvikhFNglSw5GV0pK0syZxvu/ERMg3ja4r9an8fMayVS2YpybtRl6CCCVP
+7LKZG/M5n9UutA8GWMFeDw0qcI3kLdo6ijbdpGDUqjs+OY6MBH+uKLrzsqVNTamC
+RwIDAQAB
 -----END PUBLIC KEY-----';
+
+$config['jwt_public_key_lender_dev'] = '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqTsyy4r3nrjumED4To7w
+r1rfjMEzL+hcF8OwGm89aHoEzKLZqr12uQw3eK7tVV97QV8aYOi0zUinHlOVx1PM
+Dgik5jW8aCBvGM5S6PAZXn3fj59HYtKL0HIQ1cxaoIUVXjRHD/QkcCEZuG5dIxij
+8NOCnE+Ip2nVm9WXbKSb/KXuF+p69Osm8VpVz7hpa/Hcf50iOe3R82dpCytUKBX4
+eq0HukzvikhFNglSw5GV0pK0syZxvu/ERMg3ja4r9an8fMayVS2YpybtRl6CCCVP
+7LKZG/M5n9UutA8GWMFeDw0qcI3kLdo6ijbdpGDUqjs+OY6MBH+uKLrzsqVNTamC
+RwIDAQAB
+-----END PUBLIC KEY-----';
+
+$config['jwt_public_key_vendor_dev'] = '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqTsyy4r3nrjumED4To7w
+r1rfjMEzL+hcF8OwGm89aHoEzKLZqr12uQw3eK7tVV97QV8aYOi0zUinHlOVx1PM
+Dgik5jW8aCBvGM5S6PAZXn3fj59HYtKL0HIQ1cxaoIUVXjRHD/QkcCEZuG5dIxij
+8NOCnE+Ip2nVm9WXbKSb/KXuF+p69Osm8VpVz7hpa/Hcf50iOe3R82dpCytUKBX4
+eq0HukzvikhFNglSw5GV0pK0syZxvu/ERMg3ja4r9an8fMayVS2YpybtRl6CCCVP
+7LKZG/M5n9UutA8GWMFeDw0qcI3kLdo6ijbdpGDUqjs+OY6MBH+uKLrzsqVNTamC
+RwIDAQAB
+-----END PUBLIC KEY-----';
+
+
 
 /*Generated token will expire in 1 minute for sample code
 * Increase this value as per requirement for production
