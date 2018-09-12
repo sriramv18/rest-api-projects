@@ -49,7 +49,7 @@ class Template_Management_Controller extends REST_Controller {
 				$template_id = $this->Template_Management_Model->saveRecords($template_name,TEMPLATE);
 				if($template_id != "" || $template_id != null)
 				{
-						data['dataStatus'] = true;
+						$data['dataStatus'] = true;
 						$data['status'] = REST_Controller::HTTP_OK;
 						$data['records'] = $template_id;
 						$this->response($data,REST_Controller::HTTP_OK);
@@ -68,7 +68,7 @@ class Template_Management_Controller extends REST_Controller {
 			$modified = $this->db->updateRecords($template_name,TEMPLATE,$where_condition_array);
 			if($template_id != "" || $template_id != null)
 				{
-						data['dataStatus'] = true;
+						$data['dataStatus'] = true;
 						$data['status'] = REST_Controller::HTTP_OK;
 						$data['records'] = $modified;
 						$this->response($data,REST_Controller::HTTP_OK);
@@ -117,7 +117,7 @@ class Template_Management_Controller extends REST_Controller {
 		
 		if($count == count($template_lender_details))
 				{
-						data['dataStatus'] = true;
+						$data['dataStatus'] = true;
 						$data['status'] = REST_Controller::HTTP_OK;
 						$data['records'] = true;
 						$this->response($data,REST_Controller::HTTP_OK);
@@ -160,6 +160,21 @@ class Template_Management_Controller extends REST_Controller {
 					if($id != "" || $id != null){ $count++; }
 			}
 		}
+		
+		if($count == count($template_lender_details))
+				{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = true;
+						$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$this->response($data,REST_Controller::HTTP_NO_CONTENT);
+					
+				}
 		
 		
 	}
