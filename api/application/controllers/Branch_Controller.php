@@ -73,7 +73,8 @@ class Branch_Controller extends REST_Controller {
 	public function testAWSS3_post()
 	{
 		/* CREATE NEW BUCKETS*/
-		// $b = $this->aws_s3->createNewBucket('thecucumber');
+		 // $b = $this->aws_s3->createNewBucket('lender1');
+		 // print_r($b);
 		/* CREATE NEW BUCKETS*/
 		
 		/* LIST OF BUCKETS*/
@@ -92,20 +93,20 @@ class Branch_Controller extends REST_Controller {
 		
 		/* STORE FILE TO S3*/
 		
-		$file = $_FILES['myfile']['tmp_name'];
-		$file2 = $_FILES['myfile']['name'];
-		//print_r($file);
-		//print_r($file2);
+		// $file = $_FILES['myfile']['tmp_name'];
+		// $file2 = $_FILES['myfile']['name'];
+		// print_r($file);
+		// print_r($file2);
 		
-		$s3pathname = 'byapi/'.$file2;
-		$data = array('bucket_name'=>'thecucumber','key'=>$s3pathname,'sourcefile'=>$file);
-		$res = $this->aws_s3->uploadFileToS3Bucket($data);
-		//print_r($res);
-		echo is_object($res);
-		echo is_array($res);
-		echo "*********\n\n";
-		echo $res['ObjectURL'];
-		echo $res['@metadata']['statusCode'];
+		// $s3pathname = 'pd2/'.$file2;
+		// $data = array('bucket_name'=>'lender1','key'=>$s3pathname,'sourcefile'=>$file);
+		// $res = $this->aws_s3->uploadFileToS3Bucket($data);
+		// print_r($res);
+		// echo is_object($res);
+		// echo is_array($res);
+		// echo "*********\n\n";
+		// echo $res['ObjectURL'];
+		// echo $res['@metadata']['statusCode'];
 		// foreach($res as $key => $value)
 		// {
 			// echo $key."\n\n";
@@ -113,17 +114,33 @@ class Branch_Controller extends REST_Controller {
 		
 		/* STORE FILE TO S3*/
 		
-		/* GET FILE FROM S3*/
-		// $res = $this->aws_s3->getSingleObjectInaBucket();
-		// //print_r($res);
-		// //echo "\n\n\n\n\n<br>";
-		 // //header("Content-Type:{$res['ContentType']}");
-		// header("Content-Disposition:attachment; filename='woodgrass1.jpg'");
+		// /* GET FILE FROM S3*/
+		// $bucket_name = 'lender1';
+		// $folder_name = 'pd2';
+		// $file_name = '';
+		// $res = $this->aws_s3->getSingleObjectInaBucket($bucket_name,$folder_name);
+		// print_r($res);
+		//echo "\n\n\n\n\n<br>";
+		 //header("Content-Type:{$res['ContentType']}");
+		//header("Content-Disposition:attachment; filename='woodgrass1.jpg'");
 
-		 // echo $res['Body'];
+		// print_r($res);
 		
-		/* GET FILE FROM S3*/
+		/* GET FILES FROM S3*/
 		
+		$bucket_name = 'lender1';
+		$folder_name = 'pd2';
+		$r = $this->aws_s3->getAllObjectsInaBucket($bucket_name,$folder_name);
+		$s3_signed_urls = array();
+		foreach($r as $k)
+		{
+			if($k['Key'] != $folder_name.'/') array_push($s3_signed_urls,$this->aws_s3->getSingleObjectInaBucket($bucket_name,$k['Key']));
+			
+		}
+		print_r($s3_signed_urls);
+		
+		/* GET FILES FROM S3*/
+		/* GET ALL FILES FROM IN A FOLDER WITHIN A BUCKET*/
 		/*
 		$id = MYDB::saveRecords(array('city_name'=>'salem'),'t_city_master');
 		print_r($id);
@@ -151,19 +168,24 @@ class Branch_Controller extends REST_Controller {
 		print_r($id);
 		*/
 		
-		/*
-		$columns = array('city_name','state_name');
-		$table = 't_states_master';
-		$joins = array(
-			array(
-				'table' => 't_city_master',
-				'condition' => 't_city_master.fk_state_id = t_states_master.state_id',
-				'jointype' => 'INNER'
-			),
-		);
-		$id = MYDB::getJoinRecords($columns,$table,$joins,$print_query = '');
-		print_r($id);
-		*/
+		
+		// $columns = array('m_states.name as sname','BRANCH.name as bname','m_city.*');
+		// $table = BRANCH.' as BRANCH';
+		// $joins = array(
+			// array(
+				// 'table' => 'm_city',
+				// 'condition' => 'BRANCH.fk_city_id = m_city.city_id ',
+				// 'jointype' => 'INNER'
+			// ),
+			// array(
+				// 'table' => 'm_states',
+				// 'condition' => 'm_city.fk_state_id = m_states.state_id',
+				// 'jointype' => 'INNER'
+			// )
+		// );
+		// $id = MYDB::getJoinRecords($columns,$table,$joins,$print_query = '');
+		// print_r($id);
+		
 	}
 	
 	public function testPDF_get()

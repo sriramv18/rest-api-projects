@@ -140,7 +140,7 @@ defined('BRANCHID') OR define('BRANCHID','branch_id');
 defined('PDLOCATIONAPPROACH') OR define('PDLOCATIONAPPROACH','m_pd_location_approach');
 defined('PDLOCATIONAPPROACHID') OR define('PDLOCATIONAPPROACHID','pd_location_approach_id');
 
-defined('LISTOFMASTERS') OR define('LISTOFMASTERS','m_list_of_masters');
+defined('LISTOFMASTERS') OR define('LISTOFMASTERS','c_list_of_masters');
 defined('LISTOFMASTERSID') OR define('LISTOFMASTERSID','master_id');
 
 defined('COMMENTSONLOCALITY') OR define('COMMENTSONLOCALITY','m_comments_on_locality');
@@ -187,5 +187,22 @@ defined('QUESTIONANSWERSID') OR define('QUESTIONANSWERSID','question_answer_id')
 
 defined('QUESTIONCATEGORY') OR define('QUESTIONCATEGORY','m_question_category');
 defined('QUESTIONCATEGORYID') OR define('QUESTIONCATEGORYID','question_categroy_id');
+
+defined('TEMPLATE') OR define('TEMPLATE','m_template');
+defined('TEMPLATEID') OR define('TEMPLATEID','template_id');
+
+defined('LENDERTEMPLATE') OR define('LENDERTEMPLATE','m_lender_template');
+defined('LENDERTEMPLATEID') OR define('LENDERTEMPLATEID','lender_template_id');
+
+defined('TEMPLATECATAGORYWEIGHTAGE') OR define('TEMPLATECATAGORYWEIGHTAGE','m_template_catagory_weightage');
+defined('TEMPLATECATAGORYWEIGHTAGEID') OR define('TEMPLATECATAGORYWEIGHTAGEID','template_catagory_weightage_id');
+
+defined('TEMPLATEQUESTION') OR define('TEMPLATEQUESTION','m_template_question');
+defined('TEMPLATEQUESTIONID') OR define('TEMPLATEQUESTIONID','template_question_id');
+
+defined('TEMPLATEANSWERWEIGHTAGE') OR define('TEMPLATEANSWERWEIGHTAGE','m_template_answer_weightage');
+defined('TEMPLATEANSWERWEIGHTAGEID') OR define('TEMPLATEANSWERWEIGHTAGEID','template_answer_weightage_id');
+
+
 
 
