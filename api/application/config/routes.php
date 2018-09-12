@@ -72,4 +72,9 @@ $route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster';
 $route['saveMaster'] = 'Common_Masters_Controller/saveMaster'; 
 
 
+//USER MANAGEMENT
+$route['getListOfUsers'] = 'User_Management_Controller/listAllUsers'; 
+$route['saveNewUser'] = 'User_Management_Controller/saveNewUser'; 
+$route['updateExistUser'] = 'User_Management_Controller/updateExistUser'; 
+$route['getUsersDetails'] = 'User_Management_Controller/getUsersDetails'; 
 
