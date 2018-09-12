@@ -1,0 +1,170 @@
+<mat-card>
+    <mat-card-title>User Registration</mat-card-title>
+    <!-- <mat-card-subtitle>Angular2 custom validation</mat-card-subtitle> -->
+    <form [formGroup]="regForm" (ngSubmit)="register(regForm.value)">
+        <mat-card-content>
+            <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+                        <input matInput placeholder="First name" [formControl]="regForm.controls['firstName']">
+                    </mat-form-field>
+                    <small *ngIf="regForm.controls['firstName'].hasError('required') && regForm.controls['firstName'].touched" class="mat-text-warn">You must include a first name.</small>
+                    <small *ngIf="regForm.controls['firstName'].hasError('minlength') && regForm.controls['firstName'].touched" class="mat-text-warn">Your first name must be at least 5 characters long.</small>
+                    <small *ngIf="regForm.controls['firstName'].hasError('maxlength') && regForm.controls['firstName'].touched" class="mat-text-warn">Your first name cannot exceed 10 characters.</small>
+               
+
+                
+                    <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+                        <input matInput placeholder="Last name" [formControl]="regForm.controls['lastName']">
+                    </mat-form-field>
+                    <small *ngIf="regForm.controls['lastName'].hasError('required') && regForm.controls['lastName'].touched" class="mat-text-warn">You must include a last name.</small>
+                    <!-- <small *ngIf="regForm.controls['lastName'].hasError('minlength') && regForm.controls['lastName'].touched" class="mat-text-warn">Your first name must be at least 5 characters long.</small>
+                    <small *ngIf="regForm.controls['lastName'].hasError('maxlength') && regForm.controls['lastName'].touched" class="mat-text-warn">Your first name cannot exceed 10 characters.</small> -->
+                    <mat-form-field style="display: none;">
+                        <input matInput placeholder="User Id" [formControl]="regForm.controls['userid']">
+                    </mat-form-field>
+            </div>
+
+
+            <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+                    <input matInput placeholder="Email address" [formControl]="regForm.controls['email']" type="email">
+                </mat-form-field>
+                <small *ngIf="regForm.controls['email'].hasError('required') && regForm.controls['email'].touched" class="mat-text-warn">You must include an email address.</small>
+                <small *ngIf="regForm.controls['email'].errors?.email && regForm.controls['email'].touched" class="mat-text-warn">You must include a valid email address.</small>
+
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+                    <input matInput placeholder="Alt Email address" [formControl]="regForm.controls['altemail']" type="email">
+                </mat-form-field>
+                
+                <small *ngIf="regForm.controls['email'].errors?.email && regForm.controls['altemail'].touched" class="mat-text-warn">You must include a valid email address.</small>
+            </div>
+
+
+
+
+
+            <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+                    <input matInput placeholder="Phone number" [formControl]="regForm.controls['phone']" type="text">
+                </mat-form-field>
+                <small *ngIf="regForm.controls['phone'].hasError('required') && regForm.controls['phone'].touched" class="mat-text-warn">You must include phone number.</small>
+                <small *ngIf="regForm.controls['phone'].errors?.phone && regForm.controls['phone'].touched" class="mat-text-warn">You must include a valid phone number.</small>
+
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+                    <input matInput placeholder="Alt Phone number" [formControl]="regForm.controls['altphone']" type="text">
+                </mat-form-field>
+                <!-- <small *ngIf="regForm.controls['phone'].hasError('required') && regForm.controls['phone'].touched" class="mat-text-warn">You must include phone number.</small> -->
+                <small *ngIf="regForm.controls['altphone'].errors?.phone && regForm.controls['phone'].touched" class="mat-text-warn">You must include a valid phone number.</small>
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+
+                        <input matInput placeholder="Address 1" [formControl]="regForm.controls['address1']">
+                    </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+
+                    <input matInput placeholder="Address 2" [formControl]="regForm.controls['address2']">
+                </mat-form-field>
+
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+
+                    <input matInput placeholder="Address 3" [formControl]="regForm.controls['address3']">
+                </mat-form-field>
+
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs">
+
+                    <input matInput placeholder="Pincode" [formControl]="regForm.controls['pincode']">
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs" style="width: 100%;">
+                    <mat-select matInput placeholder="Select Role" [formControl]="regForm.controls['role']" required multiple>
+                        <!-- <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">ALL</mat-option> -->
+                        <mat-option *ngFor="let role of roles" [value]="role" (onSelectionChange)="toggleAllSelection($event)" >
+                            {{role.name}}
+                        </mat-option>
+                    </mat-select>
+                    
+                    <small *ngIf="regForm.controls['role'].hasError('required') && regForm.controls['role'].touched" class="mat-text-warn">Select User Role</small>
+                    <small *ngIf="regForm.controls['role'].errors?.phone && regForm.controls['role'].touched" class="mat-text-warn">Select User Role</small>
+                </mat-form-field>
+                <!-- <pre>{{regForm.controls['role'].value | json}}</pre> -->
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs" style="width: 100%;">
+                    <mat-select matInput placeholder="Select type" [formControl]="regForm.controls['type']" required>
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let types of types" [value]="types" >
+                          {{types.name}}
+                        </mat-option>
+                    </mat-select>
+                    <small *ngIf="regForm.controls['type'].hasError('required') && regForm.controls['type'].touched" class="mat-text-warn">Select User Role</small>
+                    <small *ngIf="regForm.controls['type'].errors?.phone && regForm.controls['type'].touched" class="mat-text-warn">Select User Role</small>
+                </mat-form-field>
+
+                
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs" style="width: 100%;">
+                    <mat-select matInput placeholder="Select State" [formControl]="regForm.controls['state']" required>
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let s of State" [value]="s">
+                            {{s.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs" style="width: 100%;">
+                    <mat-select matInput placeholder="Select City" [formControl]="regForm.controls['city']" required>
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let c of City" [value]="c">
+                            {{c.name}}
+                        </mat-option>
+                    </mat-select>
+                   
+                </mat-form-field>
+
+                <mat-form-field dividerColor="primary" class="ml-xs mr-xs" style="width: 100%;">
+                    <mat-select matInput placeholder="Select designation" [formControl]="regForm.controls['designation']" required>
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let d of designation" [value]="d">
+                            {{d.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center" class="mb-2">
+                    UserProfile 
+                            <input type="file" (change)="onFileChange($event)" [formControl]="regForm.controls['userpic']"/>
+                   
+                            <span *ngIf="usersData!=''">{{img}}</span>
+                </div>
+                
+
+                <mat-slide-toggle color="primary" [formControl]="regForm.controls['isactive']">
+                        Isactive
+                        </mat-slide-toggle>
+        </mat-card-content>
+        <hr>
+
+        <mat-card-actions *ngIf="usersData !=''">
+
+            <button mat-raised-button color="primary" type="submit">Submit</button>
+        </mat-card-actions>
+        <mat-card-actions *ngIf="usersData ==''">
+
+            <button mat-raised-button color="primary" [disabled]="!regForm.valid" type="submit">Submit</button>
+        </mat-card-actions>
+    </form>
+    <!-- <button mat-raised-button color="primary" (click)="userupdate()" >Submit</button> -->
+    <mat-form-field dividerColor="primary" class="ml-xs mr-xs" style="width: 100%;">
+        <mat-select matInput placeholder="Select Role" [(ngModel)]="sampledrop" required multiple>
+            <!-- <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">ALL</mat-option> -->
+            <mat-option *ngFor="let role of roles" [value]="role" (click)="toggleAllSelection(role)">
+                {{role.name}}
+            </mat-option>
+        </mat-select>
+        
+        <!-- <small *ngIf="regForm.controls['role'].hasError('required') && regForm.controls['role'].touched" class="mat-text-warn">Select User Role</small>
+        <small *ngIf="regForm.controls['role'].errors?.phone && regForm.controls['role'].touched" class="mat-text-warn">Select User Role</small> -->
+    </mat-form-field>
+</mat-card>

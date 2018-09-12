@@ -23,8 +23,10 @@ class User_Management_Controller extends REST_Controller {
    
 	public function listAllUsers_get()
 	{
-		
-		$result = $this->User_Management_Model->$listAllUsers();
+		//echo "function";
+
+		$result = $this->User_Management_Model->listAllUsers();
+		//echo "result";
 		if($result['data_status'])
 		{
 				$data['dataStatus'] = true;
@@ -42,20 +44,26 @@ class User_Management_Controller extends REST_Controller {
 
 	public function saveNewUser_post()
 	{
+		$this->load->library('AWS_S3');
+		//print_r($this->post('roles'));die;
+		//print_r($this->post());die;
+		//print_r($_FILES['profilepic']['name']);die;
 		$roles = "";
 		$lender_hierarchy = "";
-		
+		//print_r($this->post('roles'));die;
 		if($this->post('roles')){ $roles = $this->post('roles'); }
 		
 		if($this->post('lender_hierarchy')){ $lender_hierarchy = $this->post('lender_hierarchy'); }
 		
 		
-		$records = $this->post('records');
-		$roles = $this->post('roles');
+		$records = json_decode($this->post('records'),true);
+
+		//print_r($records);die;
+		$roles = json_decode($this->post('roles'),true);
 		
-		$lender_hierarchy  = $this->post('lender_hierarchy');
-		
-		if($_FILES['profilepic']['tmp_name'])
+		$lender_hierarchy  = json_decode($this->post('lender_hierarchy'),true);
+		//echo $_FILES['profilepic']['name'];die;
+		if(!empty($_FILES['profilepic']['tmp_name']))
 		{
 				
 				
@@ -64,7 +72,7 @@ class User_Management_Controller extends REST_Controller {
 				$profilepicname = strtolower($profilepicname);
 				$profilepics3path = "";
 				
-				if(array_key_exists('fk_entity_id'),$records)
+				if(array_key_exists('fk_entity_id',$records))
 				{
 					$entity_id = $records['fk_entity_id'];
 						if($entity_id == 1) //1 means sine_edge Profile
@@ -85,10 +93,10 @@ class User_Management_Controller extends REST_Controller {
 				$key = $profilepics3path;
 				$sourcefile = $profilepic;
 				
-				$data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
-				$s3result= $this->aws_s3->uploadFileToS3Bucket($data);
+				$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+				$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
 				
-				if(is_object($s3result) && $s3result['ObjectURL'] != '' && [$s3result'@metadata']['statusCode'] == 200)
+				if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
 				{
 					$records['profilepic'] = $profilepicname;
 				}
@@ -103,7 +111,7 @@ class User_Management_Controller extends REST_Controller {
 				
 		}
 		
-			$user_id = $this->User_Management_Model->saveRecords($recordrs,USERPROFILE);//insert user records and get userid
+			$user_id = $this->User_Management_Model->saveRecords($records,USERPROFILE);//insert user records and get userid
 				
 				if($roles != "")
 				{
@@ -159,12 +167,12 @@ class User_Management_Controller extends REST_Controller {
 		if($this->post('lender_hierarchy')){ $lender_hierarchy = $this->post('lender_hierarchy'); }
 		
 		
-		$records = $this->post('records');
-		$roles = $this->post('roles');
+		$records = json_decode($this->post('records'),true);
+		$roles = json_decode($this->post('roles'),true);
 		
-		$lender_hierarchy  = $this->post('lender_hierarchy');
+		$lender_hierarchy  = json_decode($this->post('lender_hierarchy'),true);
 		
-		if($_FILES['profilepic']['tmp_name'])
+		if(!empty($_FILES['profilepic']['tmp_name']))
 		{
 				
 				
@@ -173,7 +181,7 @@ class User_Management_Controller extends REST_Controller {
 				$profilepicname = strtolower($profilepicname);
 				$profilepics3path = "";
 				
-				if(array_key_exists('fk_entity_id'),$records)
+				if(array_key_exists('fk_entity_id',$records))
 				{
 					$entity_id = $records['fk_entity_id'];
 						if($entity_id == 1) //1 means sine_edge Profile
@@ -197,7 +205,7 @@ class User_Management_Controller extends REST_Controller {
 				$data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
 				$s3result= $this->aws_s3->uploadFileToS3Bucket($data);
 				
-				if(is_object($s3result) && $s3result['ObjectURL'] != '' && [$s3result'@metadata']['statusCode'] == 200)
+				if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
 				{
 					$records['profilepic'] = $profilepicname;
 				}
@@ -212,14 +220,14 @@ class User_Management_Controller extends REST_Controller {
 				
 		}
 			$where_condition_array  = array('userid'=>$records['userid']);
-			$modified = $this->User_Management_Model->updateRecords($recordrs,USERPROFILE,$where_condition_array);//insert user records and get userid
+			$modified = $this->User_Management_Model->updateRecords($records,USERPROFILE,$where_condition_array);//insert user records and get userid
 				
 				if($roles != "")
 				{
 					foreach($roles as $role)
 					{
 						
-						$this->User_Management_Model->updateRecords(array('isactive'=>0),USERPROFILEROLES,array('userid'=>$records['userid']));
+						$this->User_Management_Model->updateRecords(array('isactive'=>0),USERPROFILEROLES,array('fk_userid'=>$records['userid']));
 						$role_array = array('user_role'=>$role['user_role'],'fk_userid'=>$records['userid']);
 						$this->User_Management_Model->saveRecords($role_array,USERPROFILEROLES);
 					}
@@ -261,4 +269,27 @@ class User_Management_Controller extends REST_Controller {
 		
 	}
    
+   /**
+	* sriram get roles function
+   */
+	public function getUsersDetails_post(){
+		
+			$userid = $this->post('userid');
+
+			$result = $this->User_Management_Model->getUserDetails($userid);
+		//echo "result";
+		if($result['data_status'])
+		{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result['data'];
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
+		}
+	}
 }
