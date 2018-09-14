@@ -61,15 +61,13 @@ $route['translate_uri_dashes'] = FALSE;
 */
 /* Routes regards Common Masters CRUD operations*/
 
-$route['saveNewUser'] = 'Common_Masters_Controller/saveNewUser'; 
-$route['listAllUsers'] = 'Common_Masters_Controller/listAllUsers'; 
-
-
 $route['getListOfBranches'] = 'Common_Masters_Controller/getListOfBranches'; 
 $route['saveBranch'] = 'Common_Masters_Controller/saveBranch'; 
 
 $route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
 $route['saveMaster'] = 'Common_Masters_Controller/saveMaster'; 
+
+$route['login'] = 'Branch_Controller/testAWSS3'; 
 
 
 //USER MANAGEMENT
@@ -77,4 +75,21 @@ $route['getListOfUsers'] = 'User_Management_Controller/listAllUsers';
 $route['saveNewUser'] = 'User_Management_Controller/saveNewUser'; 
 $route['updateExistUser'] = 'User_Management_Controller/updateExistUser'; 
 $route['getUsersDetails'] = 'User_Management_Controller/getUsersDetails'; 
+
+// TEMPLATE MANAGEMENT
+$route['listAllTemplates'] = 'Template_Management_Controller/listAllTemplates'; 
+$route['saveNewTemplateName'] = 'Template_Management_Controller/saveNewTemplateName'; 
+$route['saveTemplateLenderDetails'] = 'Template_Management_Controller/saveTemplateLenderDetails'; 
+$route['saveTemplateCategoryDetails'] = 'Template_Management_Controller/saveTemplateCategoryDetails'; 
+
+//QUESTION MANAGEMENT
+$route['listAllQuestions'] = 'Question_Management_Controller/listAllQuestions'; 
+$route['saveNewQuestion'] = 'Question_Management_Controller/saveNewQuestion'; 
+$route['saveExistQuestion'] = 'Question_Management_Controller/saveExistQuestion'; 
+
+//ENTITY MANAGEMENT
+$route['listAllEntites'] = 'Entity_Management_Controller/listAllEntites'; 
+$route['saveNewEntity'] = 'Entity_Management_Controller/saveNewEntity'; 
+$route['saveExistEntity'] = 'Entity_Management_Controller/saveExistEntity'; 
+
 

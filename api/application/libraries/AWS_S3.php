@@ -44,7 +44,7 @@ class AWS_S3
 	{
 		
 		try {
-				$result = $this->S3->createBucket(['Bucket' => $BUCKET_NAME]);
+				$result = $this->S3->createBucket(['Bucket' => $BUCKET_NAME,'ACL' => 'authenticated-read']);
 				
 				print_r($result);
 			} catch (AwsException $e) {
@@ -65,7 +65,7 @@ class AWS_S3
 				'SourceFile' => $data['sourcefile'],
 				'ContentType' => '*/*',
 				'StorageClass' => 'STANDARD',
-				'ACL'=>'public-read'
+				'ACL'=>'authenticated-read'
 				]);
 			
 			} catch (AwsException $e) 
@@ -76,44 +76,56 @@ class AWS_S3
 		return $result;	
 	}
 	
-	public function getSingleObjectInaBucket()
+	public function getSingleObjectInaBucketAsSignedURI($bucket_name,$folder_name)//get as singed url
 	{
 		$result = array();
 		
 		try {
-		$result = $this->S3->getObject([
-        'Bucket' => 'thecucumber',
-        'Key'    => 'byapi/woodgrass1.jpg'
-		//'ResponseContentType'        => 'image/png'
-		//'ResponseContentDisposition' => 'attachment; woodgrass1.jpg',
-			]);
+			
+		// $result = $this->S3->getObject([
+        // 'Bucket' => 'thecucumber',
+        // 'Key'    => 'byapi/woodgrass1.jpg'
+		// //'ResponseContentType'        => 'image/png'
+		// //'ResponseContentDisposition' => 'attachment; woodgrass1.jpg',
+			// ]);
+			
+						$cmd = $this->S3->getCommand('GetObject', [
+							'Bucket' => $bucket_name,
+							'Key'    => $folder_name
+						]);
+
+				$request = $this->S3->createPresignedRequest($cmd, '+60 seconds');
+				$presignedUrl = (string) $request->getUri();
 		}
 		catch(AwsException $e)
 		{
 			echo $e->getMessage();
 		}
 		
-			return $result;
+			return $presignedUrl;
 			
 
 	}
 	
-	public function getAllObjectsInaBucket()
+	public function getAllObjectsInaBucket($bucket_name,$folder_name)
 	{
+		$objects = array();
 				try {
-					$objects = $this->S3->getIterator('ListObjects', [
-						'Bucket' => 'thecucumber',
-						'Prefix' => ''
-					]);
+						$objects = $this->S3->getIterator('ListObjects', [
+							'Bucket' => $bucket_name,
+							'Prefix' => $folder_name
+						]);
 
-					echo "Keys retrieved!" ;
-					//print_r($objects);
-					foreach ($objects as $object) {
-						print_r($object) ;
-					}
+						// echo "Keys retrieved!" ;
+						// //print_r($objects);
+						// foreach ($objects as $object) {
+							// print_r($object) ;
+					// }
 		} catch (S3Exception $e) {
 			echo $e->getMessage() . PHP_EOL;
 		}
+		
+		return $objects;
 
 	}
 	

@@ -21,10 +21,10 @@ class Template_Management_Controller extends REST_Controller {
         
     }
    
-	public function listAllUsers_get()
+	public function listAllTemplates_get()
 	{
 		
-		$result = $this->User_Management_Model->$listAllUsers();
+		$result = $this->User_Management_Model->$listAllTemplates();
 		if($result['data_status'])
 		{
 				$data['dataStatus'] = true;
@@ -40,225 +40,145 @@ class Template_Management_Controller extends REST_Controller {
 		}
 	}
 
-	public function saveNewUser_post()
+	public function saveNewTemplateName_post()
 	{
-		$roles = "";
-		$lender_hierarchy = "";
+		$template_name = $this->post('template_name');
 		
-		if($this->post('roles')){ $roles = $this->post('roles'); }
-		
-		if($this->post('lender_hierarchy')){ $lender_hierarchy = $this->post('lender_hierarchy'); }
-		
-		
-		$records = $this->post('records');
-		$roles = $this->post('roles');
-		
-		$lender_hierarchy  = $this->post('lender_hierarchy');
-		
-		if($_FILES['profilepic']['tmp_name'])
+		if(array_key_exists('template_id',$template_name))
 		{
-				
-				
-				$profilepic = $_FILES['profilepic']['tmp_name'];
-				$profilepicname = $_FILES['profilepic']['name'];
-				$profilepicname = strtolower($profilepicname);
-				$profilepics3path = "";
-				
-				if(array_key_exists('fk_entity_id'),$records)
+				$template_id = $this->Template_Management_Model->saveRecords($template_name,TEMPLATE);
+				if($template_id != "" || $template_id != null)
 				{
-					$entity_id = $records['fk_entity_id'];
-						if($entity_id == 1) //1 means sine_edge Profile
-						{
-							$profilepics3path = 'sineedge/'.$profilepicname;
-						}
-						else if($entity_id == 2)//1 means lender Profile
-						{
-							$profilepics3path = 'lender/'.$profilepicname;
-						}
-						else // else or 3 means vendor Profile
-						{
-							$profilepics3path = 'vendor/'.$profilepicname;
-						}
-				}
-				
-				$bucketname = PROFILEPICTUREBUCKETNAME;
-				$key = $profilepics3path;
-				$sourcefile = $profilepic;
-				
-				$data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
-				$s3result= $this->aws_s3->uploadFileToS3Bucket($data);
-				
-				if(is_object($s3result) && $s3result['ObjectURL'] != '' && [$s3result'@metadata']['statusCode'] == 200)
-				{
-					$records['profilepic'] = $profilepicname;
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $template_id;
+						$this->response($data,REST_Controller::HTTP_OK);
 				}
 				else
 				{
-					$records['profilepic'] = null;
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$this->response($data,REST_Controller::HTTP_NO_CONTENT);
+					
 				}
-				
-				
-				
-				
-				
 		}
-		
-			$user_id = $this->User_Management_Model->saveRecords($recordrs,USERPROFILE);//insert user records and get userid
-				
-				if($roles != "")
+		else
+		{
+			$where_condition_array = array('template_id'=>$template_name['template_id']);
+			$modified = $this->db->updateRecords($template_name,TEMPLATE,$where_condition_array);
+			if($template_id != "" || $template_id != null)
 				{
-					foreach($roles as $role)
-					{
-						$role_array = array('user_role'=>$role['user_role'],'fk_userid'=>$user_id);//insert roles againest user
-						$this->User_Management_Model->saveRecords($role_array,USERPROFILEROLES);
-					}
-				}
-				
-				if($lender_hierarchy != "")
-				{
-					foreach($lender_hierarchy as $hierarchy)
-					{
-						$hierarchy = array('fk_hierarchy_id'=>$hierarchy['fk_hierarchy_id'],'fk_user_id'=>$user_id,'fk_createdby'=>$records['fk_createdby'],'createdon'=>$records['createdon']);//insert hierarchy  againest lender type users
-						$this->User_Management_Model->saveRecords($hierarchy,USERPROFILEHIERARCHY);
-					}
-				}
-				
-				if($user_id != '' || $user_id != null)
-				{
-					$data['dataStatus'] = true;
-					$data['status'] = REST_Controller::HTTP_OK;
-					$data['record'] = $user_id;
-					$this->response($data,REST_Controller::HTTP_OK);
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $modified;
+						$this->response($data,REST_Controller::HTTP_OK);
 				}
 				else
 				{
-					$data['dataStatus'] = false;
-					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-					$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$this->response($data,REST_Controller::HTTP_NO_CONTENT);
+					
 				}
-		
-		
-		
-		
-		
-		
 			
-	
-
+		}
 		
 	}
 	
 	
-	public function updateExistUser_post()
+	public function saveTemplateLenderDetails_post()
 	{
-		$roles = "";
-		$lender_hierarchy = "";
+		$template_id = '';
+		$count = 0;
 		
-		if($this->post('roles')){ $roles = $this->post('roles'); }
-		
-		if($this->post('lender_hierarchy')){ $lender_hierarchy = $this->post('lender_hierarchy'); }
-		
-		
-		$records = $this->post('records');
-		$roles = $this->post('roles');
-		
-		$lender_hierarchy  = $this->post('lender_hierarchy');
-		
-		if($_FILES['profilepic']['tmp_name'])
+		if($this->post('template_id'))
 		{
-				
-				
-				$profilepic = $_FILES['profilepic']['tmp_name'];
-				$profilepicname = $_FILES['profilepic']['name'];
-				$profilepicname = strtolower($profilepicname);
-				$profilepics3path = "";
-				
-				if(array_key_exists('fk_entity_id'),$records)
-				{
-					$entity_id = $records['fk_entity_id'];
-						if($entity_id == 1) //1 means sine_edge Profile
-						{
-							$profilepics3path = 'sineedge/'.$profilepicname;
-						}
-						else if($entity_id == 2)//1 means lender Profile
-						{
-							$profilepics3path = 'lender/'.$profilepicname;
-						}
-						else // else or 3 means vendor Profile
-						{
-							$profilepics3path = 'vendor/'.$profilepicname;
-						}
-				}
-				
-				$bucketname = PROFILEPICTUREBUCKETNAME;
-				$key = $profilepics3path;
-				$sourcefile = $profilepic;
-				
-				$data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
-				$s3result= $this->aws_s3->uploadFileToS3Bucket($data);
-				
-				if(is_object($s3result) && $s3result['ObjectURL'] != '' && [$s3result'@metadata']['statusCode'] == 200)
-				{
-					$records['profilepic'] = $profilepicname;
-				}
-				else
-				{
-					$records['profilepic'] = null;
-				}
-				
-				
-				
-				
-				
+			$template_id = $this->post('template_id');
 		}
-			$where_condition_array  = array('userid'=>$records['userid']);
-			$modified = $this->User_Management_Model->updateRecords($recordrs,USERPROFILE,$where_condition_array);//insert user records and get userid
-				
-				if($roles != "")
+		
+		$template_lender_details = $this->post('template_lender_details');
+		
+		foreach($template_lender_details as $template_lender_detail)
+		{
+				if(array_key_exists('lender_template_id',$template_lender_detail))
 				{
-					foreach($roles as $role)
-					{
-						
-						$this->User_Management_Model->updateRecords(array('isactive'=>0),USERPROFILEROLES,array('userid'=>$records['userid']));
-						$role_array = array('user_role'=>$role['user_role'],'fk_userid'=>$records['userid']);
-						$this->User_Management_Model->saveRecords($role_array,USERPROFILEROLES);
-					}
-				}
-				
-				if($lender_hierarchy != "")
-				{
-					foreach($lender_hierarchy as $hierarchy)
-					{
-						
-						$this->User_Management_Model->updateRecords(array('isactive'=>0),USERPROFILEHIERARCHY,array('userid'=>$records['userid']));
-						$hierarchy = array('fk_hierarchy_id'=>$hierarchy['fk_hierarchy_id'],'fk_user_id'=>$user_id);//insert hierarchy  againest lender type users
-						$this->User_Management_Model->saveRecords($hierarchy,USERPROFILEHIERARCHY);
-					}
-				}
-				
-				if($modified != '' || $modified != null || $modified != 0)
-				{
-					$data['dataStatus'] = true;
-					$data['status'] = REST_Controller::HTTP_OK;
-					$data['record'] = $modified;
-					$this->response($data,REST_Controller::HTTP_OK);
+					$where_condition_array = array('lender_template_id'=>$template_lender_detail['lender_template_id']);
+					$modified = $this->Template_Management_Model->updateRecords(template_lender_detail,LENDERTEMPLATE,$where_condition_array);
+					if($modified != "" || $modified != null){ $count++; } 
 				}
 				else
 				{
-					$data['dataStatus'] = false;
-					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-					$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+					$template_lender_detail['fk_template_id'] = $template_id;
+					$id = $this->Template_Management_Model->saveRecords($template_lender_detail,LENDERTEMPLATE);
+					if($id != "" || $id != null){ $count++; }
+				}
+		}
+		
+		
+		if($count == count($template_lender_details))
+				{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = true;
+						$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$this->response($data,REST_Controller::HTTP_NO_CONTENT);
+					
 				}
 		
-		
-		
-		
-		
-		
-			
-	
-
 		
 	}
-   
+	
+	public function saveTemplateCategoryDetails_post()
+	{
+		$template_id = '';
+		$count = 0;
+		
+		if($this->post('template_id'))
+		{
+			$template_id = $this->post('template_id');
+		}
+		
+		$template_category_details = $this->post('template_category_details');
+		
+		foreach($template_category_details as $template_category_detail)
+		{
+			if(array_key_exists('template_catagory_weightage_id',$template_category_detail))
+			{
+				$where_condition_array = array('template_catagory_weightage_id'=>$template_category_detail['template_catagory_weightage_id']);
+				$modified = $this->Template_Management_Model->updateRecords($template_category_detail,TEMPLATECATAGORYWEIGHTAGE,$where_condition_array);
+				if($modified != "" || $modified != null){ $count++; } 
+			}
+			else
+			{
+					$template_category_detail['fk_template_id'] = $template_id;
+					$id = $this->Template_Management_Model->saveRecords($template_lender_detail,TEMPLATECATAGORYWEIGHTAGE);
+					if($id != "" || $id != null){ $count++; }
+			}
+		}
+		
+		if($count == count($template_lender_details))
+				{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = true;
+						$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$this->response($data,REST_Controller::HTTP_NO_CONTENT);
+					
+				}
+		
+		
+	}
+	
+	
+	
 }
