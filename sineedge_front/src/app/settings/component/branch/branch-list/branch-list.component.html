@@ -1,0 +1,88 @@
+<mat-card-content>
+    <div style="text-align: right;">
+            <button mat-raised-button color="primary" (click)="addBranch()" [disabled]="dialogRef"> + Add Branch</button>
+    </div>
+    <br>           
+    <!-- <div class="example-container mat-elevation-z8">
+            <table>
+                   <thead>
+                      <th header-cell>S.no</th>
+                      <th header-cell>Branch Name</th>
+                      <th header-cell>Branch City Name</th>
+                      <th header-cell>Action</th>
+                    </thead>
+    
+                <tr *ngFor="let BL of BranchList; let i=index">
+                  <td style="text-align:  center;">{{i+1}}</td>
+                  <td style="text-align:  center;">{{BL.Name}}</td>
+                  <td style="text-align:  center;">{{BL.CityID}}</td>
+                  <td style="text-align:  center;">
+                        <button mat-raised-button mat-icon-button class="mr-1 mb-1 hover-icon" matTooltip="Edit" matTooltipPosition="above" (click)="editBranch(BL.ID)"><mat-icon>edit</mat-icon></button>
+                        <button mat-raised-button mat-icon-button class="mr-1 mb-1 hover-icon" matTooltip="Delete" matTooltipPosition="above" (click)="deleteBranch(BL.ID)"><mat-icon>delete_outline</mat-icon></button>
+                   </td>     
+                </tr>
+              </table>
+  
+          </div> -->
+
+          <div>
+            <!-- <mat-table [dataSource]="dataSource">  -->
+            <mat-table [dataSource]="dataSource" matSort>
+              
+              <ng-container matColumnDef="branch_id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{user.branch_id}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="fk_city_id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> fk_city_id </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{user.fk_city_id}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{user.name}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="cname">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> city name </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{user.cityname}} </mat-cell>
+              </ng-container>
+              <!-- <ng-container matColumnDef="sname">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> state name </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{user.statename}} </mat-cell>
+              </ng-container> -->
+              <ng-container matColumnDef="createdon">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> createdon </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{user.createdon}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="fk_createdby">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> createdby </mat-header-cell>
+                  <mat-cell *matCellDef="let user"> {{user.fk_createdby}} </mat-cell>
+                </ng-container>  
+                <ng-container matColumnDef="updatedon">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> updated on </mat-header-cell>
+                  <mat-cell *matCellDef="let user"> {{user.updatedon}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="fk_updatedby">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> updatedby </mat-header-cell>
+                  <mat-cell *matCellDef="let user"> {{user.fk_updatedby}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="isactive">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> isactive </mat-header-cell>
+                  <mat-cell *matCellDef="let user"> {{user.isactive}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let user">
+                        <button mat-raised-button mat-icon-button class="mr-1 mb-1 hover-icon" matTooltip="Edit" matTooltipPosition="above" (click)="editBranch(user)"><mat-icon>edit</mat-icon></button>
+                        <button mat-raised-button mat-icon-button class="mr-1 mb-1 hover-icon" matTooltip="Delete" matTooltipPosition="above" (click)="deleteBranch(user.branch_id)"><mat-icon>delete_outline</mat-icon></button>
+                    </mat-cell>
+                </ng-container>
+          
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+          
+          <br>
+          
+  
+</mat-card-content>

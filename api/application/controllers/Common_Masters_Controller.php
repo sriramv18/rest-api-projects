@@ -981,7 +981,7 @@ class Common_Masters_Controller extends REST_Controller {
 			//echo $table_name;
 			$result = $this->Common_Masters_Model->selectRecords(constant($table_name));
 			//print_r($result);
-			die();
+			//die();
 			if(count($result) > 0)
 			{
 				$data['dataStatus'] = true;

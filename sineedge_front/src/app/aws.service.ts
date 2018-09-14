@@ -20,7 +20,7 @@ import 'rxjs/add/operator/map';
 import { SharedService } from './shared.service';
 
 
-let apiurl = 'localhost/sineedge/sparqapi/api/';
+let apiurl = 'localhost/sparqapi/api/';
 const sineedge_poolData = { 
   UserPoolId: "ap-south-1_y7dt3iEaX", //ap-south-1_qQ85yQZJO UserName :SPARQ_SINEEDGE_DEV
   ClientId: "291qt4smn5pql6o8cc2hi201lj" // ClientName: SINEEDGE_DEV_WEB
@@ -48,7 +48,7 @@ const sineedgeIdentity = "ap-south-1:9a551eab-97cf-4991-b677-2f9bcd058961";//"ap
 const lenderIdentity = "ap-south-1:ca22dabc-db59-4af5-9bb8-265f7ec95907";
 const vendorIdenttiy = "";
 // serviceProvider
-apiurl = "http://localhost/sineedge/sparqapi/api/";
+// apiurl = "http://localhost/sineedge/sparqapi/api/";
 const currentdate = new Date().toJSON().slice(0,19).replace('T',' ');
 
 @Injectable({

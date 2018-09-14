@@ -1,0 +1,151 @@
+<mat-card>
+    <!-- <div class="selectedSidebarColor"> -->
+    <!-- <div class="app search-i" [dir]="layoutDir" [ngClass]="[ menuLayout, selectedSidebarImage, , selectedHeaderColor]" > -->
+       <mat-card-title><span> Master Details </span></mat-card-title>
+       <mat-card-subtitle> Pickup the Master to View Master Detail </mat-card-subtitle>
+    <!-- </div> -->
+  
+   <mat-card-content>
+     
+        <div fxFlex.gt-sm="40" fxFlex="100"></div>
+        <div fxFlex.gt-sm="30" fxFlex="100">
+            <!-- NORMAL Search Field -->
+            <!-- <mat-form-field>   
+                  <mat-select placeholder="Select Master" [(ngModel)]="pickUpMasterData" required [disabled]="isDisabled" #MasterDataControl="ngModel">
+                       <!-- <mat-option (click)="onChangedData()" *ngFor="let masters of masterArray" [value]="masters.value" [disabled]="masters.disabled"> ->
+                            <mat-option  *ngFor="let masters of masterArray" [value]="masters.code" [disabled]="masters.disabled">
+                           {{ masters.viewValue }}
+                       </mat-option>
+                   </mat-select>
+                 </mat-form-field> -->
+            <!-- Autocomplete Field -->
+            <!-- <mat-form-field>
+                <input matInput placeholder="Select Master" [matAutocomplete]="tdAuto" [(ngModel)]="currentState" #modelDir="ngModel" required
+                  (ngModelChange)="this.tdStates = filterStates(currentState)" [disabled]="tdDisabled">
+                  <mat-autocomplete #tdAuto="matAutocomplete">
+                        <mat-option *ngFor="let state of tdStates" [value]="state.viewValue">
+                          {{ state.viewValue }}
+                        </mat-option>
+                   </mat-autocomplete>
+            </mat-form-field>  -->
+            <!-- Searchable dropdown Field -->
+            <!-- <form [formGroup]="_MasterForm" (submit)="onSubmit()"> 
+            <div class="form-group">-->
+                    <div class="mb-1"> 
+                      <mat-form-field>
+                        <mat-select placeholder="Select" #singleSelect required [formControl]="masterCtrl">
+                          <ngx-mat-select-search [formControl]="masterFilterCtrl" ></ngx-mat-select-search>
+                          <mat-option *ngFor="let master of filteredMasters | async" [value]="master.id">
+                            {{master.name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!-- <small *ngIf="masterCtrl.touched" class="mat-text-warn">You must Pick up a Master Name.</small> -->
+                    </div>
+            <!--</div>
+             </form> -->
+            
+                 
+       </div>
+      
+   </mat-card-content>
+
+   <hr>
+   
+    <div *ngIf="masterCtrl.value =='master-1'" >
+        
+        <app-industry_classification-list></app-industry_classification-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-2'">
+            <app-branch-list></app-branch-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-3'">
+            <app-title-list></app-title-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-4'">
+            <app-relation-ship-list></app-relation-ship-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-5'">
+            <app-product-list></app-product-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-6'">
+            <app-sub-product-list></app-sub-product-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-7'" >
+            <app-members-occupation-list></app-members-occupation-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-8'">
+            <app-activity-list></app-activity-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-9'">
+            <app-uom-list></app-uom-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-10'">
+            <app-frequency-list></app-frequency-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-11'">
+          <app-pd-allocation-type-list></app-pd-allocation-type-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-12'">
+            <app-comments-on-locality-list></app-comments-on-locality-list>  
+    </div>
+    <div *ngIf="masterCtrl.value =='master-13'">
+           <app-customer-behaviour-list></app-customer-behaviour-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-14'">
+            <app-customer-segment-list></app-customer-segment-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-15'">
+            <app-designation-list></app-designation-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-16'">
+           <app-pd-allocation-type-list></app-pd-allocation-type-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-17'">
+        <app-pd-status-list></app-pd-status-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-18'">
+        <app-pd-type-list></app-pd-type-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-19'">
+            <app-company-list></app-company-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-20'">
+            <app-city-list></app-city-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-21'">
+            <app-states-list></app-states-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-22'">
+            <app-regions-list></app-regions-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-23'">
+            <app-lender-hierarchy-list></app-lender-hierarchy-list>
+    </div>
+    <div *ngIf="masterCtrl.value =='master-24'">
+            <!-- <app-entity-type-list></app-entity-type-list> -->
+    </div>
+    <!-- <div *ngIf="masterCtrl.value =='datatable'">
+    <data-table></data-table></div>
+    <div *ngIf="masterCtrl.value =='usertable'">
+    <app-usertable></app-usertable>
+    </div> -->
+    <!-- <div *ngIf="currentState == 'Industry Classification'" >
+        <app-industry-master-list></app-industry-master-list>
+    </div>
+    <div *ngIf="currentState == 'Product'" >
+        <app-product-list></app-product-list>
+    </div>
+    <div *ngIf="currentState == 'Sub Product'" >
+        <app-sub-product-list></app-sub-product-list>
+    </div> -->
+   <!-- <div *ngIf="pickUpMasterData =='master-1'">
+        <app-industry-master-list></app-industry-master-list>
+   </div>
+   <div *ngIf="pickUpMasterData =='master-2'">
+        <app-product-list></app-product-list>
+   </div>
+   <div *ngIf="pickUpMasterData =='master-3'">
+        <app-sub-product-list></app-sub-product-list>
+   </div> -->
+</mat-card>          

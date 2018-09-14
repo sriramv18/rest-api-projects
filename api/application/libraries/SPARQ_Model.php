@@ -27,11 +27,11 @@ class SPARQ_Model extends CI_Model {
 	
 	public  function selectRecords($table_name,$where_condition_array = array(),$print_query = '')
 	{
-		echo $print_query;
-		echo $table_name;
+		// echo $print_query;
+		// echo $table_name;
 		
 		$data =  $this->db->get_where($table_name,$where_condition_array)->result_array();//only AND condition
-		print_r($data);
+		//print_r($data);
 		if($print_query == 1)
 		{
 			print_r($this->db->last_query());

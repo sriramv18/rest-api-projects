@@ -3,7 +3,7 @@ import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cogn
 import { Router } from "@angular/router";
 import * as aws from 'aws-sdk';
 import { Http, Headers, RequestOptions } from '@angular/http';
-let apiUrl = 'http://localhost/sineedge/sparqapi/api/'
+let apiUrl = 'http://localhost/sparqapi/api/'
 let currentuser: any = window.localStorage.getItem("Currentuser");
 console.log(currentuser);
 let poolData: any;

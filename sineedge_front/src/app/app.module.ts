@@ -3,6 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
 
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
@@ -21,6 +22,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatTableModule} from '@angular/material';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSelectModule} from '@angular/material/select';
@@ -54,9 +56,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AdminLayoutComponent,
     AuthLayoutComponent,
     JazzDialogComponent,
-    
+
     NewPasswordDialog,ForgotPass,ChangePasswordDialog,
-    
+
   ],
   imports: [
     BrowserModule,
@@ -66,6 +68,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       onSameUrlNavigation: 'reload'
     }),
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     HttpClientModule,
     MatSidenavModule,
@@ -94,7 +97,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
        useClass:[{AwsService,SharedService}]
     }
   ],
-  entryComponents: [JazzDialogComponent, NewPasswordDialog,ForgotPass,ChangePasswordDialog ],
+  entryComponents: [JazzDialogComponent, NewPasswordDialog,ForgotPass,ChangePasswordDialog],            
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -80,4 +80,8 @@ export class UserListComponent implements OnInit {
         this.route.navigate(['settings/userRegister']);
       });
   }
+
+  addRegister(){
+    this.route.navigate(['settings/userRegister']);
+  }
 }

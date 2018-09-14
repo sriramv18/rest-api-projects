@@ -175,6 +175,18 @@ const HORIZONTALMENUITEMS = [
     ]
   },
   {
+    state:'settings',
+    name:'Settings',
+    type:'sub',
+    icon:'settings',
+    children:[
+      {state:'userRegister',name:'User Register'},
+      {state:'userListing',name:'User Listing'},
+      {state:'masters',name:'Master Details'}
+
+    ]
+  },
+  {
     state: 'authentication',
     name: 'AUTHENTICATION',
     type: 'sub',
