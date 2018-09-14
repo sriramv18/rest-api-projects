@@ -86,7 +86,7 @@ class Template_Management_Controller extends REST_Controller {
 	}
 	
 	
-	public function saveTemplateLenderDetails()
+	public function saveTemplateLenderDetails_post()
 	{
 		$template_id = '';
 		$count = 0;
@@ -133,7 +133,7 @@ class Template_Management_Controller extends REST_Controller {
 		
 	}
 	
-	public function saveTemplateCategoryDetails()
+	public function saveTemplateCategoryDetails_post()
 	{
 		$template_id = '';
 		$count = 0;
