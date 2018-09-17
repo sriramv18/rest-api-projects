@@ -2,7 +2,7 @@
 
 
 
-/* public key for encrypt AWS JWT token
+/* public key for encrypt AWS JWT SINE_EDGE_USER_POOL_ID_TOKEN
 */
 $config['jwt_public_key'] = '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqTsyy4r3nrjumED4To7w
@@ -14,6 +14,8 @@ eq0HukzvikhFNglSw5GV0pK0syZxvu/ERMg3ja4r9an8fMayVS2YpybtRl6CCCVP
 RwIDAQAB
 -----END PUBLIC KEY-----';
 
+/* public key for encrypt AWS JWT LENDER_USER_POOL_ID_TOKEN
+*/
 $config['jwt_public_key_lender_dev'] = '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqTsyy4r3nrjumED4To7w
 r1rfjMEzL+hcF8OwGm89aHoEzKLZqr12uQw3eK7tVV97QV8aYOi0zUinHlOVx1PM
@@ -24,6 +26,8 @@ eq0HukzvikhFNglSw5GV0pK0syZxvu/ERMg3ja4r9an8fMayVS2YpybtRl6CCCVP
 RwIDAQAB
 -----END PUBLIC KEY-----';
 
+/* public key for encrypt AWS JWT VENDOR_USER_POOL_ID_TOKEN
+*/
 $config['jwt_public_key_vendor_dev'] = '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqTsyy4r3nrjumED4To7w
 r1rfjMEzL+hcF8OwGm89aHoEzKLZqr12uQw3eK7tVV97QV8aYOi0zUinHlOVx1PM

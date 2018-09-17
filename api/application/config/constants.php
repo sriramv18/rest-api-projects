@@ -89,12 +89,13 @@ defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'login'); // no errors
 defined('ROUTE_LOGIN2')        OR define('ROUTE_LOGIN2', 'login2'); // no errors
 defined('ROUTE_LOGIN3')        OR define('ROUTE_LOGIN3', 'login3'); // no errors
 
-//AWS resources Constants
+/*********************AWS resources Constants*************************************************/
 defined('PROFILEPICTUREBUCKETNAME') OR define('PROFILEPICTUREBUCKETNAME','sineedgedevprofilepic');
+/*********************AWS resources Constants*************************************************/
 
 
+/*******************Define Constants for Table Names and Primarykeys**************************/
 
-//Define Constants for Table Names and Primarykeys
 defined('INDUSTRYCLASSIFICATION') OR define('INDUSTRYCLASSIFICATION','m_industry_classification');
 defined('INDUSTRYCLASSIFICATIONID') OR define('INDUSTRYCLASSIFICATIONID','industry_classification_id');
 
@@ -202,6 +203,12 @@ defined('TEMPLATEQUESTIONID') OR define('TEMPLATEQUESTIONID','template_question_
 
 defined('TEMPLATEANSWERWEIGHTAGE') OR define('TEMPLATEANSWERWEIGHTAGE','m_template_answer_weightage');
 defined('TEMPLATEANSWERWEIGHTAGEID') OR define('TEMPLATEANSWERWEIGHTAGEID','template_answer_weightage_id');
+
+defined('PDTRIGGER') OR define('PDTRIGGER','t_pd_triggered');
+defined('PDTRIGGERID') OR define('PDTRIGGERID','pd_id');
+
+defined('PDAPPLICANTSDETAILS') OR define('PDAPPLICANTSDETAILS','t_pd_co_applicants_details');
+defined('PDAPPLICANTSDETAILSID') OR define('PDAPPLICANTSDETAILSID','pd_co_applicant_id');
 
 
 
