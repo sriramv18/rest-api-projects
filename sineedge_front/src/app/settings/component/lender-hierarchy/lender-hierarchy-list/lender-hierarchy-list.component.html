@@ -1,0 +1,58 @@
+<mat-card-content>
+    <div style="text-align: right;">
+            <button mat-raised-button color="primary" (click)="addLenderHierarchy()" [disabled]="dialogRef"> + Add LenderHierarchy</button>
+    </div>
+    <br>           
+    <!-- <div class="example-container mat-elevation-z8">
+            <table>
+                   <thead>
+                      <th header-cell>S.no</th>
+                      <th header-cell>LenderHierarchy Name</th>
+                      <th header-cell>Action</th>
+                    </thead>
+    
+                <tr *ngFor="let FL of LenderHierarchyList; let i=index">
+                  <td style="text-align:  center;">{{i+1}}</td>
+                  <td style="text-align:  center;">{{FL.Name}}</td>
+                  <td style="text-align:  center;">
+                        <button mat-raised-button mat-icon-button class="mr-1 mb-1 hover-icon" matTooltip="Edit" matTooltipPosition="above" (click)="editLenderHierarchy(FL.ID)"><mat-icon>edit</mat-icon></button>
+                        <button mat-raised-button mat-icon-button class="mr-1 mb-1 hover-icon" matTooltip="Delete" matTooltipPosition="above" (click)="deleteLenderHierarchy(FL.ID)"><mat-icon>delete_outline</mat-icon></button>
+                   </td>     
+                </tr>
+              </table>
+  
+          </div> -->
+
+          <div>
+            <!-- <mat-table [dataSource]="dataSource">  -->
+                
+            <mat-table [dataSource]="dataSource" matSort>
+              <ng-container matColumnDef="lender_hierarchy_id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{user.lender_hierarchy_id}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="lender_hierarchy">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Lender Hierarchy </mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{user.lender_hierarchy}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="isactive">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> isactive </mat-header-cell>
+                  <mat-cell *matCellDef="let user"> {{user.isactive}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let user">
+                        <button mat-raised-button mat-icon-button class="mr-1 mb-1 hover-icon" matTooltip="Edit" matTooltipPosition="above" (click)="editLenderHierarchy(user)"><mat-icon>edit</mat-icon></button>
+                        <button mat-raised-button mat-icon-button class="mr-1 mb-1 hover-icon" matTooltip="Delete" matTooltipPosition="above" (click)="deleteLenderHierarchy(user.lender_hierarchy_id)"><mat-icon>delete_outline</mat-icon></button>
+                    </mat-cell>
+                </ng-container>
+          
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+          
+          <br>
+          
+  
+</mat-card-content>

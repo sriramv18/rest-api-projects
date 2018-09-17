@@ -126,6 +126,10 @@ defined('FREQUENCYID') OR define('FREQUENCYID','frequency_id');
 defined('CUSTOMERBEHAVIOUR') OR define('CUSTOMERBEHAVIOUR','m_customer_behaviour');
 defined('CUSTOMERBEHAVIOURID') OR define('CUSTOMERBEHAVIOURID','customer_behaviour_id');
 
+defined('CUSTOMERSEGMENT') OR define('CUSTOMERSEGMENT','m_customer_segment');
+defined('CUSTOMERSEGMENTID') OR define('CUSTOMERSEGMENTID','customer_segment_id');
+
+
 defined('REGIONS') OR define('REGIONS','m_regions');
 defined('REGIONSID') OR define('REGIONSID','region_id');
 
@@ -138,8 +142,17 @@ defined('CITYID') OR define('CITYID','city_id');
 defined('BRANCH') OR define('BRANCH','m_branch');
 defined('BRANCHID') OR define('BRANCHID','branch_id');
 
+defined('PDALLOCATIONTYPE') OR define('PDALLOCATIONTYPE','m_pd_allocation_type');
+defined('PDALLOCATIONTYPEID') OR define('PDALLOCATIONTYPEID','pd_allocation_type_id');
+
 defined('PDLOCATIONAPPROACH') OR define('PDLOCATIONAPPROACH','m_pd_location_approach');
 defined('PDLOCATIONAPPROACHID') OR define('PDLOCATIONAPPROACHID','pd_location_approach_id');
+
+defined('PDSTATUS') OR define('PDSTATUS','m_pd_status');
+defined('PDSTATUSID') OR define('PDSTATUSID','pd_status_id');
+
+defined('PDTYPE') OR define('PDTYPE','m_pd_type');
+defined('PDTYPEID') OR define('PDTYPEID','pd_type_id');
 
 defined('LISTOFMASTERS') OR define('LISTOFMASTERS','c_list_of_masters');
 defined('LISTOFMASTERSID') OR define('LISTOFMASTERSID','master_id');

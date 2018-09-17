@@ -65,7 +65,8 @@ const MENUITEMS : Menu[] = [
     icon:'settings',
     children:[
       {state:'userRegister',name:'User Register'},
-      {state:'userListing',name:'User Listing'}
+      {state:'userListing',name:'User Listing'},
+      {state: 'masters',name:'Master Details'}
     ]
   },
   // {

@@ -19,7 +19,8 @@ export const AppRoutes: Routes = [{
   },{
     path:'settings',
     loadChildren:'./settings/settings.module#SettingsModule'
-  }]
+  }
+]
 }, {
   path: '',
   component: AuthLayoutComponent,
