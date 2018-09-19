@@ -146,7 +146,7 @@ defined('PDALLOCATIONTYPEID') OR define('PDALLOCATIONTYPEID','pd_allocation_type
 defined('PDLOCATIONAPPROACH') OR define('PDLOCATIONAPPROACH','m_pd_location_approach');
 defined('PDLOCATIONAPPROACHID') OR define('PDLOCATIONAPPROACHID','pd_location_approach_id');
 
-defined('PDSTATUS') OR define('PDSTATUS','m_pd_status');
+defined('PDSTATUS') OR define('PDSTATUS','c_pd_status'); 
 defined('PDSTATUSID') OR define('PDSTATUSID','pd_status_id');
 
 defined('PDTYPE') OR define('PDTYPE','m_pd_type');
