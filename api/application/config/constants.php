@@ -85,16 +85,15 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 // define login route name for token verification
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'login'); // no errors
-defined('ROUTE_LOGIN2')        OR define('ROUTE_LOGIN2', 'login2'); // no errors
-defined('ROUTE_LOGIN3')        OR define('ROUTE_LOGIN3', 'login3'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 
-//AWS resources Constants
+/*********************AWS resources Constants*************************************************/
 defined('PROFILEPICTUREBUCKETNAME') OR define('PROFILEPICTUREBUCKETNAME','sineedgedevprofilepic');
+/*********************AWS resources Constants*************************************************/
 
 
+/*******************Define Constants for Table Names and Primarykeys**************************/
 
-//Define Constants for Table Names and Primarykeys
 defined('INDUSTRYCLASSIFICATION') OR define('INDUSTRYCLASSIFICATION','m_industry_classification');
 defined('INDUSTRYCLASSIFICATIONID') OR define('INDUSTRYCLASSIFICATIONID','industry_classification_id');
 
@@ -147,7 +146,7 @@ defined('PDALLOCATIONTYPEID') OR define('PDALLOCATIONTYPEID','pd_allocation_type
 defined('PDLOCATIONAPPROACH') OR define('PDLOCATIONAPPROACH','m_pd_location_approach');
 defined('PDLOCATIONAPPROACHID') OR define('PDLOCATIONAPPROACHID','pd_location_approach_id');
 
-defined('PDSTATUS') OR define('PDSTATUS','m_pd_status');
+defined('PDSTATUS') OR define('PDSTATUS','c_pd_status'); 
 defined('PDSTATUSID') OR define('PDSTATUSID','pd_status_id');
 
 defined('PDTYPE') OR define('PDTYPE','m_pd_type');
@@ -186,9 +185,6 @@ defined('USERPROFILEHIERARCHYID') OR define('USERPROFILEHIERARCHYID','user_lende
 defined('USERPROFILEROLES') OR define('USERPROFILEROLES','m_user_roles');
 defined('USERPROFILEROLESID') OR define('USERPROFILEROLESID','user_role_id');
 
-defined('LENDER') OR define('LENDER','m_lender');
-defined('LENDERID') OR define('LENDERID','lender_id');
-
 defined('QUESTIONS') OR define('QUESTIONS','m_questions');
 defined('QUESTIONSID') OR define('QUESTIONSID','question_id');
 
@@ -215,6 +211,15 @@ defined('TEMPLATEQUESTIONID') OR define('TEMPLATEQUESTIONID','template_question_
 
 defined('TEMPLATEANSWERWEIGHTAGE') OR define('TEMPLATEANSWERWEIGHTAGE','m_template_answer_weightage');
 defined('TEMPLATEANSWERWEIGHTAGEID') OR define('TEMPLATEANSWERWEIGHTAGEID','template_answer_weightage_id');
+
+defined('PDTRIGGER') OR define('PDTRIGGER','t_pd_triggered');
+defined('PDTRIGGERID') OR define('PDTRIGGERID','pd_id');
+
+defined('PDAPPLICANTSDETAILS') OR define('PDAPPLICANTSDETAILS','t_pd_co_applicants_details');
+defined('PDAPPLICANTSDETAILSID') OR define('PDAPPLICANTSDETAILSID','pd_co_applicant_id');
+
+defined('PDSTATUS') OR define('PDSTATUS','m_pd_status');
+defined('PDSTATUSID') OR define('PDSTATUSID','pd_status_id');
 
 
 
