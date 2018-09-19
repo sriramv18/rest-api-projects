@@ -92,4 +92,8 @@ $route['listAllEntites'] = 'Entity_Management_Controller/listAllEntites';
 $route['saveNewEntity'] = 'Entity_Management_Controller/saveNewEntity'; 
 $route['saveExistEntity'] = 'Entity_Management_Controller/saveExistEntity'; 
 
+//PD RELATED
+$route['triggerNewPD'] = 'PD_Controller/triggerNewPD'; 
+$route['updateExistPD'] = 'PD_Controller/updateExistPD'; 
+$route['(listLessPDDetails/:any)'] = 'PD_Controller/listLessPDDetails/'; 
 

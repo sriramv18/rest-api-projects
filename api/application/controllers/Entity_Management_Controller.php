@@ -36,7 +36,7 @@ class Entity_Management_Controller extends REST_Controller {
 		{
 				$data['dataStatus'] = false;
 				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
+				$this->response($data,REST_Controller::HTTP_OK);
 		}
 	}
 
