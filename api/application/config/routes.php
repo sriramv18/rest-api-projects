@@ -61,7 +61,11 @@ $route['translate_uri_dashes'] = FALSE;
 */
 /* Routes regards Common Masters CRUD operations*/
 
+$route['getListOfSubProduct'] = 'Common_Masters_Controller/getListOfSubProduct'; 
 $route['getListOfBranches'] = 'Common_Masters_Controller/getListOfBranches'; 
+$route['getListOfCompany'] = 'Common_Masters_Controller/getListOfCompany'; 
+$route['getListOfState'] = 'Common_Masters_Controller/getListOfState'; 
+$route['getListOfCity'] = 'Common_Masters_Controller/getListOfCity'; 
 $route['saveBranch'] = 'Common_Masters_Controller/saveBranch'; 
 
 $route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
