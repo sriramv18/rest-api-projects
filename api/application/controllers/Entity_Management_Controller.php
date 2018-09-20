@@ -18,6 +18,7 @@ class Entity_Management_Controller extends REST_Controller {
         // Construct the parent class
         parent::__construct();
 		$this->load->model('Entity_Management_Model');
+		$this->load->library('AWS_S3');
         
     }
    
@@ -64,7 +65,15 @@ class Entity_Management_Controller extends REST_Controller {
 					}
 				}
 				
-				
+				if($entity_id != '' || $entity_id != null)
+				{
+					 if($entity['fk_entity_type_id'] == 2)// If New Entity is Lender(2) type then create a S3 bucket. 
+					 {
+						  $bucket_name = 'lender'.$entity_id;
+						  $bucket_status = $this->aws_s3->createNewBucket($bucket_name);
+						 
+					 }
+				}
 				
 				if($entity_id != '' || $entity_id != null)
 				{

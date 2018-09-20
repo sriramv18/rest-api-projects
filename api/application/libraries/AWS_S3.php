@@ -77,7 +77,7 @@ class AWS_S3
 	}
 	
 	/* This Function return signed URI of single S3 Object*/
-	public function getSingleObjectInaBucketAsSignedURI($bucket_name,$folder_name)//get as singed url
+	public function getSingleObjectInaBucketAsSignedURI($bucket_name,$folder_name,$time = '+5 minutes')//get as singed url
 	{
 		$result = array();
 		
@@ -95,12 +95,12 @@ class AWS_S3
 							'Key'    => $folder_name
 						]);
 
-				$request = $this->S3->createPresignedRequest($cmd, '+60 seconds');
+				$request = $this->S3->createPresignedRequest($cmd, $time);
 				$presignedUrl = (string) $request->getUri();
 		}
 		catch(AwsException $e)
 		{
-			echo $e->getMessage();
+			return $e->getMessage();
 		}
 		
 			return $presignedUrl;

@@ -7,6 +7,7 @@ class User_Management_Model extends SPARQ_Model {
 
 		public function __construct() {
             parent::__construct();
+			$this->load->library('AWS_S3');
         }
 		
 		
@@ -31,7 +32,29 @@ class User_Management_Model extends SPARQ_Model {
 
 	   
 	   $result = $this->db->get()->result_array();
-	   if($result !=''){
+	   
+	   if($result['profilepic'] != '' ||  $result['profilepic'] != null)
+	   {
+		  $profilepics3path = '';
+						if($result['fk_entity_id'] == 1) //1 means sine_edge Profile
+						{
+							$profilepics3path = 'sineedge/'.$result['profilepic'];
+						}
+						else if($result['fk_entity_id'] == 2)//1 means lender Profile
+						{
+							$profilepics3path = 'lender/'.$result['profilepic'];
+						}
+						else // else or 3 means vendor Profile
+						{
+							$profilepics3path = 'vendor/'.$result['profilepic'];
+						}
+						$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI(PROFILE_PICTURE_BUCKET_NAME, $profilepics3path,'+5 mintues');
+						
+						$result['profilepic_singed_url'] = $singed_uri;
+						
+	   }
+	   
+	   if($result != '' ){
 	   	
 	   		foreach($result as $key =>$roles){
 	   			$role = $this->db->get_where(USERPROFILEROLES.' as USERPROFILEROLES',array('fk_userid'=>$roles['userid'],'isactive'=>1))->result_array();

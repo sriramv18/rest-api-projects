@@ -86,10 +86,10 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'login'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListOfUsers'); // no errors
 
 /*********************AWS resources Constants*************************************************/
-defined('PROFILEPICTUREBUCKETNAME') OR define('PROFILEPICTUREBUCKETNAME','sineedgedevprofilepic');
+defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
 /*********************AWS resources Constants*************************************************/
 
 

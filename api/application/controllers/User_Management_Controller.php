@@ -89,7 +89,7 @@ class User_Management_Controller extends REST_Controller {
 						}
 				}
 				
-				$bucketname = PROFILEPICTUREBUCKETNAME;
+				$bucketname = PROFILE_PICTURE_BUCKET_NAME;
 				$key = $profilepics3path;
 				$sourcefile = $profilepic;
 				
