@@ -134,7 +134,7 @@ class Branch_Controller extends REST_Controller {
 		$s3_signed_urls = array();
 		foreach($r as $k)
 		{
-			if($k['Key'] != $folder_name.'/') array_push($s3_signed_urls,$this->aws_s3->getSingleObjectInaBucket($bucket_name,$k['Key']));
+			if($k['Key'] != $folder_name.'/') array_push($s3_signed_urls,$this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$k['Key']));
 			
 		}
 		print_r($s3_signed_urls);

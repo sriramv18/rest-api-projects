@@ -46,7 +46,7 @@ class AWS_S3
 		try {
 				$result = $this->S3->createBucket(['Bucket' => $BUCKET_NAME,'ACL' => 'authenticated-read']);
 				
-				print_r($result);
+				//print_r($result);
 			} catch (AwsException $e) {
 				// output error message if fails
 				echo $e->getMessage();
@@ -76,6 +76,7 @@ class AWS_S3
 		return $result;	
 	}
 	
+	/* This Function return signed URI of single S3 Object*/
 	public function getSingleObjectInaBucketAsSignedURI($bucket_name,$folder_name)//get as singed url
 	{
 		$result = array();
