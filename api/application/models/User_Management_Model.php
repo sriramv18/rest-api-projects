@@ -32,26 +32,29 @@ class User_Management_Model extends SPARQ_Model {
 
 	   
 	   $result = $this->db->get()->result_array();
-	   
-	   if($result['profilepic'] != '' ||  $result['profilepic'] != null)
+	 
+	   foreach($result as $key => $pics)
 	   {
-		  $profilepics3path = '';
-						if($result['fk_entity_id'] == 1) //1 means sine_edge Profile
-						{
-							$profilepics3path = 'sineedge/'.$result['profilepic'];
-						}
-						else if($result['fk_entity_id'] == 2)//1 means lender Profile
-						{
-							$profilepics3path = 'lender/'.$result['profilepic'];
-						}
-						else // else or 3 means vendor Profile
-						{
-							$profilepics3path = 'vendor/'.$result['profilepic'];
-						}
-						$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI(PROFILE_PICTURE_BUCKET_NAME, $profilepics3path,'+5 mintues');
-						
-						$result['profilepic_singed_url'] = $singed_uri;
-						
+		   if($pics['profilepic'] != '' ||  $pics['profilepic'] != null)
+		   {
+			  $profilepics3path = '';
+							if($pics['fk_entity_id'] == 1) //1 means sine_edge Profile
+							{
+								$profilepics3path = 'sineedge/'.$pics['profilepic'];
+							}
+							else if($pics['fk_entity_id'] == 2)//1 means lender Profile
+							{
+								$profilepics3path = 'lender/'.$pics['profilepic'];
+							}
+							else // else or 3 means vendor Profile
+							{
+								$profilepics3path = 'vendor/'.$pics['profilepic'];
+							}
+							$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI(PROFILE_PICTURE_BUCKET_NAME, $profilepics3path,'+5 minutes');
+							
+							$result[$key]['profilepic_singed_url'] = $singed_uri;
+							
+		   }
 	   }
 	   
 	   if($result != '' ){
