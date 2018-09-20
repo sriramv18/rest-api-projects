@@ -1056,8 +1056,7 @@ class Common_Masters_Controller extends REST_Controller {
 
 	/*  For Branch Listing */
 	public function getListOfBranches_get(){
-		echo "asfd";
-		die;
+		
 	    $columns = array('m_city.name as cityname','BRANCH.*');
 		$table = BRANCH.' as BRANCH';
 		$joins = array(
