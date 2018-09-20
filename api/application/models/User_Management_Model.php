@@ -21,7 +21,7 @@ class User_Management_Model extends SPARQ_Model {
 	   $this->db->join(DESIGNATION.' as DESIGNATION','USERPROFILE.fk_designation = DESIGNATION.designation_id and DESIGNATION.isactive = 1');
 	   $this->db->join(STATE.' as STATE','USERPROFILE.fk_state = STATE.state_id and STATE.isactive = 1');
 	   $this->db->join(CITY.' as CITY','USERPROFILE.fk_city = CITY.city_id and CITY.isactive = 1');
-	   $this->db->join(USERPROFILE.' as USERPROFILE1','USERPROFILE.fk_createdby = USERPROFILE1.userid and USERPROFILE1.isactive = 1');
+	   $this->db->join(USERPROFILE.' as USERPROFILE1','USERPROFILE.fk_createdby = USERPROFILE1.userid and USERPROFILE1.isactive = 1','LEFT');
 	   $this->db->join(USERPROFILE.' as USERPROFILE2','USERPROFILE.fk_updatedby = USERPROFILE2.userid and USERPROFILE2.isactive = 1','LEFT');
 	   $this->db->join(USERPROFILEHIERARCHY.' as USERPROFILEHIERARCHY','USERPROFILE.userid = USERPROFILEHIERARCHY.fk_user_id and USERPROFILEHIERARCHY.isactive = 1','LEFT');
 	   $this->db->join(LENDERHIERARCHY.' as LENDERHIERARCHY','USERPROFILEHIERARCHY.user_lender_hierarchy_id = LENDERHIERARCHY.lender_hierarchy_id and LENDERHIERARCHY.isactive = 1','LEFT');
