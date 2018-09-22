@@ -7,7 +7,6 @@ class User_Management_Model extends SPARQ_Model {
 
 		public function __construct() {
             parent::__construct();
-			$this->load->library('AWS_S3');
         }
 		
 		
@@ -16,10 +15,10 @@ class User_Management_Model extends SPARQ_Model {
 
 	   $result_data = array();
 	   
-	   $this->db->select('USERPROFILE.userid, USERPROFILE.aws_name, USERPROFILE.first_name as user_first_name, USERPROFILE.last_name as user_last_name, USERPROFILE.email, USERPROFILE.alt_email, USERPROFILE.mobile_no, USERPROFILE.alt_mobile_no, USERPROFILE.addressline1, USERPROFILE.addressline2, USERPROFILE.profilepic, USERPROFILE.createdon, USERPROFILE.fk_createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as created_full_name, USERPROFILE.updatedon, USERPROFILE.fk_updatedby,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name)as update_full_name, USERPROFILE.fk_entity_id,ENTITY.full_name, USERPROFILE.isactive, USERPROFILE.fk_designation,DESIGNATION.name, USERPROFILE.addressline3, USERPROFILE.fk_city,CITY.name as city_name, USERPROFILE.fk_state,STATE.name as state_name, USERPROFILE.pincode');
+	   $this->db->select('USERPROFILE.userid, USERPROFILE.aws_name, USERPROFILE.first_name as user_first_name, USERPROFILE.last_name as user_last_name, USERPROFILE.email, USERPROFILE.alt_email, USERPROFILE.mobile_no, USERPROFILE.alt_mobile_no, USERPROFILE.addressline1, USERPROFILE.addressline2, USERPROFILE.profilepic, USERPROFILE.createdon, USERPROFILE.fk_createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as created_full_name, USERPROFILE.updatedon, USERPROFILE.fk_updatedby,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name)as update_full_name, USERPROFILE.fk_entity_id,ENTITY.full_name, USERPROFILE.isactive, USERPROFILE.fk_designation,DESIGNATION.name, USERPROFILE.addressline3, USERPROFILE.fk_city,CITY.name as city_name, USERPROFILE.fk_state,STATE.name as state_name, USERPROFILE.pincode,USERPROFILEHIERARCHY.fk_hierarchy_id');
 	   $this->db->from(USERPROFILE.' as USERPROFILE');
 	   $this->db->join(ENTITY.' as ENTITY','USERPROFILE.fk_entity_id = ENTITY.entity_id and ENTITY.isactive = 1','LEFT');
-	   $this->db->join(DESIGNATION.' as DESIGNATION','USERPROFILE.fk_designation = DESIGNATION.designation_id and DESIGNATION.isactive = 1');
+	   $this->db->join(DESIGNATION.' as DESIGNATION','USERPROFILE.fk_designation = DESIGNATION.designation_id and DESIGNATION.isactive = 1','left');
 	   $this->db->join(STATE.' as STATE','USERPROFILE.fk_state = STATE.state_id and STATE.isactive = 1');
 	   $this->db->join(CITY.' as CITY','USERPROFILE.fk_city = CITY.city_id and CITY.isactive = 1');
 	   $this->db->join(USERPROFILE.' as USERPROFILE1','USERPROFILE.fk_createdby = USERPROFILE1.userid and USERPROFILE1.isactive = 1','LEFT');
@@ -32,32 +31,7 @@ class User_Management_Model extends SPARQ_Model {
 
 	   
 	   $result = $this->db->get()->result_array();
-	 
-	   foreach($result as $key => $pics)
-	   {
-		   if($pics['profilepic'] != '' ||  $pics['profilepic'] != null)
-		   {
-			  $profilepics3path = '';
-							if($pics['fk_entity_id'] == 1) //1 means sine_edge Profile
-							{
-								$profilepics3path = 'sineedge/'.$pics['profilepic'];
-							}
-							else if($pics['fk_entity_id'] == 2)//1 means lender Profile
-							{
-								$profilepics3path = 'lender/'.$pics['profilepic'];
-							}
-							else // else or 3 means vendor Profile
-							{
-								$profilepics3path = 'vendor/'.$pics['profilepic'];
-							}
-							$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI(PROFILE_PICTURE_BUCKET_NAME, $profilepics3path,'+5 minutes');
-							
-							$result[$key]['profilepic_singed_url'] = $singed_uri;
-							
-		   }
-	   }
-	   
-	   if($result != '' ){
+	   if($result !=''){
 	   	
 	   		foreach($result as $key =>$roles){
 	   			$role = $this->db->get_where(USERPROFILEROLES.' as USERPROFILEROLES',array('fk_userid'=>$roles['userid'],'isactive'=>1))->result_array();
