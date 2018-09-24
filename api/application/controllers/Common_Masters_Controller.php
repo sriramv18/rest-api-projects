@@ -999,12 +999,10 @@ class Common_Masters_Controller extends REST_Controller {
 	
 	public function saveMaster_post()
 	{
-		echo 'dfsf';
+		
 		$records = $this->post('records');
 		$table_name = $this->post('master_name');
-		print_r($records);
-		//die();
-		
+			
 		if(false !== array_key_exists(constant($table_name.'ID'),$records))  //Update Record
 		{
 			
@@ -1057,7 +1055,7 @@ class Common_Masters_Controller extends REST_Controller {
 	/*  For Branch Listing */
 	public function getListOfBranches_get(){
 		
-	    $columns = array('m_city.name as cityname','BRANCH.*');
+	    $columns = array('m_city.name as city_name','BRANCH.*');
 		$table = BRANCH.' as BRANCH';
 		$joins = array(
 			array(
