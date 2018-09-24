@@ -221,6 +221,13 @@ class User_Management_Controller extends REST_Controller {
 					{
 						
 						$this->User_Management_Model->updateRecords(array('isactive'=>0),USERPROFILEROLES,array('fk_userid'=>$records['userid']));
+						
+						
+					}
+					foreach($roles as $role)
+					{
+						
+						
 						$role_array = array('user_role'=>$role['user_role'],'fk_userid'=>$records['userid']);
 						$this->User_Management_Model->saveRecords($role_array,USERPROFILEROLES);
 					}
