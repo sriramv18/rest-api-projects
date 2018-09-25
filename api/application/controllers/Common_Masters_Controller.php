@@ -1002,6 +1002,7 @@ class Common_Masters_Controller extends REST_Controller {
 		
 		$records = $this->post('records');
 		$table_name = $this->post('master_name');
+
 		if(false !== array_key_exists(constant($table_name.'ID'),$records))  //Update Record
 		{
 			

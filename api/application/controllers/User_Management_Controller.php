@@ -217,6 +217,13 @@ class User_Management_Controller extends REST_Controller {
 					{
 						
 						$this->User_Management_Model->updateRecords(array('isactive'=>0),USERPROFILEROLES,array('fk_userid'=>$records['userid']));
+						
+						
+					}
+					foreach($roles as $role)
+					{
+						
+						
 						$role_array = array('user_role'=>$role['user_role'],'fk_userid'=>$records['userid']);
 						$this->User_Management_Model->saveRecords($role_array,USERPROFILEROLES);
 					}
@@ -229,6 +236,13 @@ class User_Management_Controller extends REST_Controller {
 						
 						$this->User_Management_Model->updateRecords(array('isactive'=>0),USERPROFILEHIERARCHY,array('fk_user_id'=>$records['userid']));
 						$hierarchy = array('fk_hierarchy_id'=>$hierarchy['lender_hierarchy_id'],'fk_user_id'=>$records['userid']);//insert hierarchy  againest lender type users
+						
+					}
+
+					foreach($lender_hierarchy as $hierarchy)
+					{
+						
+						//insert hierarchy  againest lender type users
 						$this->User_Management_Model->saveRecords($hierarchy,USERPROFILEHIERARCHY);
 					}
 				}
