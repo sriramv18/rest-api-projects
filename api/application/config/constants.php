@@ -86,11 +86,31 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListOfUsers'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'triggerNewPD'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
-/*********************AWS resources Constants*************************************************/
+/*********************END of AWS resources Constants*************************************************/
+
+/*******************Constants PD status*********************************/
+defined('TRIGGERED') OR define('TRIGGERED','1'); //First time PD Trigger.
+defined('ALLOCATED') OR define('ALLOCATED','2'); //PD Allocated to PD officer
+defined('ACCEPTED') OR define('ACCEPTED','3'); // PD Accepted PD officer after Allocation
+defined('BOUNCED') OR define('BOUNCED','4'); // PD Not accepted by PD Officer
+defined('SCHEDULED') OR define('SCHEDULED','5'); //PD Scheduled by PD Officer
+defined('INITIATED') OR define('INITIATED','6'); // PD Initiated or Ready to go a PD
+defined('STARTED') OR define('STARTED','7'); // PD started by PD officer
+defined('INPROGRESS') OR define('INPROGRESS','8'); // PD inprogress 
+defined('COMPLETED') OR define('COMPLETED','9'); // PD Completed
+defined('QC_INPROGRESS') OR define('QC_INPROGRESS','10'); // QC_INPROGRESS
+defined('QC_COMPLETED') OR define('QC_COMPLETED','11'); // QC_COMPLETED
+defined('PD_REPORT_ACCEPTED') OR define('PD_REPORT_ACCEPTED','12'); //PD_REPORT_ACCEPTED by Lender
+defined('PD_CHNAGE_REQUEST') OR define('PD_CHNAGE_REQUEST','13'); // From Lender side requesting change of PD report
+defined('ALLOCATED_TO_PARTNER') OR define('ALLOCATED_TO_PARTNER','14'); // PD Allocated to PD agency not for PD officer
+defined('ARCHIVED') OR define('ARCHIVED','15');
+defined('CANCELLED') OR define('CANCELLED','16');
+
+/*******************End Of Constants PD status**************************/
 
 
 /*******************Define Constants for Table Names and Primarykeys**************************/
@@ -141,7 +161,7 @@ defined('CITYID') OR define('CITYID','city_id');
 defined('BRANCH') OR define('BRANCH','m_branch');
 defined('BRANCHID') OR define('BRANCHID','branch_id');
 
-defined('PDALLOCATIONTYPE') OR define('PDALLOCATIONTYPE','m_pd_allocation_type');
+defined('PDALLOCATIONTYPE') OR define('PDALLOCATIONTYPE','c_pd_allocation_type');
 defined('PDALLOCATIONTYPEID') OR define('PDALLOCATIONTYPEID','pd_allocation_type_id');
 
 defined('PDLOCATIONAPPROACH') OR define('PDLOCATIONAPPROACH','m_pd_location_approach');
@@ -219,9 +239,23 @@ defined('PDTRIGGERID') OR define('PDTRIGGERID','pd_id');
 defined('PDAPPLICANTSDETAILS') OR define('PDAPPLICANTSDETAILS','t_pd_co_applicants_details');
 defined('PDAPPLICANTSDETAILSID') OR define('PDAPPLICANTSDETAILSID','pd_co_applicant_id');
 
-defined('PDSTATUS') OR define('PDSTATUS','m_pd_status');
+defined('PDSTATUS') OR define('PDSTATUS','c_pd_status');
 defined('PDSTATUSID') OR define('PDSTATUSID','pd_status_id');
 
+defined('PDTEAM') OR define('PDTEAM','m_pdteam');
+defined('PDTEAMID') OR define('PDTEAMID','pdteam_id');
+
+defined('PDTEAMCITYMAP') OR define('PDTEAMCITYMAP','m_pdteam_city_mapping');
+defined('PDTEAMCITYMAPID') OR define('PDTEAMCITYMAPID','pdteam_city_mapping_id');
+
+defined('PDOFFICIERSDETAILS') OR define('PDOFFICIERSDETAILS','m_pd_officiers_details');
+defined('PDOFFICIERSDETAILSID') OR define('PDOFFICIERSDETAILSID','pd_officier_id');
+
+defined('PDNOTIFICATION') OR define('PDNOTIFICATION','m_pdnotification');
+defined('PDNOTIFICATIONID') OR define('PDNOTIFICATIONID','pdnotification_id');
+
+defined('PDDOCUMENTS') OR define('PDDOCUMENTS','t_pd_documents');
+defined('PDDOCUMENTSID') OR define('PDDOCUMENTSID','pd_document_id');
 
 
 

@@ -23,8 +23,13 @@ class Question_Management_Controller extends REST_Controller {
    
 	public function listAllQuestions_get()
 	{
+		$page = 0;$limit = 50;$sort = 'ASC';
 		
-		$result = $this->User_Management_Model->$listAllQuestions();
+		if($this->get('page')) { $page  = $this->get('page'); }
+		if($this->get('limit')){ $limit = $this->get('limit'); }
+		if($this->get('sort')) { $sort  = $this->get('sort'); }
+		
+		$result = $this->User_Management_Model->$listAllQuestions($page,$limit,$sort);
 		if($result['data_status'])
 		{
 				$data['dataStatus'] = true;
@@ -40,47 +45,47 @@ class Question_Management_Controller extends REST_Controller {
 		}
 	}
 
-	public function saveNewQuestion_post()// Save Array of question and it's answers(Single too)
+	public function saveNewQuestion_post()// Save  single question and it's answers
 	{
 		
 		$records = $this->post('records');
 		$count = 0;
-		foreach($records as $record)
-		{
+		
 			$answers = array();
-			if(array_key_exists('answers',$record))
+			if(array_key_exists('answers',$records))
 			{
-				$answers = $record['answers'];
-				unset($record['ansewrs']);
+				$answers = $records['answers'];
+				unset($records['ansewrs']);
 			}
 			
-			$question_id = $this->db->saveRecords($record,QUESTIONS);
+			$question_id = $this->db->saveRecords($records,QUESTIONS);
 			
 			if($question_id != '' || $question_id != null)
 			{
-				$count++;
+				//$count++;
 				foreach($answers as $answer)
 				{
-					$temp_answers = array('fk_question_id' => $question_id, 'answer' =>$answer , 'createdon' =>$record['createdon'] , 'fk_createdby' =>$record['fk_createdby'] , 'updatedon' =>$record['updatedon'], 'fk_updatedby' =>$record['fk_updatedby']);
-					$this->db->saveRecords($temp_answers,QUESTIONANSWERS);
+					$temp_answers = array('fk_question_id' => $question_id, 'answer' =>$answer , 'createdon' =>$records['createdon'] , 'fk_createdby' =>$records['fk_createdby']);
+					$child_id = $this->db->saveRecords($temp_answers,QUESTIONANSWERS);
+					
 				}
 			}
 			
 			
-		}
 		
-		if($count != 0 && $count == count($records))
+		
+		if($question_id != '' || $question_id != null)
 		{
 			        $data['dataStatus'] = true;
 					$data['status'] = REST_Controller::HTTP_OK;
-					$data['record'] = $entity_id;
+					$data['record'] = $question_id;
 					$this->response($data,REST_Controller::HTTP_OK);
 		}
 		else
 		{
 					$data['dataStatus'] = false;
 					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-					$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+					$this->response($data,REST_Controller::HTTP_OK);
 			
 		}
 }
@@ -107,7 +112,7 @@ class Question_Management_Controller extends REST_Controller {
 				$affected_rows_child = $this->db->updateRecords($answer,QUESTIONANSWERS,$where_condtion_array); 
 			}
 			
-			if($affected_rows == 1 && (count($answers) == $affected_rows_child))
+			if($affected_rows == 1) //&& (count($answers) == $affected_rows_child))
 			{
 					$data['dataStatus'] = true;
 					$data['status'] = REST_Controller::HTTP_OK;
@@ -119,7 +124,7 @@ class Question_Management_Controller extends REST_Controller {
 			{
 					$data['dataStatus'] = false;
 					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-					$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+					$this->response($data,REST_Controller::HTTP_OK);
 			
 			
 			}

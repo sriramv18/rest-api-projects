@@ -25,12 +25,10 @@ class SPARQ_Model extends CI_Model {
 		
 	}
 	
-	public function selectRecords($table_name,$where_condition_array = array(),$print_query = '',$limit = 50,$offset = 0,$order = 'ASC',$order_by_colum_name = '')
+	public function selectRecords($table_name,$where_condition_array = array(),$limit = 50,$offset = 0,$order = 'ASC',$order_by_colum_name = '',$print_query = '')
 	{		
 		$data =  $this->db->order_by($order_by_colum_name,$order)->get_where($table_name,$where_condition_array,$limit,$offset)->result_array();//only AND condition
-	
-
-		if($print_query == 1)
+		if($print_query == '1')
 		{
 			print_r($this->db->last_query());
 		}
@@ -48,22 +46,20 @@ class SPARQ_Model extends CI_Model {
 		return $data;
 	}
 	
-	public  function selectCustomRecords($fields = '', $where = array(), $or_where_total = array(),$table = '', $limit = '', $order_by_colum_name = '', $order_by = 'ASC', $group_by = '',$print_query = '') {
+	public  function selectCustomRecords($fields = '', $where_condition_array = array(),$table = '', $or_where_total = array(), $limit = '', $order_by_colum_name = '', $order_by = 'ASC', $group_by = '',$print_query = '') {
 		
 		
-		
-        //$data = array();
-        if ($fields != '') {
+		if ($fields != '') {
             $this->db->select($fields);
         }
 
-        if (count($where)) {
-            $this->db->where($where);
+        if (count($where_condition_array)) {
+            $this->db->where($where_condition_array);
         }
 		
 		if (count($or_where_total)) {
-            
-			foreach($or_where_total as $or_where)
+           
+		   foreach($or_where_total as $or_where)
 			{
 				$this->db->or_where($or_where);
 			}

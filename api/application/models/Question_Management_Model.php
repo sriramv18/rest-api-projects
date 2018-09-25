@@ -10,18 +10,20 @@ class Question_Management_Model extends SPARQ_Model {
         }
 		
 		
-   public function listAllQuestions()
+   public function listAllQuestions($page,$limit,$sort)
    {
 	  
-	  
+	   	
 	   $this->db->SELECT('QUESTIONS.question_id, QUESTIONS.question, QUESTIONS.description, QUESTIONS.fk_question_catagory,QUESTIONCATEGORY.category_name, QUESTIONS.fk_question_answertype,QUESTIONANSWERTYPE.answer_type_name,QUESTIONS.isactive, QUESTIONS.createdon, QUESTIONS.fk_createdby, QUESTIONS.updatedon, QUESTIONS.fk_updatedby,concat(USERPROFILE.first_name,' ',USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name,' ',USERPROFILE1.last_name) as updatedby');
 	   $this->db->FROM(QUESTIONS.' as QUESTIONS');
 	   $this->db->JOIN(QUESTIONANSWERTYPE.' as QUESTIONANSWERTYPE','QUESTIONS.fk_question_answertype = QUESTIONANSWERTYPE.question_answer_type_id AND QUESTIONANSWERTYPE.isactive = 1');
 	   $this->db->JOIN(QUESTIONCATEGORY.' as QUESTIONCATEGORY','QUESTIONS.fk_question_catagory = QUESTIONCATEGORY.question_categroy_id AND QUESTIONCATEGORY.isactive = 1');
 	   $this->db->JOIN(USERPROFILE.' as USERPROFILE','QUESTIONS.fk_createdby = USERPROFILE.userid AND USERPROFILE.isactive = 1');
 	   $this->db->JOIN(USERPROFILE.' as USERPROFILE1','QUESTIONS.fk_updatedby = USERPROFILE1.userid AND USERPROFILE1.isactive = 1');
+	   $this->db->ORDER_BY('QUESTIONS.question_id',$sort);
+	   $this->db->LIMIT($page,$limit);
 	   
-	   $result = $this->db->get()->result_array();
+	   $result = $this->db->GET()->result_array();
 	   
 	   foreach($result as $key => $r)
 	   {

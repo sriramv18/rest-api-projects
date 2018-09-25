@@ -63,4 +63,13 @@ class PD_Model extends SPARQ_Model {
 			   }
 			
 		}
+		
+		// get Lender Specific PDOfficers List And Currently Allocated PD Values form PDOFFICIERSDETAILS table
+		public function getLenderSpecificPDOfficersListAndAllocatedValues($lender_specific_pdofficers_list)
+		{
+			$this->db->SELECT('fk_user_id,allocated');
+			$this->db->FROM(PDOFFICIERSDETAILS);
+			$this->db->WHERE_IN('fk_user_id',$lender_specific_pdofficers_list);
+			$result = $this->db->get()->result_array();
+		}
 }

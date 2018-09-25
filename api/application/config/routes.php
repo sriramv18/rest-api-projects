@@ -87,7 +87,7 @@ $route['saveTemplateLenderDetails'] = 'Template_Management_Controller/saveTempla
 $route['saveTemplateCategoryDetails'] = 'Template_Management_Controller/saveTemplateCategoryDetails'; 
 
 //QUESTION MANAGEMENT
-$route['listAllQuestions'] = 'Question_Management_Controller/listAllQuestions'; 
+$route['(listAllQuestions/:any)'] = 'Question_Management_Controller/listAllQuestions/'; 
 $route['saveNewQuestion'] = 'Question_Management_Controller/saveNewQuestion'; 
 $route['saveExistQuestion'] = 'Question_Management_Controller/saveExistQuestion'; 
 

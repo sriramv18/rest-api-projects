@@ -18,7 +18,7 @@ class User_Management_Controller extends REST_Controller {
         // Construct the parent class
         parent::__construct();
 		$this->load->model('User_Management_Model');
-        
+        $this->load->library('AWS_S3');
     }
    
 	public function listAllUsers_get()
@@ -44,13 +44,9 @@ class User_Management_Controller extends REST_Controller {
 
 	public function saveNewUser_post()
 	{
-		$this->load->library('AWS_S3');
-		//print_r($this->post('roles'));die;
-		//print_r($this->post());die;
-		//print_r($_FILES['profilepic']['name']);die;
+		
 		$roles = "";
 		$lender_hierarchy = "";
-		//print_r($this->post('roles'));die;
 		if($this->post('roles')){ $roles = $this->post('roles'); }
 		
 		if($this->post('lender_hierarchy')){ $lender_hierarchy = json_decode($this->post('lender_hierarchy'),true); }
@@ -191,7 +187,7 @@ class User_Management_Controller extends REST_Controller {
 						}
 				}
 				
-				$bucketname = PROFILEPICTUREBUCKETNAME;
+				$bucketname = PROFILE_PICTURE_BUCKET_NAME;
 				$key = $profilepics3path;
 				$sourcefile = $profilepic;
 				
@@ -275,5 +271,49 @@ class User_Management_Controller extends REST_Controller {
 				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
 				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
 		}
+	}
+	
+	/* Get Signed URL for profile picture 
+	@params userid , entity id, profilepic name 
+	 URL expires 5 min
+	*/
+	public function getSingedProfilePicURL()
+	{
+		$userid = $this->post('userid');
+		$entityid = $this->post('entityid');
+		$profilepic = $this->post('profilepic');
+		
+		$profilepics3path = '';
+							if($entityid == 1) //1 means sine_edge Profile
+							{
+								$profilepics3path = 'sineedge/'.$profilepic;
+							}
+							else if($entityid == 2)//1 means lender Profile
+							{
+								$profilepics3path = 'lender/'.$profilepic;
+							}
+							else // else or 3 means vendor Profile
+							{
+								$profilepics3path = 'vendor/'.$profilepic;
+							}
+							$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI(PROFILE_PICTURE_BUCKET_NAME, $profilepics3path,'+5 minutes');
+		
+		if($singed_uri != null || $singed_uri != '')
+		{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $singed_uri;
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{		
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$data['msg'] = 'No Profile URL Available';
+				$this->response($data,REST_Controller::HTTP_OK);
+			
+		}
+							
+							
 	}
 }
