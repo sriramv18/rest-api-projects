@@ -69,7 +69,10 @@ $route['getListOfCity'] = 'Common_Masters_Controller/getListOfCity';
 $route['saveBranch'] = 'Common_Masters_Controller/saveBranch'; 
 
 $route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
-$route['saveMaster'] = 'Common_Masters_Controller/saveMaster'; 
+$route['saveMaster'] = 'Common_Masters_Controller/saveMaster';
+$route['savePDAllocationType'] = 'Common_Masters_Controller/savePDAllocationType';
+$route['savePDNotifications'] = 'Common_Masters_Controller/savePDNotifications';
+$route['getPDNotificationsList'] = 'Common_Masters_Controller/getPDNotificationsList';
 
 
 

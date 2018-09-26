@@ -1214,5 +1214,78 @@ class Common_Masters_Controller extends REST_Controller {
 	}
 	/*  End of City Listing */
 
+	/* For only update PDAllocationType */
+	public function savePDAllocationType_post()
+	{
+		
+		$records = $this->post('records');
+		$count = 0;
+		
+			
+		foreach( $records as $record){
+				$where_condition_array = array('pd_allocation_type_id' => $record['pd_allocation_type_id']);	
+				$result = $this->Common_Masters_Model->updateRecords($record,PDALLOCATIONTYPE,$where_condition_array);
+				if($result == 1)
+				{
+					$count++;
+				}
+		}
+
+		if($count == count($records))
+		{
+				
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else  
+		{		
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+	}
+	/**End of PD-Allocation-Type  */
+	
+	
+	/* For update PD Notification Table info*/
+	
+	public function savePDNotifications_post()
+	{
+		
+	}
+	
+	
+	/* For Get List PD Notifications config's */
+	
+	public function getPDNotificationsList_get()
+	{
+		$columns = array('PDNOTIFICATION.pdnotification_id', 'PDNOTIFICATION.fk_pd_status_id','PDSTATUS.pd_status_name', 'PDNOTIFICATION.sms_lender', 'PDNOTIFICATION.sms_pdofficer', 'PDNOTIFICATION.sms_pdincharge', 'PDNOTIFICATION.mail_lender','PDNOTIFICATION.mail_pdincharge', 'PDNOTIFICATION.mail_pdofficer',  'PDNOTIFICATION.isactive');
+		$table = PDNOTIFICATION." as PDNOTIFICATION";
+		$joins = array(
+		
+				array('table' => PDSTATUS.' as PDSTATUS',
+				'condition' => 'PDNOTIFICATION.fk_pd_status_id = PDSTATUS.pd_status_id ',
+				'jointype' => 'INNER')
+			);
+		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
+		if(count($result))
+		{
+				
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else  
+		{		
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+		
+		
+	}
 
 }

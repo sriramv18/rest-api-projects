@@ -21,7 +21,7 @@ class AWS_SES
 		
 		//echo "listAllBuckets";
 			$this->SES = SesClient::factory($this->ses_properties);
-        $this->sendMail();
+        $this->createCustomVerificationEmailTemplate();
 		
     }
 	
@@ -31,14 +31,14 @@ class AWS_SES
 
 				// Replace these sample addresses with the addresses of your recipients. If
 				// your account is still in the sandbox, these addresses must be verified.
-				$recipient_emails = ['sanjeev.p@venbainfotech.com'];
+				$recipient_emails = ['vitvelz@gmail.com'];
 
 				// Specify a configuration set. If you do not want to use a configuration
 				// set, comment the following variable, and the
 				// 'ConfigurationSetName' => $configuration_set argument below.
 				//$configuration_set = 'ConfigSet';
 
-				$subject = 'Amazon SES test (AWS SDK for PHP)';
+				$subject = 'SineEdge Test';
 				$plaintext_body = 'This email was sent with Amazon SES using the AWS SDK for PHP.' ;
 				$html_body =  '<h1>AWS Amazon Simple Email Service Test Email</h1>'.
 							  '<p>This email was sent with <a href="https://aws.amazon.com/ses/">'.
@@ -82,6 +82,37 @@ class AWS_SES
 					echo "\n";
 				}
 	}
+	
+	public function verifyEmailAddress($email)
+	{
+		$result = $this->SES->verifyEmailIdentity([
+		'EmailAddress' => $email,
+			]);
+	}	
+
+		/*
+			$result = $client->sendCustomVerificationEmail([
+			'ConfigurationSetName' => '<string>',
+			'EmailAddress' => '<string>', // REQUIRED
+			'TemplateName' => '<string>', // REQUIRED
+			]);*/
+			
+			
+		public function createCustomVerificationEmailTemplate()
+	{	
+			$result = $this->SES->createCustomVerificationEmailTemplate([
+				'FailureRedirectionURL' => 'www.google.com', // REQUIRED
+				'FromEmailAddress' => 'vitvelz@gmail.com', // REQUIRED
+				'SuccessRedirectionURL' => 'www.gmail.com', // REQUIRED
+				'TemplateContent' => '<h1>Heading</h1>', // REQUIRED
+				'TemplateName' => 'myCustom', // REQUIRED
+				'TemplateSubject' => 'customTemlate', // REQUIRED
+			]);
+			
+			print_r($result);
+	}
+		
+		
 	
 	
 	

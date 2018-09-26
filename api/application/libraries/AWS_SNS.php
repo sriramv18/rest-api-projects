@@ -19,7 +19,7 @@ class AWS_SNS
         // Construct the parent class
         //parent::__construct();
 		$this->sns = SnsClient::factory($this->sns_properties);
-        $this->sendSMS();
+        
 		
     }
 	
@@ -53,9 +53,7 @@ class AWS_SNS
 		// var_dump($result);
 		// echo "</pre>";
 			}
-	
-	
-	
+		
 	
 	
 	

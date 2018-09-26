@@ -19,6 +19,7 @@ class PD_Controller extends REST_Controller {
         parent::__construct();
 		$this->load->model('PD_Model');
 		$this->load->library('AWS_S3');
+		$this->load->library('AWS_SES');
         
     }
     /***********************Get get List Of Lenders  Details for PD Trigger Page************************/
@@ -171,7 +172,9 @@ class PD_Controller extends REST_Controller {
 	/********For Save New PD while Trigger****/
 	public function triggerNewPD_post()
 	{
-		
+		echo "TRIGGER";
+		//$this->aws_ses->verifyEmailAddress('velmurugan.s@venbainfotech.com');
+		die();
 		$pd_details = json_decode($this->post('pd_details'),true);
 		$pd_applicant_details = json_decode($this->post('pd_applicant_details'),true);
 		$pd_document_titles = json_decode($this->post('pd_document_titles'),true);
