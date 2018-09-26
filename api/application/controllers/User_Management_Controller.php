@@ -44,18 +44,19 @@ class User_Management_Controller extends REST_Controller {
 
 	public function saveNewUser_post()
 	{
-		
+		//print_r(json_decode($this->post('pdofficer'),true));die;
 		$roles = "";
 		$lender_hierarchy = "";
-		if($this->post('roles')){ $roles = $this->post('roles'); }
-		
+		$pdofficer = "";
+		if($this->post('roles')){ $roles = json_decode($this->post('roles'),true); }
+		if($this->post('pdofficer')){ $pdofficer = json_decode($this->post('pdofficer'),true);}
 		if($this->post('lender_hierarchy')){ $lender_hierarchy = json_decode($this->post('lender_hierarchy'),true); }
 		
 		
 		$records = json_decode($this->post('records'),true);
 
 		//print_r($records);die;
-		$roles = json_decode($this->post('roles'),true);
+		//$roles = json_decode($this->post('roles'),true);
 		//print_r(json_decode($this->post('lender_hierarchy'),true));die;
 		//$lender_hierarchy  = json_decode($this->post('lender_hierarchy'),true);
 		//echo $_FILES['profilepic']['name'];die;
@@ -128,7 +129,12 @@ class User_Management_Controller extends REST_Controller {
 						$this->User_Management_Model->saveRecords($hierarchy,USERPROFILEHIERARCHY);
 					}
 				}
-				
+
+				if($pdofficer != ""){
+					$pdofficer['fk_user_id'] = $user_id;
+					print_r($pdofficer);
+					$this->User_Management_Model->saveRecords($pdofficer,PDOFFICIERSDETAILS);
+				}
 				if($user_id != '' || $user_id != null)
 				{
 					$data['dataStatus'] = true;
@@ -152,7 +158,7 @@ class User_Management_Controller extends REST_Controller {
 		$lender_hierarchy = "";
 		
 		if($this->post('roles')){ $roles = $this->post('roles'); }
-		
+		if($this->post('pdofficer')){ $pdofficer = json_decode($this->post('pdofficer'),true);}		
 		if($this->post('lender_hierarchy')){ $lender_hierarchy = json_decode($this->post('lender_hierarchy'),true); }
 		
 		
@@ -245,6 +251,10 @@ class User_Management_Controller extends REST_Controller {
 						//insert hierarchy  againest lender type users
 						$this->User_Management_Model->saveRecords($hierarchy,USERPROFILEHIERARCHY);
 					}
+				}
+
+				if($pdofficer != ""){
+					$this->User_Management_Model->updateRecords($pdofficer,PDOFFICIERSDETAILS,$pdofficer['fk_user_id']);
 				}
 				
 				if($modified != '' || $modified != null || $modified != 0)
