@@ -18,16 +18,14 @@ class AWS_SNS
     {
         // Construct the parent class
         //parent::__construct();
-		
-		//echo "listAllBuckets";
-			$this->sns = SnsClient::factory($this->sns_properties);
+		$this->sns = SnsClient::factory($this->sns_properties);
         $this->sendSMS();
 		
     }
 	
-	public function sendSMS()
+	public function sendSMS($msg,$mobile_no)
 	{
-		echo "SEND SMS CALLED";
+		//echo "SEND SMS CALLED";
 		// $args = array(
 			// "SenderID" => "TEMP",
 			// "SMSType" => "Transactional",
@@ -46,14 +44,14 @@ class AWS_SNS
 								'StringValue' => 'Transactional'
 							]
 						],
-				"Message" => "Hi Rajasekar this is from AWS SNS service.",
-				"PhoneNumber" => "+917402014940"
+				"Message" => $msg,
+				"PhoneNumber" => $mobile_no
 			);
 
 		$result = $this->sns->publish($args);
-		echo "<pre>";
-		var_dump($result);
-		echo "</pre>";
+		// echo "<pre>";
+		// var_dump($result);
+		// echo "</pre>";
 			}
 	
 	

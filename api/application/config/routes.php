@@ -71,7 +71,7 @@ $route['saveBranch'] = 'Common_Masters_Controller/saveBranch';
 $route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
 $route['saveMaster'] = 'Common_Masters_Controller/saveMaster'; 
 
-$route['login'] = 'Branch_Controller/testAWSS3'; 
+
 
 
 //USER MANAGEMENT

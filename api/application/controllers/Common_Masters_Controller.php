@@ -993,7 +993,7 @@ class Common_Masters_Controller extends REST_Controller {
 			{
 				$data['dataStatus'] = false;
 				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
+				$this->response($data,REST_Controller::HTTP_OK);
 			}
 		}
 	
@@ -1023,7 +1023,7 @@ class Common_Masters_Controller extends REST_Controller {
 				
 				$data['dataStatus'] = false;
 				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-				$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+				$this->response($data,REST_Controller::HTTP_OK);
 			}
 		}
 		else 	// Insert Record	
@@ -1042,7 +1042,7 @@ class Common_Masters_Controller extends REST_Controller {
 			{
 				$data['dataStatus'] = false;
 				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
-				$this->response($data,REST_Controller::HTTP_SERVICE_UNAVAILABLE);
+				$this->response($data,REST_Controller::HTTP_OK);
 			}
 		}
 		
