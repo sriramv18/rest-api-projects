@@ -29,7 +29,7 @@ class Question_Management_Controller extends REST_Controller {
 		if($this->get('limit')){ $limit = $this->get('limit'); }
 		if($this->get('sort')) { $sort  = $this->get('sort'); }
 		
-		$result = $this->User_Management_Model->$listAllQuestions($page,$limit,$sort);
+		$result = $this->Question_Management_Model->$listAllQuestions($page,$limit,$sort);
 		if($result['data_status'])
 		{
 				$data['dataStatus'] = true;
