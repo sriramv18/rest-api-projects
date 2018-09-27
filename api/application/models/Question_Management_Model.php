@@ -27,7 +27,7 @@ class Question_Management_Model extends SPARQ_Model {
 	  
 	   foreach($result as $key => $r)
 	   {
-		   $this->db->SELECT('QUESTIONANSWERS.question_answer_id, QUESTIONANSWERS.fk_question_id, QUESTIONANSWERS.answer, QUESTIONANSWERS.createdon, QUESTIONANSWERS.fk_createdby, QUESTIONANSWERS.updatedon, QUESTIONANSWERS.fk_updatedby, QUESTIONS.isactive');
+		   $this->db->SELECT('QUESTIONANSWERS.question_answer_id, QUESTIONANSWERS.fk_question_id, QUESTIONANSWERS.answer, QUESTIONANSWERS.createdon, QUESTIONANSWERS.fk_createdby, QUESTIONANSWERS.updatedon, QUESTIONANSWERS.fk_updatedby, QUESTIONANSWERS.isactive');
 		   $this->db->FROM(QUESTIONANSWERS.' as QUESTIONANSWERS');
 		   $this->db->JOIN(QUESTIONS.' as QUESTIONS','QUESTIONANSWERS.fk_question_id = QUESTIONS.question_id');
 		   $this->db->JOIN(USERPROFILE.' as USERPROFILE','QUESTIONANSWERS.fk_createdby = USERPROFILE.userid ');
