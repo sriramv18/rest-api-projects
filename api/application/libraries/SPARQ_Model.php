@@ -13,7 +13,7 @@ class SPARQ_Model extends CI_Model {
 
 	}
 	
-	public  function saveRecords($record_data = array(),$table_name,$print_query = '1')
+	public  function saveRecords($record_data = array(),$table_name,$print_query = '')
 	{
 		
 		$this->db->insert($table_name,$record_data);
