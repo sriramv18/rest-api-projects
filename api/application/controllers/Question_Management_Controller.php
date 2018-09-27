@@ -65,7 +65,7 @@ class Question_Management_Controller extends REST_Controller {
 				//$count++;
 				foreach($answers as $answer)
 				{
-					$temp_answers = array('fk_question_id' => $question_id, 'answer' =>$answer , 'createdon' =>$records['createdon'] , 'fk_createdby' =>$records['fk_createdby']);
+					$temp_answers = array('fk_question_id' => $question_id, 'answer' =>$answer['answer'] , 'createdon' =>$records['createdon'] , 'fk_createdby' =>$records['fk_createdby']);
 					$child_id = $this->db->saveRecords($temp_answers,QUESTIONANSWERS);
 					
 				}
