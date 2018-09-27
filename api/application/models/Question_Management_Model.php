@@ -19,19 +19,19 @@ class Question_Management_Model extends SPARQ_Model {
 	   $this->db->JOIN(QUESTIONANSWERTYPE.' as QUESTIONANSWERTYPE','QUESTIONS.fk_question_answertype = QUESTIONANSWERTYPE.question_answer_type_id AND QUESTIONANSWERTYPE.isactive = 1');
 	   $this->db->JOIN(QUESTIONCATEGORY.' as QUESTIONCATEGORY','QUESTIONS.fk_question_catagory = QUESTIONCATEGORY.question_categroy_id AND QUESTIONCATEGORY.isactive = 1');
 	   $this->db->JOIN(USERPROFILE.' as USERPROFILE','QUESTIONS.fk_createdby = USERPROFILE.userid AND USERPROFILE.isactive = 1');
-	   $this->db->JOIN(USERPROFILE.' as USERPROFILE1','QUESTIONS.fk_updatedby = USERPROFILE1.userid AND USERPROFILE1.isactive = 1');
+	   $this->db->JOIN(USERPROFILE.' as USERPROFILE1','QUESTIONS.fk_updatedby = USERPROFILE1.userid AND USERPROFILE1.isactive = 1','LEFT');
 	   $this->db->ORDER_BY('QUESTIONS.question_id',$sort);
 	   $this->db->LIMIT($page,$limit);
 	   
 	   $result = $this->db->GET()->result_array();
-	   
+	  
 	   foreach($result as $key => $r)
 	   {
-		   $this->db->SELECT('QUESTIONANSWERS.question_answer_id, QUESTIONANSWERS.fk_question_id, QUESTIONANSWERS.answer, QUESTIONANSWERS.createdon, QUESTIONANSWERS.fk_createdby, QUESTIONANSWERS.updatedon, QUESTIONANSWERS.fk_updatedby, isactive');
+		   $this->db->SELECT('QUESTIONANSWERS.question_answer_id, QUESTIONANSWERS.fk_question_id, QUESTIONANSWERS.answer, QUESTIONANSWERS.createdon, QUESTIONANSWERS.fk_createdby, QUESTIONANSWERS.updatedon, QUESTIONANSWERS.fk_updatedby, QUESTIONS.isactive');
 		   $this->db->FROM(QUESTIONANSWERS.' as QUESTIONANSWERS');
 		   $this->db->JOIN(QUESTIONS.' as QUESTIONS','QUESTIONANSWERS.fk_question_id = QUESTIONS.question_id AND QUESTIONS.isactive');
 		   $this->db->JOIN(USERPROFILE.' as USERPROFILE','QUESTIONANSWERS.fk_createdby = USERPROFILE.userid AND USERPROFILE.isactive = 1');
-		   $this->db->JOIN(USERPROFILE.' as USERPROFILE1','QUESTIONANSWERS.fk_updatedby = USERPROFILE1.userid AND USERPROFILE1.isactive = 1');
+		   $this->db->JOIN(USERPROFILE.' as USERPROFILE1','QUESTIONANSWERS.fk_updatedby = USERPROFILE1.userid AND USERPROFILE1.isactive = 1','LEFT');
 		   $this->db->where('QUESTIONS.question_id',$r['question_id']);
 		   $answers_data = $this->db->get()->result_array();
 		   

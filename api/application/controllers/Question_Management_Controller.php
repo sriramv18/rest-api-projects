@@ -55,8 +55,9 @@ class Question_Management_Controller extends REST_Controller {
 			if(array_key_exists('answers',$records))
 			{
 				$answers = $records['answers'];
-				unset($records['ansewrs']);
+				unset($records['answers']);
 			}
+			
 			
 			$question_id = $this->Question_Management_Model->saveRecords($records,QUESTIONS);
 			
@@ -65,8 +66,10 @@ class Question_Management_Controller extends REST_Controller {
 				//$count++;
 				foreach($answers as $answer)
 				{
+					
+					
 					$temp_answers = array('fk_question_id' => $question_id, 'answer' =>$answer['answer'] , 'createdon' =>$records['createdon'] , 'fk_createdby' =>$records['fk_createdby']);
-					$child_id = $this->db->saveRecords($temp_answers,QUESTIONANSWERS);
+					$child_id = $this->Question_Management_Models->saveRecords($temp_answers,QUESTIONANSWERS);
 					
 				}
 			}
