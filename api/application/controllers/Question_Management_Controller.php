@@ -23,13 +23,13 @@ class Question_Management_Controller extends REST_Controller {
    
 	public function listAllQuestions_get()
 	{
-		$page = 0;$limit = 50;$sort = 'ASC';
+		$page = 0;$limit = 0;$sort = 'ASC';
 		
 		if($this->get('page')) { $page  = $this->get('page'); }
 		if($this->get('limit')){ $limit = $this->get('limit'); }
 		if($this->get('sort')) { $sort  = $this->get('sort'); }
 		
-		$result = $this->Question_Management_Model->$listAllQuestions($page,$limit,$sort);
+		$result = $this->Question_Management_Model->listAllQuestions($page,$limit,$sort);
 		if($result['data_status'])
 		{
 				$data['dataStatus'] = true;
@@ -58,7 +58,7 @@ class Question_Management_Controller extends REST_Controller {
 				unset($records['ansewrs']);
 			}
 			
-			$question_id = $this->db->saveRecords($records,QUESTIONS);
+			$question_id = $this->Question_Management_Model->saveRecords($records,QUESTIONS);
 			
 			if($question_id != '' || $question_id != null)
 			{

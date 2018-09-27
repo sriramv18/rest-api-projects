@@ -14,7 +14,7 @@ class Question_Management_Model extends SPARQ_Model {
    {
 	  
 	   	
-	   $this->db->SELECT('QUESTIONS.question_id, QUESTIONS.question, QUESTIONS.description, QUESTIONS.fk_question_catagory,QUESTIONCATEGORY.category_name, QUESTIONS.fk_question_answertype,QUESTIONANSWERTYPE.answer_type_name,QUESTIONS.isactive, QUESTIONS.createdon, QUESTIONS.fk_createdby, QUESTIONS.updatedon, QUESTIONS.fk_updatedby,concat(USERPROFILE.first_name," " ,USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby');
+	   $this->db->SELECT('QUESTIONS.question_id, QUESTIONS.question, QUESTIONS.description, QUESTIONS.fk_question_catagory,QUESTIONCATEGORY.categroy_name, QUESTIONS.fk_question_answertype,QUESTIONANSWERTYPE.answer_type_name,QUESTIONS.isactive, QUESTIONS.createdon, QUESTIONS.fk_createdby, QUESTIONS.updatedon, QUESTIONS.fk_updatedby,concat(USERPROFILE.first_name," " ,USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby');
 	   $this->db->FROM(QUESTIONS.' as QUESTIONS');
 	   $this->db->JOIN(QUESTIONANSWERTYPE.' as QUESTIONANSWERTYPE','QUESTIONS.fk_question_answertype = QUESTIONANSWERTYPE.question_answer_type_id AND QUESTIONANSWERTYPE.isactive = 1');
 	   $this->db->JOIN(QUESTIONCATEGORY.' as QUESTIONCATEGORY','QUESTIONS.fk_question_catagory = QUESTIONCATEGORY.question_categroy_id AND QUESTIONCATEGORY.isactive = 1');
