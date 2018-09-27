@@ -172,9 +172,10 @@ class PD_Controller extends REST_Controller {
 	/********For Save New PD while Trigger****/
 	public function triggerNewPD_post()
 	{
-		// echo "TRIGGER";
-		// //$this->aws_ses->verifyEmailAddress('velmurugan.s@venbainfotech.com');
-		// die();
+		echo "TRIGGER";
+		//$this->aws_ses->verifyEmailIdentity('raro@spindl-e.com');
+		//$this->aws_ses->sendMail('raro@spindl-e.com');
+		die();
 		$pd_details = json_decode($this->post('pd_details'),true);
 		$pd_applicant_details = json_decode($this->post('pd_applicant_details'),true);
 		$pd_document_titles = json_decode($this->post('pd_document_titles'),true);

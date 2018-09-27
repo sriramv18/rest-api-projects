@@ -21,7 +21,7 @@ class AWS_SES
 		
 		//echo "listAllBuckets";
 			$this->SES = SesClient::factory($this->ses_properties);
-        $this->createCustomVerificationEmailTemplate();
+        //$this->verifyEmailAddress();
 		
     }
 	
@@ -31,7 +31,7 @@ class AWS_SES
 
 				// Replace these sample addresses with the addresses of your recipients. If
 				// your account is still in the sandbox, these addresses must be verified.
-				$recipient_emails = ['vitvelz@gmail.com'];
+				$recipient_emails = ['raro@spindl-e.com'];
 
 				// Specify a configuration set. If you do not want to use a configuration
 				// set, comment the following variable, and the
@@ -83,27 +83,31 @@ class AWS_SES
 				}
 	}
 	
-	public function verifyEmailAddress($email)
+	public function verifyEmailIdentity($email = "")
 	{
 		$result = $this->SES->verifyEmailIdentity([
 		'EmailAddress' => $email,
 			]);
+			
+			print_r($result);
 	}	
-
-		/*
-			$result = $client->sendCustomVerificationEmail([
-			'ConfigurationSetName' => '<string>',
-			'EmailAddress' => '<string>', // REQUIRED
-			'TemplateName' => '<string>', // REQUIRED
-			]);*/
+	
+		public function sendCustomVerificationEmail($email,$template_name = 'myCustom')
+		{
+			$result = $this->SES->sendCustomVerificationEmail([
+					//'ConfigurationSetName' => '<string>',
+					'EmailAddress' => $email, // REQUIRED
+					'TemplateName' => $template_name, // REQUIRED
+			]);	
+		}
 			
 			
 		public function createCustomVerificationEmailTemplate()
 	{	
 			$result = $this->SES->createCustomVerificationEmailTemplate([
-				'FailureRedirectionURL' => 'www.google.com', // REQUIRED
+				'FailureRedirectionURL' => 'https://www.google.com', // REQUIRED
 				'FromEmailAddress' => 'vitvelz@gmail.com', // REQUIRED
-				'SuccessRedirectionURL' => 'www.gmail.com', // REQUIRED
+				'SuccessRedirectionURL' => 'https://www.gmail.com', // REQUIRED
 				'TemplateContent' => '<h1>Heading</h1>', // REQUIRED
 				'TemplateName' => 'myCustom', // REQUIRED
 				'TemplateSubject' => 'customTemlate', // REQUIRED
