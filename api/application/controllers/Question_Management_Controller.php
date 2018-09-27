@@ -64,13 +64,16 @@ class Question_Management_Controller extends REST_Controller {
 			if($question_id != '' || $question_id != null)
 			{
 				//$count++;
-				foreach($answers as $answer)
+				if(count($answers))
 				{
-					
-					
-					$temp_answers = array('fk_question_id' => $question_id, 'answer' =>$answer['answer'] , 'createdon' =>$records['createdon'] , 'fk_createdby' =>$records['fk_createdby']);
-					$child_id = $this->Question_Management_Model->saveRecords($temp_answers,QUESTIONANSWERS);
-					
+						foreach($answers as $answer)
+						{
+							
+							
+							$temp_answers = array('fk_question_id' => $question_id, 'answer' =>$answer['answer'] , 'createdon' =>$records['createdon'] , 'fk_createdby' =>$records['fk_createdby']);
+							$child_id = $this->Question_Management_Model->saveRecords($temp_answers,QUESTIONANSWERS);
+							
+						}
 				}
 			}
 			
@@ -107,14 +110,27 @@ class Question_Management_Controller extends REST_Controller {
 			}
 			
 			$where_condtion_array = array('question_id'=>$records['question_id']);
-			$affected_rows = $this->db->updateRecords($records,QUESTIONS,$where_condtion_array); 
+			$affected_rows = $this->Question_Management_Model->updateRecords($records,QUESTIONS,$where_condtion_array); 
 			$affected_rows_child = 0;
-			foreach($answers as $answer)
-			{
-				$where_condtion_array = array('question_answer_id'=>$answer['question_answer_id']);
-				$affected_rows_child = $this->db->updateRecords($answer,QUESTIONANSWERS,$where_condtion_array); 
-			}
 			
+			if(count($answers))
+				{
+					foreach($answers as $answer)
+					{
+						if($answer['question_answer_id'] != null || $answer['question_answer_id'] != '')
+						{
+							$where_condtion_array = array('question_answer_id'=>$answer['question_answer_id']);
+							$answer['updatedon'] =  $records['updatedon'];
+							$answer['fk_updatedby'] = $records['fk_updatedby']; 
+							$affected_rows_child = $this->Question_Management_Model->updateRecords($answer,QUESTIONANSWERS,$where_condtion_array); 
+						}
+						else
+						{
+							$temp_answers = array('fk_question_id' => $records['question_id'], 'answer' =>$answer['answer'] , 'createdon' =>$records['updatedon'] , 'fk_createdby' =>$records['fk_updatedby']);
+							$child_id = $this->Question_Management_Model->saveRecords($temp_answers,QUESTIONANSWERS);
+						}
+					}
+				}
 			if($affected_rows == 1) //&& (count($answers) == $affected_rows_child))
 			{
 					$data['dataStatus'] = true;
@@ -131,6 +147,32 @@ class Question_Management_Controller extends REST_Controller {
 			
 			
 			}
+	}
+	
+	/*   ******** For Updated isActive status of ansewrs only ******/
+	public function updateAnswerStatus()
+	{
+		$records = $this->post('records');
+		
+		$where_condtion_array = array('question_answer_id' => $records['question_answer_id']);
+		$affected_rows = $this->Question_Management_Model->updateRecords($records,QUESTIONANSWERS,$where_condtion_array);
+			
+			if($affected_rows == 1) //&& (count($answers) == $affected_rows_child))
+			{
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['record'] = $affected_rows;
+					$this->response($data,REST_Controller::HTTP_OK);
+				
+			}
+			else
+			{
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$this->response($data,REST_Controller::HTTP_OK);
+			
+			
+			}		
 	}
 	
 }

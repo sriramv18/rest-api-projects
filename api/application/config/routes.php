@@ -93,6 +93,7 @@ $route['saveTemplateCategoryDetails'] = 'Template_Management_Controller/saveTemp
 $route['(listAllQuestions/:any)'] = 'Question_Management_Controller/listAllQuestions/'; 
 $route['saveNewQuestion'] = 'Question_Management_Controller/saveNewQuestion'; 
 $route['saveExistQuestion'] = 'Question_Management_Controller/saveExistQuestion'; 
+$route['updateAnswerStatus'] = 'Question_Management_Controller/updateAnswerStatus'; 
 
 //ENTITY MANAGEMENT
 $route['listAllEntites'] = 'Entity_Management_Controller/listAllEntites'; 
@@ -103,4 +104,9 @@ $route['saveExistEntity'] = 'Entity_Management_Controller/saveExistEntity';
 $route['triggerNewPD'] = 'PD_Controller/triggerNewPD'; 
 $route['updateExistPD'] = 'PD_Controller/updateExistPD'; 
 $route['(listLessPDDetails/:any)'] = 'PD_Controller/listLessPDDetails/'; 
+$route['getListOfProducts'] = 'PD_Controller/getListOfProducts'; 
+$route['getListOfLenders'] = 'PD_Controller/getListOfLenders'; 
+$route['getListOfCustomerSegments'] = 'PD_Controller/getListOfCustomerSegments'; 
+$route['getListOfPDAllocationTypes'] = 'PD_Controller/getListOfPDAllocationTypes'; 
+$route['getListOfStatesAndCities'] = 'PD_Controller/getListOfStatesAndCities'; 
 
