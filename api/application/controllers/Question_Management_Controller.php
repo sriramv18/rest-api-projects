@@ -106,7 +106,7 @@ class Question_Management_Controller extends REST_Controller {
 		if(array_key_exists('answers',$records))
 			{
 				$answers = $records['answers'];
-				unset($records['ansewrs']);
+				unset($records['answers']);
 			}
 			
 			$where_condtion_array = array('question_id'=>$records['question_id']);

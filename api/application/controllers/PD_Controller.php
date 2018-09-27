@@ -203,8 +203,8 @@ class PD_Controller extends REST_Controller {
 		/***********************PD ALLOCATION TYPE PROCESS **********/
 		
 		
-		$where_condition_array = array('fk_city_id' => $pd_details['fk_city']);
-		$temp_city_id = $this->PD_Model->selectRecords(PDTEAMCITYMAP,$where_condition_array,$limit=0,$offset=0);
+		$where_condition_array = array('fk_city_id' => $pd_details['fk_city'],'fk_lender_id' => $pd_details['fk_lender_id']);
+		$temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
 		if(count($temp_city_id))
 		{
 			if($temp_city_id[0]['type'] == 0) // Allocate to Vendor
@@ -218,30 +218,6 @@ class PD_Controller extends REST_Controller {
 					if($local_pd_allocation_type == 1)// AUTO - Load Balance Allocation
 					{
 						
-						//1.select list pd officers from lender_pd offices map table and choose minimun allocated one
-						$fields = array('fk_user_id');
-						$where_condition_array = array('fk_lender_id'=>$pd_details['fk_lender_id'],'isactive' => 1);
-						$lender_specific_pdofficers_list = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
-						
-						if(count($lender_specific_pdofficers_list))
-						{
-							//select currently allocated PD values from PDOFFICIERSDETAILS table to find min value 
-							$lender_specific_pdofficer_list_and_allocated_values = $this->PD_Model->getLenderSpecificPDOfficersListAndAllocatedValues($lender_specific_pdofficers_list);
-							
-							if(count($lender_specific_pdofficer_list_and_allocated_values))
-							{
-								$allocated_values = array_column($lender_specific_pdofficer_list_and_allocated_values,'allocated');
-							
-								$min_allocated = min($allocated_values);
-								$key = array_search($min_allocated,$allocated_values);
-								$final_pd_officer_to_allocate = $lender_specific_pdofficer_list_and_allocated_values[$key]['fk_user_id'];
-								$pd_details['fk_pd_allocated_to'] = $final_pd_officer_to_allocate;
-								$pd_details['fk_pd_status'] = ALLOCATED;
-							}
-							
-						}
-						else
-						{	
 							//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
 							$fields = array('fk_user_id,allocated');
 							
@@ -261,7 +237,7 @@ class PD_Controller extends REST_Controller {
 							
 							$pd_details['fk_pd_allocated_to'] = $final_pd_officer_to_allocate;
 							$pd_details['fk_pd_status'] = ALLOCATED;
-						}
+						
 						
 					}
 					else if($local_pd_allocation_type == 2) // AUTO - NEAREST Allocation

@@ -245,8 +245,8 @@ defined('PDSTATUSID') OR define('PDSTATUSID','pd_status_id');
 defined('PDTEAM') OR define('PDTEAM','m_pdteam');
 defined('PDTEAMID') OR define('PDTEAMID','pdteam_id');
 
-defined('PDTEAMCITYMAP') OR define('PDTEAMCITYMAP','m_pdteam_city_mapping');
-defined('PDTEAMCITYMAPID') OR define('PDTEAMCITYMAPID','pdteam_city_mapping_id');
+defined('PDTEAMMAP') OR define('PDTEAMMAP','m_pdteam_map');
+defined('PDTEAMMAPID') OR define('PDTEAMMAPID','pdteam_map_id');
 
 defined('PDOFFICIERSDETAILS') OR define('PDOFFICIERSDETAILS','m_pd_officiers_details');
 defined('PDOFFICIERSDETAILSID') OR define('PDOFFICIERSDETAILSID','pd_officier_id');

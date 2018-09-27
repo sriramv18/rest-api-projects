@@ -113,8 +113,9 @@ class PDALERTS
 				
 				
 				/*
-				* 
+				* **********************************************************************************************************
 				* EMAIL FUNCTIONALITY
+				************************************************************************************************************
 				*/
 				
 				
@@ -173,10 +174,11 @@ class PDALERTS
 				}
 				
 				//$msg = "PD for Lender Applicant ID:".$core_details['lender_applicant_id']."has been".$core_details['pd_status_name']; // status base configurable
-				foreach($mobile_nos_to_send_notification as $no)
+				foreach($email_ids_to_send_notification as $email)
 				{
 					
-					//email SES
+					//email SES	 have to config
+					//$CI->aws_ses->sendMail($email);
 				}
 				
 			

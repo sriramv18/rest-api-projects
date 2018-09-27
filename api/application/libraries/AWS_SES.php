@@ -25,20 +25,20 @@ class AWS_SES
 		
     }
 	
-	public function sendMail()
+	public function sendMail($email)
 	{
 		$sender_email = 'velmurugan.s@venbainfotech.com';
 
 				// Replace these sample addresses with the addresses of your recipients. If
 				// your account is still in the sandbox, these addresses must be verified.
-				$recipient_emails = ['raro@spindl-e.com'];
+				$recipient_emails = [$email];
 
 				// Specify a configuration set. If you do not want to use a configuration
 				// set, comment the following variable, and the
 				// 'ConfigurationSetName' => $configuration_set argument below.
 				//$configuration_set = 'ConfigSet';
 
-				$subject = 'SineEdge Test';
+				$subject = 'SineEdge PD Test';
 				$plaintext_body = 'This email was sent with Amazon SES using the AWS SDK for PHP.' ;
 				$html_body =  '<h1>AWS Amazon Simple Email Service Test Email</h1>'.
 							  '<p>This email was sent with <a href="https://aws.amazon.com/ses/">'.
@@ -89,7 +89,7 @@ class AWS_SES
 		'EmailAddress' => $email,
 			]);
 			
-			print_r($result);
+			//print_r($result);
 	}	
 	
 		public function sendCustomVerificationEmail($email,$template_name = 'myCustom')
@@ -113,7 +113,7 @@ class AWS_SES
 				'TemplateSubject' => 'customTemlate', // REQUIRED
 			]);
 			
-			print_r($result);
+			//print_r($result);
 	}
 		
 		

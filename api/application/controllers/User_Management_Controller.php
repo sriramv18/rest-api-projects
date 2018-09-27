@@ -19,6 +19,7 @@ class User_Management_Controller extends REST_Controller {
         parent::__construct();
 		$this->load->model('User_Management_Model');
         $this->load->library('AWS_S3');
+		$this->load->library('AWS_SES');
     }
    
 	public function listAllUsers_get()
@@ -44,7 +45,7 @@ class User_Management_Controller extends REST_Controller {
 
 	public function saveNewUser_post()
 	{
-		//print_r(json_decode($this->post('pdofficer'),true));die;
+		
 		$roles = "";
 		$lender_hierarchy = "";
 		$pdofficer = "";
@@ -55,11 +56,7 @@ class User_Management_Controller extends REST_Controller {
 		
 		$records = json_decode($this->post('records'),true);
 
-		//print_r($records);die;
-		//$roles = json_decode($this->post('roles'),true);
-		//print_r(json_decode($this->post('lender_hierarchy'),true));die;
-		//$lender_hierarchy  = json_decode($this->post('lender_hierarchy'),true);
-		//echo $_FILES['profilepic']['name'];die;
+		
 		if(!empty($_FILES['profilepic']['tmp_name']))
 		{
 				
@@ -118,14 +115,14 @@ class User_Management_Controller extends REST_Controller {
 						$this->User_Management_Model->saveRecords($role_array,USERPROFILEROLES);
 					}
 				}
-		//$user_id = 52;
+		
 				
 				if($lender_hierarchy != "")
 				{
-					//print_r($lender_hierarchy);die;
+					
 					foreach($lender_hierarchy as $hierarchy)
-					{	//echo $hierarchy['lender_hierarchy_id'];die;
-						$hierarchy = array('fk_hierarchy_id'=>$hierarchy['lender_hierarchy_id'],'fk_user_id'=>$user_id);//insert hierarchy  againest lender type users
+					{	
+						$hierarchy = array('fk_hierarchy_id'=>$hierarchy['lender_hierarchy_id'],'fk_user_id'=>$user_id);
 						$this->User_Management_Model->saveRecords($hierarchy,USERPROFILEHIERARCHY);
 					}
 				}
@@ -137,6 +134,10 @@ class User_Management_Controller extends REST_Controller {
 				}
 				if($user_id != '' || $user_id != null)
 				{
+					
+					// send a verification mail for registered user to get PD alert informations
+					// They have to clik a verification link from sent mail
+					$this->aws_ses->verifyEmailIdentity($records['email']);
 					$data['dataStatus'] = true;
 					$data['status'] = REST_Controller::HTTP_OK;
 					$data['record'] = $user_id;
