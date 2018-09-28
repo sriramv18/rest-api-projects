@@ -73,6 +73,7 @@ $route['saveMaster'] = 'Common_Masters_Controller/saveMaster';
 $route['savePDAllocationType'] = 'Common_Masters_Controller/savePDAllocationType';
 $route['savePDNotifications'] = 'Common_Masters_Controller/savePDNotifications';
 $route['getPDNotificationsList'] = 'Common_Masters_Controller/getPDNotificationsList';
+$route['saveCompany'] = 'Common_Masters_Controller/saveCompany';
 
 
 
@@ -82,6 +83,7 @@ $route['getListOfUsers'] = 'User_Management_Controller/listAllUsers';
 $route['saveNewUser'] = 'User_Management_Controller/saveNewUser'; 
 $route['updateExistUser'] = 'User_Management_Controller/updateExistUser'; 
 $route['getUsersDetails'] = 'User_Management_Controller/getUsersDetails'; 
+$route['getSingedProfilePicURL'] = 'User_Management_Controller/getSingedProfilePicURL'; 
 
 // TEMPLATE MANAGEMENT
 $route['listAllTemplates'] = 'Template_Management_Controller/listAllTemplates'; 

@@ -170,12 +170,14 @@ class PD_Controller extends REST_Controller {
 	
 	
 	/********For Save New PD while Trigger****/
+	/*
+	sample data
+	{
+    "pd_details":{ "fk_lender_id": "1", "lender_applicant_id":"12458","fk_product_id":"2","fk_subproduct_id":"1","fk_pd_type":"2", "fk_pd_status":"2","pd_specific_clarification":"nothing","createdon":"2017","fk_createdby":"2","fk_pd_allocation_type":"3","fk_pd_allocated_to":"1","fk_pd_template_id":"2","fk_customer_segment":"1","pd_officier_final_judgement":"54561","pd_agency_id":"1","loan_amount":"1589655","addressline1":"1", "addressline2":"2", "addressline3":"3", "fk_city":"1", "fk_state":"2", "pincode":"966852"}
+	}
+	*/
 	public function triggerNewPD_post()
 	{
-		//echo "TRIGGER";
-		//$this->aws_ses->verifyEmailIdentity('raro@spindl-e.com');
-		//$this->aws_ses->sendMail('raro@spindl-e.com');
-		//die();
 		$pd_details = json_decode($this->post('pd_details'),true);
 		$pd_applicant_details = json_decode($this->post('pd_applicant_details'),true);
 		$pd_document_titles = json_decode($this->post('pd_document_titles'),true);
@@ -207,55 +209,60 @@ class PD_Controller extends REST_Controller {
 		$temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
 		if(count($temp_city_id))
 		{
-			if($temp_city_id[0]['type'] == 0) // Allocate to Vendor
+			if(isset($temp_city_id[0]['type']))
 			{
-				$pd_details['pd_agency_id'] = $temp_city_id[0]['fk_team_id'];
-				$pd_details['fk_pd_allocated_to'] = ALLOCATED_TO_PARTNER;
-			}
-			else //Allocate to SineEdge Team with allocation logics
-			{
-					$local_pd_allocation_type = $pd_details['fk_pd_allocation_type'];
-					if($local_pd_allocation_type == 1)// AUTO - Load Balance Allocation
-					{
-						
-							//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
-							$fields = array('fk_user_id,allocated');
+				if($temp_city_id[0]['type'] == 0) // Allocate to Vendor
+				{
+					$pd_details['pd_agency_id'] = $temp_city_id[0]['fk_team_id'];
+					$pd_details['fk_pd_allocated_to'] = ALLOCATED_TO_PARTNER;
+				}
+				else //Allocate to SineEdge Team with allocation logics
+				{
+						$local_pd_allocation_type = $pd_details['fk_pd_allocation_type'];
+						if($local_pd_allocation_type == 1)// AUTO - Load Balance Allocation
+						{
 							
-							$where_condition_array = array('fk_pd_type_id' => $pd_details['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $pd_details['fk_customer_segment'],'fk_product_id' => $pd_details['fk_product_id'],'isactive' => 1);
+								//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
+								$fields = array('fk_user_id,allocated');
+								
+								$where_condition_array = array('fk_pd_type_id' => $pd_details['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $pd_details['fk_customer_segment'],'fk_product_id' => $pd_details['fk_product_id'],'isactive' => 1);
+								
+								$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
+								
+								$allocated_values = array_column($list_of_pd_officers,'allocated');
+								
+								$min_allocated = min($allocated_values);
+								$key = array_search($min_allocated,$allocated_values);
+								$final_pd_officer_to_allocate = $list_of_pd_officers[$key]['fk_user_id'];
+								
+								//For Random Allocaiton not in use
+								// $key = mt_rand(0, count($list_of_pd_officers) - 1);
+								// $final_pd_officer_to_allocate = isset($list_of_pd_officers[$key])? $list_of_pd_officers[$key]: null;
+								
+								$pd_details['fk_pd_allocated_to'] = $final_pd_officer_to_allocate;
+								$pd_details['fk_pd_status'] = ALLOCATED;
 							
-							$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
 							
-							$allocated_values = array_column($list_of_pd_officers,'allocated');
+						}
+						else if($local_pd_allocation_type == 2) // AUTO - NEAREST Allocation
+						{
 							
-							$min_allocated = min($allocated_values);
-							$key = array_search($min_allocated,$allocated_values);
-							$final_pd_officer_to_allocate = $list_of_pd_officers[$key]['fk_user_id'];
-							
-							//For Random Allocaiton not in use
-							// $key = mt_rand(0, count($list_of_pd_officers) - 1);
-							// $final_pd_officer_to_allocate = isset($list_of_pd_officers[$key])? $list_of_pd_officers[$key]: null;
-							
-							$pd_details['fk_pd_allocated_to'] = $final_pd_officer_to_allocate;
-							$pd_details['fk_pd_status'] = ALLOCATED;
-						
-						
-					}
-					else if($local_pd_allocation_type == 2) // AUTO - NEAREST Allocation
-					{
-						
-					}
-					else // Manual Allocation
-					{
-						//  Do nothing, cause fk_pd_allocated_to value comes from front end.
-					}
-				
-			}
+						}
+						else // Manual Allocation
+						{
+							//  Do nothing, cause fk_pd_allocated_to value comes from front end.
+						}
+					
+				}
+			}//End Of isset
 		}
 		
 		
 					
 		
 		/***********************END OF PD ALLOCATION TYPE AND PROCESS***********/
+		
+		
 		$pd_id = $this->PD_Model->saveRecords(PDTRIGGER,$pd_details);
 		
 		
@@ -300,7 +307,11 @@ class PD_Controller extends REST_Controller {
 			}
 		}
 		
-		
+		// update into pd officer details 
+		if($pd_details['fk_pd_allocated_to'] != null || $pd_details['fk_pd_allocated_to'] != '')
+		{
+			$this->PD_Model->updatePDofficersDetail($pd_details['fk_pd_allocated_to']);
+		}
 		if($pd_id != null || $pd_id != '' && $count != 0)
 		{
 			// CALL pdnotification Helper function to send pd alerts @ params pdid,pdstatus

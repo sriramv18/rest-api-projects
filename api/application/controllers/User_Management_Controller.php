@@ -129,7 +129,7 @@ class User_Management_Controller extends REST_Controller {
 
 				if($pdofficer != ""){
 					$pdofficer['fk_user_id'] = $user_id;
-					print_r($pdofficer);
+					//print_r($pdofficer);
 					$this->User_Management_Model->saveRecords($pdofficer,PDOFFICIERSDETAILS);
 				}
 				if($user_id != '' || $user_id != null)
@@ -302,7 +302,7 @@ class User_Management_Controller extends REST_Controller {
 	@params userid , entity id, profilepic name 
 	 URL expires 5 min
 	*/
-	public function getSingedProfilePicURL()
+	public function getSingedProfilePicURL_post()
 	{
 		$userid = $this->post('userid');
 		$entityid = $this->post('entityid');
