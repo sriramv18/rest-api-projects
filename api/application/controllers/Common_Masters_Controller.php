@@ -341,7 +341,7 @@ class Common_Masters_Controller extends REST_Controller {
 	}
 	
 	
-	**
+	/**
  * Company File Upload
  */
 	public function saveCompany_post(){
