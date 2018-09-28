@@ -23,13 +23,14 @@ class Question_Management_Controller extends REST_Controller {
    
 	public function listAllQuestions_get()
 	{
-		$page = 0;$limit = 0;$sort = 'ASC';
+		$page = 0;$limit = 0;$sort = 'ASC';$category_id = '';
 		
 		if($this->get('page')) { $page  = $this->get('page'); }
 		if($this->get('limit')){ $limit = $this->get('limit'); }
 		if($this->get('sort')) { $sort  = $this->get('sort'); }
+		if($this->get('cid')) { $category_id  = $this->get('cid'); }
 		
-		$result = $this->Question_Management_Model->listAllQuestions($page,$limit,$sort);
+		$result = $this->Question_Management_Model->listAllQuestions($page,$limit,$sort,$category_id);
 		if($result['data_status'])
 		{
 				$data['dataStatus'] = true;

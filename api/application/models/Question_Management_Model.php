@@ -10,7 +10,7 @@ class Question_Management_Model extends SPARQ_Model {
         }
 		
 		
-   public function listAllQuestions($page,$limit,$sort)
+   public function listAllQuestions($page,$limit,$sort,$category_id)
    {
 	  
 	   	
@@ -20,6 +20,10 @@ class Question_Management_Model extends SPARQ_Model {
 	   $this->db->JOIN(QUESTIONCATEGORY.' as QUESTIONCATEGORY','QUESTIONS.fk_question_catagory = QUESTIONCATEGORY.question_categroy_id');
 	   $this->db->JOIN(USERPROFILE.' as USERPROFILE','QUESTIONS.fk_createdby = USERPROFILE.userid');
 	   $this->db->JOIN(USERPROFILE.' as USERPROFILE1','QUESTIONS.fk_updatedby = USERPROFILE1.userid','LEFT');
+	   if($category_id != null || $category_id != '')
+	   {
+		    $this->db->WHERE('QUESTIONS.fk_question_catagory',$category_id);
+	   }
 	   $this->db->ORDER_BY('QUESTIONS.question_id',$sort);
 	   $this->db->LIMIT($page,$limit);
 	   
