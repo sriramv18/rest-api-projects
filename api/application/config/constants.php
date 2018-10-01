@@ -85,8 +85,8 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 // define login route name for token verification
-//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllQuestions/:any)'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
+//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllQuestions/:any)'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -221,8 +221,8 @@ defined('QUESTIONCATEGORYID') OR define('QUESTIONCATEGORYID','question_categroy_
 defined('TEMPLATE') OR define('TEMPLATE','m_template');
 defined('TEMPLATEID') OR define('TEMPLATEID','template_id');
 
-defined('LENDERTEMPLATE') OR define('LENDERTEMPLATE','m_lender_template');
-defined('LENDERTEMPLATEID') OR define('LENDERTEMPLATEID','lender_template_id');
+defined('LENDERTEMPLATE') OR define('LENDERTEMPLATE','m_template_lender_map');
+defined('LENDERTEMPLATEID') OR define('LENDERTEMPLATEID','template_lender_map_id');
 
 defined('TEMPLATECATAGORYWEIGHTAGE') OR define('TEMPLATECATAGORYWEIGHTAGE','m_template_catagory_weightage');
 defined('TEMPLATECATAGORYWEIGHTAGEID') OR define('TEMPLATECATAGORYWEIGHTAGEID','template_catagory_weightage_id');
