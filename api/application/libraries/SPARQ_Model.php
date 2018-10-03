@@ -92,7 +92,7 @@ class SPARQ_Model extends CI_Model {
       
     }
 	
-	public function getJoinRecords($columns,$table,$joins,$print_query = '')
+	public function getJoinRecords($columns,$table,$joins,$where_condition_array = array(),$print_query = '')
 		{
 			
 			
@@ -102,6 +102,13 @@ class SPARQ_Model extends CI_Model {
 				foreach($joins as $k => $join)
 				{
 					$this->db->join($join['table'], $join['condition'], $join['jointype']);
+				}
+			}
+			if(count($where_condition_array))
+			{
+				foreach($where_condition_array as $key => $condition)
+				{
+					$this->db->WHERE($key,$condition);
 				}
 			}
 			

@@ -21,7 +21,7 @@ class AWS_S3
 		
 		//echo "listAllBuckets";
 			$this->S3 = S3Client::factory($this->s3_properties);
-        //$this->getAllObjectsInaBucket();
+       // $this->deleteSingleObjFromBucket();
 		
     }
 	
@@ -107,7 +107,7 @@ class AWS_S3
 			
 
 	}
-	
+	// Get List of objetcs as byte(Raw file).
 	public function getAllObjectsInaBucket($bucket_name,$folder_name)
 	{
 		$objects = array();
@@ -128,6 +128,19 @@ class AWS_S3
 		
 		return $objects;
 
+	}
+	
+	
+	// Delete an object from the bucket.
+	public function deleteSingleObjFromBucket($bucket,$key)
+	{
+		
+			$result = $this->S3->deleteObject([
+				'Bucket' => $bucket,
+				'Key'    => $key
+			]);
+			
+			return $result;
 	}
 	
 	
