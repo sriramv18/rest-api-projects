@@ -404,6 +404,62 @@ class PD_Controller extends REST_Controller {
 			
 	}
 	
+	/*
+	* Get Full PD Details like all  applicant's details, all PD related documents, PD Template and 
+	* answersd questions,PD History details.
+	*/
+	public function getFullPDDetails_post()
+	{
+		$pdid = $this->post('pdid');
+		
+		// Get All Applicant's Details
+		$result_data['applicants_details'] = $this->PD_Model->getApplicantsDetails($pdid);
+		
+		// Get All PD Related Documents
+		$result_data['pd_documnets'] = $this->PD_Model->getSignedPDDocsURL($pdid);
+	
+		//Get All PD Template and It's Question with Answers
+		//$result_data['pd_question_answer'] = $this->getPDQuestionAnswer($pdid);
+		
+		//Get All PD Logs
+		$result_data['pd_logs'] = $this->PD_Model->getPDLogs($pdid);
+		
+		$applicant_msg = '';
+		$pd_docs_msg = '';
+		$pd_question_answer_msg = '';
+		$pd_logs_msg = '';
+		
+		if(!count($result_data['applicants_details']))
+		{
+			$applicant_msg = 'Applicant Details Not Found';
+		}
+		
+		if(!count($result_data['pd_documnets']))
+		{
+			$pd_docs_msg = 'Documents Not Found';
+		}
+		
+		// if(!count($result_data['pd_question_answer']))
+		// {
+			// $pd_question_answer_msg = 'PD Details Not Found';
+		// }
+		
+		if(!count($result_data['pd_logs']))
+		{
+			$pd_logs_msg = 'PD Logs Not Found';
+		}
+		
+			
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $result_data;
+			$data['msg'] = array('applicant_msg'=>$applicant_msg,'pd_docs_msg'=>$pd_docs_msg,'pd_question_answer_msg'=>$pd_question_answer_msg,'pd_logs_msg'=>$pd_logs_msg);
+			$this->response($data,REST_Controller::HTTP_OK);
+		
+		 
+	}
+	
+	
 	
 	
 	

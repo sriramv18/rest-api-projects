@@ -25,7 +25,7 @@ class SPARQ_Model extends CI_Model {
 		
 	}
 	
-	public function selectRecords($table_name,$where_condition_array = array(),$limit = 50,$offset = 0,$order = 'ASC',$order_by_colum_name = '',$print_query = '')
+	public function selectRecords($table_name,$where_condition_array = array(),$limit = 1000000,$offset = 0,$order = 'ASC',$order_by_colum_name = '',$print_query = '')
 	{		
 		$data =  $this->db->order_by($order_by_colum_name,$order)->get_where($table_name,$where_condition_array,$limit,$offset)->result_array();//only AND condition
 		if($print_query == '1')

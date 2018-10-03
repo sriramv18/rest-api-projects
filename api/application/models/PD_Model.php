@@ -7,6 +7,7 @@ class PD_Model extends SPARQ_Model {
 
 		public function __construct() {
             parent::__construct();
+			$this->load->library('AWS_S3');
         }
 		
 	
@@ -81,4 +82,103 @@ class PD_Model extends SPARQ_Model {
 			$sql = 'UPDATE '.PDOFFICIERSDETAILS.' SET total = total+1, allocated = allocated+1 WHERE fk_user_id ='.$userid;
 			$modified = $this->db->query($sql);
 		}
+		
+		
+	/*
+	*Get All PD Related Documents as signed and expired URL's from S3  Buckets
+	*/
+	public function getSignedPDDocsURL($pdid)
+	{
+		 $document_lists = array();
+		if($pdid != '' || $pdid != null)
+		{
+		
+				
+				// Get lenderid of this pd by using pid
+				$lender_id = $this->selectCustomRecords(array('fk_lender_id'),array('pd_id' => $pdid),PDTRIGGER);
+				if(count($lender_id))
+				{
+				 //Get PD Documenttitle and name from DB
+				  $document_lists = $this->selectRecords(PDDOCUMENTS,array('fk_pd_id' => $pdid));
+				  if(count($document_lists))
+				  {  
+					
+					$bucket_name = 'lender'.$lender_id[0]['fk_lender_id'];
+					$profilepics3path = 'pd'.$pdid;
+					 foreach($document_lists as $key => $value)
+					 {
+						$profilepics3path .=$value['pd_document_name'];
+						$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+30 minutes');
+						$document_lists['doc_url'] = $singed_uri;
+					 }
+					
+				   }
+					
+				}
+		
+		}
+		
+		return $document_lists;
+	}
+	
+	
+	/*
+	*Get all Applicants details by pdid
+	*/
+	public function getApplicantsDetails($pdid)
+	{
+		$this->db->SELECT('PDAPPLICANTSDETAILS.pd_co_applicant_id, PDAPPLICANTSDETAILS.fk_pd_id, PDAPPLICANTSDETAILS.applicant_name, PDAPPLICANTSDETAILS.applicant_type, PDAPPLICANTSDETAILS.mobile_no, PDAPPLICANTSDETAILS.email, PDAPPLICANTSDETAILS.addressline1, PDAPPLICANTSDETAILS.addressline2, PDAPPLICANTSDETAILS.addressline3, PDAPPLICANTSDETAILS.fk_city, PDAPPLICANTSDETAILS.fk_state, PDAPPLICANTSDETAILS.pincode');
+		$this->db->FROM(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS');
+		$this->db->JOIN(STATE.' as STATE','PDAPPLICANTSDETAILS.fk_state = STATE.state_id');
+		$this->db->JOIN(CITY.' as CITY','PDAPPLICANTSDETAILS.fk_city = CITY.city_id');
+		$this->db->WHERE('PDAPPLICANTSDETAILS.fk_pd_id ',$pdid);
+		$result_child_array = $this->db->GET()->result_array();
+		
+		if(count($result_child_array) != 0)
+		  {
+			  return $result_child_array;
+		  }
+		  else 
+		  {
+			  return array();
+		  }
+	}
+	
+	
+	/*
+	* GET PD Log Details by pdid
+	*/
+	public function getPDLogs($pdid)
+	{
+		$this->db->SELECT('PDLOGS.pd_id, PDLOGS.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name, PDLOGS.lender_applicant_id, DATE_FORMAT(PDLOGS.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDLOGS.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDLOGS.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDLOGS.fk_pd_type,PDTYPE.type_name as pd_type_name, PDLOGS.fk_pd_status,PDSTATUS.pd_status_name, PDLOGS.pd_specific_clarification, DATE_FORMAT(PDLOGS.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDLOGS.fk_createdby, DATE_FORMAT(PDLOGS.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDLOGS.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDLOGS.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDLOGS.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDLOGS.fk_pd_template_id,TEMPLATE.template_name, PDLOGS.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDLOGS.pd_officier_final_judgement, PDLOGS.pd_agency_id,AGENCY.full_name as agency_name, PDLOGS.loan_amount,PDLOGS.addressline1,PDLOGS.addressline2,PDLOGS.addressline3,PDLOGS.fk_city,CITY.name as city_name,PDLOGS.fk_state,STATE.name as state_name,PDLOGS.pincode');
+			$this->db->FROM(PDLOGS.' as PDLOGS');
+			$this->db->JOIN(ENTITY.' as ENTITY','PDLOGS.fk_lender_id = ENTITY.entity_id ');
+			$this->db->JOIN(PRODUCTS.' as PRODUCTS','PDLOGS.fk_product_id = PRODUCTS.product_id');
+			$this->db->JOIN(SUBPRODUCTS.' as SUBPRODUCTS','PDLOGS.fk_subproduct_id = SUBPRODUCTS.subproduct_id');
+			$this->db->JOIN(PDTYPE.' as PDTYPE','PDLOGS.fk_pd_type = PDTYPE.pd_type_id');
+			$this->db->JOIN(PDSTATUS.' as PDSTATUS','PDLOGS.fk_pd_status = PDSTATUS.pd_status_id');
+			$this->db->JOIN(USERPROFILE.' as USERPROFILE','PDLOGS.fk_createdby = USERPROFILE.userid');
+			$this->db->JOIN(USERPROFILE.' as USERPROFILE1','PDLOGS.fk_updatedby = USERPROFILE1.userid','LEFT');
+			$this->db->JOIN(PDALLOCATIONTYPE.' as PDALLOCATIONTYPE','PDLOGS.fk_pd_allocation_type = PDALLOCATIONTYPE.pd_allocation_type_id');
+			$this->db->JOIN(USERPROFILE.' as USERPROFILE2','PDLOGS.fk_pd_allocated_to = USERPROFILE2.userid');
+			$this->db->JOIN(TEMPLATE.' as TEMPLATE','PDLOGS.fk_pd_template_id = TEMPLATE.template_id');
+			$this->db->JOIN(CUSTOMERSEGMENT.' as CUSTOMERSEGMENT','PDLOGS.fk_customer_segment = CUSTOMERSEGMENT.customer_segment_id');
+			$this->db->JOIN(ENTITY.' as AGENCY','PDLOGS.pd_agency_id = AGENCY.entity_id','LEFT');
+			$this->db->JOIN(STATE.' as STATE','PDLOGS.fk_state = STATE.state_id ');
+			$this->db->JOIN(CITY.' as CITY','PDLOGS.fk_city = CITY.city_id');
+			$this->db->WHERE('PDLOGS.pd_id ',$pdid);
+			//$this->db->ORDER_BY('PDLOGS.pd_id',$sort);
+			//$this->db->LIMIT($limit,$page);
+			$result_array['pd_master_logs'] = $this->db->GET()->result_array();
+			
+			
+			$this->db->SELECT('PDAPPLICANTSLOGS.pd_co_applicant_id, PDAPPLICANTSLOGS.fk_pd_id, PDAPPLICANTSLOGS.applicant_name, PDAPPLICANTSLOGS.applicant_type, PDAPPLICANTSLOGS.mobile_no, PDAPPLICANTSLOGS.email, PDAPPLICANTSLOGS.addressline1, PDAPPLICANTSLOGS.addressline2, PDAPPLICANTSLOGS.addressline3, PDAPPLICANTSLOGS.fk_city, PDAPPLICANTSLOGS.fk_state, PDAPPLICANTSLOGS.pincode');
+			$this->db->FROM(PDAPPLICANTSLOGS.' as PDAPPLICANTSLOGS');
+			$this->db->JOIN(STATE.' as STATE','PDAPPLICANTSLOGS.fk_state = STATE.state_id');
+			$this->db->JOIN(CITY.' as CITY','PDAPPLICANTSLOGS.fk_city = CITY.city_id');
+			$this->db->WHERE('PDAPPLICANTSLOGS.fk_pd_id ',$pdid);
+			$result_array['pd_applicants_logs'] = $this->db->GET()->result_array();
+			
+			return $result_array;
+	}
 }

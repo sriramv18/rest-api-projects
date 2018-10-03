@@ -85,8 +85,8 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 // define login route name for token verification
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
-//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllQuestions/:any)'); // no errors
+//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getFullPDDetails'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -256,6 +256,12 @@ defined('PDNOTIFICATIONID') OR define('PDNOTIFICATIONID','pdnotification_id');
 
 defined('PDDOCUMENTS') OR define('PDDOCUMENTS','t_pd_documents');
 defined('PDDOCUMENTSID') OR define('PDDOCUMENTSID','pd_document_id');
+
+defined('PDLOGS') OR define('PDLOGS','h_pd_triggered');
+defined('PDLOGSID') OR define('PDLOGSID','pd_trigger_id');
+
+defined('PDAPPLICANTSLOGS') OR define('PDAPPLICANTSLOGS','h_pd_co_applicants_details');
+defined('PDAPPLICANTSLOGSID') OR define('PDAPPLICANTSLOGSID','pd_co_applicant_trigger_id');
 
 
 

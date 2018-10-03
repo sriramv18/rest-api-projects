@@ -39,7 +39,7 @@ class User_Management_Controller extends REST_Controller {
 		{
 				$data['dataStatus'] = false;
 				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_NO_CONTENT);
+				$this->response($data,REST_Controller::HTTP_OK);
 		}
 	}
 
@@ -147,7 +147,7 @@ class User_Management_Controller extends REST_Controller {
 				{
 					$data['dataStatus'] = false;
 					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-					$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+					$this->response($data,REST_Controller::HTTP_OK);
 				}
 		
 	}
@@ -269,7 +269,7 @@ class User_Management_Controller extends REST_Controller {
 				{
 					$data['dataStatus'] = false;
 					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-					$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+					$this->response($data,REST_Controller::HTTP_OK);
 				}
 		
 	}

@@ -111,4 +111,5 @@ $route['getListOfLenders'] = 'PD_Controller/getListOfLenders';
 $route['getListOfCustomerSegments'] = 'PD_Controller/getListOfCustomerSegments'; 
 $route['getListOfPDAllocationTypes'] = 'PD_Controller/getListOfPDAllocationTypes'; 
 $route['getListOfStatesAndCities'] = 'PD_Controller/getListOfStatesAndCities'; 
+$route['getFullPDDetails'] = 'PD_Controller/getFullPDDetails'; 
 
