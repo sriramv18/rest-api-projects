@@ -86,7 +86,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getFullPDDetails'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListOfLenders'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -109,6 +109,8 @@ defined('PD_CHNAGE_REQUEST') OR define('PD_CHNAGE_REQUEST','13'); // From Lender
 defined('ALLOCATED_TO_PARTNER') OR define('ALLOCATED_TO_PARTNER','14'); // PD Allocated to PD agency not for PD officer
 defined('ARCHIVED') OR define('ARCHIVED','15');
 defined('CANCELLED') OR define('CANCELLED','16');
+defined('RESCHEDULED') OR define('RESCHEDULED','17');
+defined('PLANNEDSCHEDULED') OR define('PLANNEDSCHEDULED','18');
 
 /*******************End Of Constants PD status**************************/
 

@@ -61,7 +61,8 @@ class PD_Controller extends REST_Controller {
 							$fields = array('subproduct_id','name as subproduct_name','abbr as subproduct_abbr');
 							$where_condition_array = array('isactive' => 1,'fk_product_id' => $product['product_id']);
 							$subproducts = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,SUBPRODUCTS);
-							array_push($result_data[$key],$subproducts);
+							//array_push($result_data[$key],$subproducts);
+							$result_data[$key]['subproducts'] = $subproducts;
 						}		
 						
 						$data['dataStatus'] = true;
@@ -262,7 +263,7 @@ class PD_Controller extends REST_Controller {
 		
 		/***********************END OF PD ALLOCATION TYPE AND PROCESS***********/
 		
-		
+		$pd_details['pd_date_of_initiation'] = date("Y-m-d H:i:s");
 		$pd_id = $this->PD_Model->saveRecords(PDTRIGGER,$pd_details);
 		
 		
