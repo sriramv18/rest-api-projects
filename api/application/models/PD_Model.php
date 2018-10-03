@@ -181,4 +181,12 @@ class PD_Model extends SPARQ_Model {
 			
 			return $result_array;
 	}
+	
+	/*
+	*Get Completed PD Questions and Answers.
+	*/
+	public function getPDQuestionAnswers($pdid)
+	{
+		
+	}
 }

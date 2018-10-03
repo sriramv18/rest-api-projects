@@ -419,7 +419,7 @@ class PD_Controller extends REST_Controller {
 		$result_data['pd_documnets'] = $this->PD_Model->getSignedPDDocsURL($pdid);
 	
 		//Get All PD Template and It's Question with Answers
-		//$result_data['pd_question_answer'] = $this->getPDQuestionAnswer($pdid);
+		$result_data['pd_question_answer'] = $this->PD_Model->getPDQuestionAnswers($pdid);
 		
 		//Get All PD Logs
 		$result_data['pd_logs'] = $this->PD_Model->getPDLogs($pdid);
@@ -439,12 +439,12 @@ class PD_Controller extends REST_Controller {
 			$pd_docs_msg = 'Documents Not Found';
 		}
 		
-		// if(!count($result_data['pd_question_answer']))
-		// {
-			// $pd_question_answer_msg = 'PD Details Not Found';
-		// }
+		if(!count($result_data['pd_question_answer']))
+		{
+			$pd_question_answer_msg = 'PD Details Not Found';
+		}
 		
-		if(!count($result_data['pd_logs']))
+		if(!count($result_data['pd_logs']['pd_master_logs']) && !count($result_data['pd_logs']['pd_applicants_logs']))
 		{
 			$pd_logs_msg = 'PD Logs Not Found';
 		}
