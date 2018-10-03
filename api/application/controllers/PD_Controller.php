@@ -145,8 +145,8 @@ class PD_Controller extends REST_Controller {
 		{
 				foreach($result_data as $key => $state)
 						{
-							$fields = array('city_id','name as city_name','abbr as subproduct_abbr');
-							$where_condition_array = array('isactive' => 1,'fk_state_id' => $state['fk_state_id']);
+							$fields = array('city_id','name as city_name');
+							$where_condition_array = array('isactive' => 1,'fk_state_id' => $state['state_id']);
 							$cities = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,CITY);
 							array_push($result_data[$key],$cities);
 						}		
