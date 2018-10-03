@@ -414,6 +414,9 @@ class PD_Controller extends REST_Controller {
 	{
 		$pdid = $this->post('pdid');
 		
+		// Get All PD Masters Details
+		$result_data['pd_master_details'] = $this->PD_Model->getPDMasterDetails($pdid);
+		
 		// Get All Applicant's Details
 		$result_data['applicants_details'] = $this->PD_Model->getApplicantsDetails($pdid);
 		
