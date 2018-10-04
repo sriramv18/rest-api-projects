@@ -117,7 +117,7 @@ class Common_Masters_Controller extends REST_Controller {
 			)
 		);
 		
-		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$print_query = '');
+		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
 			
 			if(count($result) > 0)
 			{
@@ -153,9 +153,8 @@ class Common_Masters_Controller extends REST_Controller {
 			)
 		);
 		
-		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$print_query = '');
-			//print_r($result);
-			//die();
+		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
+		
 			if(count($result) > 0)
 			{
 				$data['dataStatus'] = true;
@@ -185,7 +184,7 @@ class Common_Masters_Controller extends REST_Controller {
 			)
 		);
 		
-		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$print_query = '');
+		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
 			
 			if(count($result) > 0)
 			{
@@ -216,7 +215,7 @@ class Common_Masters_Controller extends REST_Controller {
 			)
 		);
 		
-		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$print_query = '');
+		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
 			
 			if(count($result) > 0)
 			{
@@ -247,7 +246,7 @@ class Common_Masters_Controller extends REST_Controller {
 			)
 		);
 		
-		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$print_query = '');
+		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
 			
 			if(count($result) > 0)
 			{
@@ -300,14 +299,140 @@ class Common_Masters_Controller extends REST_Controller {
 	}
 	/**End of PD-Allocation-Type  */
 	
-	
-	/* For update PD Notification Table info*/
-	
-	public function savePDNotifications_post()
+	/** For Save Pd-Team-Details */
+	public function savePdTeam_post()
 	{
+		$records = $this->post('records');
+
+		if(false !== array_key_exists(PDTEAMID,$records))  //Update Record
+		{
+			
+
+			$where_condition_array = array(PDTEAMID => $records[PDTEAMID]);
+
+			$pdTeamMaster = array('team_name'=>$records['team_name'],'updatedon'=>$records['updatedon'],'fk_updatedby'=>$records['fk_updatedby']);
+			//pdteam_id, team_name, createdon, fk_createdby, updatedon, fk_updatedby, isactive
+			$result = $this->Common_Masters_Model->updateRecords($pdTeamMaster,PDTEAM,$where_condition_array);
+			//print_r($pdTeamMaster);
+
+			if($result == true){
+				$root_array = $records['temp_array'];
+				if(!empty($root_array)){
+				foreach($root_array as $key => $value){
+								
+					$pdTeamChild = array(
+						        'fk_city_id'=>$value['cityid']['city_id'],
+								'fk_team_id'=>$records['pdteam_id'],
+								'team_type' => 1,
+								'fk_lender_id' =>$value['lenderid']['entity_id']);
+
+					$this->Common_Masters_Model->saveRecords($pdTeamChild,PDTEAMMAP);
+				}}
+			
+			}
+			
+			if($result)
+			{
+				
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+			else  
+			{	
+				
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+		}
+		else 	// Insert Record	
+		{
+
+		$pdTeamMaster = array('team_name'=>$records['team_name'],'fk_createdby'=>$records['fk_createdby'],'createdon'=>$records['createdon']);
+		
+		$result = $this->Common_Masters_Model->saveRecords($pdTeamMaster,PDTEAM);
+		
+			if(!empty($result)){
+		
+				$root_array = $records['temp_array'];
+
+				foreach($root_array as $key => $value){
+								
+					$pdTeamChild = array(
+						        'fk_city_id'=>$value['cityid']['city_id'],
+								'fk_team_id'=>$result,
+								'team_type' => 1,
+								'fk_lender_id' =>$value['lenderid']['entity_id']);
+
+					$this->Common_Masters_Model->saveRecords($pdTeamChild,PDTEAMMAP);
+				}
+				
+			}
+
+			
+			if(count($result) !=0 )
+			{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+			else
+			{
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_SERVICE_UNAVAILABLE;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+		
+		}
+	}
+
+	/** End Of Save PD-Team-Detail-Function */
+
+	/** For Of Delete PD-Team-Mapping-Detail-Function */
+	public function deletePdTeamMapping_post()
+	{
+		$records = $this->post('records');
+	
+		
+		foreach($records as $key => $value){
+			//In Master - Have To The Record ( Updated on and Updated By )
+			$where_condition_array1 = array(PDTEAMID => $value['fk_team_id']);
+
+			$pdTeamMaster = array(
+				'fk_updatedby'=>$value['fk_updatedby'],
+				'updatedon' =>$value['updatedon']);
+			
+			$result1 = $this->Common_Masters_Model->updateRecords($pdTeamMaster,PDTEAM,$where_condition_array1);
+			
+			//In child - Have To  Delete The Record
+			$where_condition_array2 = array('pdteam_map_id'=>$value['pdteam_map_id']);
+
+			$pdTeamChild = array(
+				'pdteam_map_id'=>$value['pdteam_map_id']);
+			
+			$result2 = $this->Common_Masters_Model->deleteRecords($pdTeamChild,PDTEAMMAP,$where_condition_array2);
+		}
+		
+			if($result1 == 1 && $result2 == 1)
+			{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				// $data['records'] = $result1;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+			else  
+			{				
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
 		
 	}
-	
+	/**End of Delete PD-TEAM-MAPPING  */
+
 	
 	/* For Get List PD Notifications config's */
 	
@@ -340,10 +465,78 @@ class Common_Masters_Controller extends REST_Controller {
 		
 	}
 	
+	/* For Get PD Team Details (Master Table info)*/
+	public function getListOfPDTeam_get()
+		{		
+			$result = $this->Common_Masters_Model->pdteamlist();
+		
+			if(count($result) > 0)
+			{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+			else
+			{
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+		}
+	/* End Of Get PD Team Details (Master Table info)*/
+
+	/* For Get PD Team Mapping Details (Child Table info)*/
+		public function getListOfPDTeamMap_post(){
+			
+			$PK = $this->post('primary_key');
+			
+			$columns = array('m_city.name as city_name',
+			                 'm_entities.full_name as lender_name',
+							 'PDTEAMMAP.pdteam_map_id as pdteam_map_id', 
+							 'PDTEAMMAP.fk_city_id as fk_city_id',
+							 'PDTEAMMAP.fk_team_id as fk_team_id',
+							 'PDTEAMMAP.isactive as isactive',
+							 'PDTEAMMAP.team_type as team_type',
+							 'PDTEAMMAP.fk_lender_id as fk_lender_id');
+			$table = PDTEAMMAP.' as PDTEAMMAP';
+			$joins = array(
+				array(
+					'table' => 'm_city',
+					'condition' => 'PDTEAMMAP.fk_city_id = m_city.city_id ',
+					'jointype' => 'INNER'
+				),
+				array(
+					'table' => 'm_entities',
+					'condition' => 'PDTEAMMAP.fk_lender_id = m_entities.entity_id',
+					'jointype' => 'INNER'
+				)
+			);
+			$where_condition_array = array('PDTEAMMAP.fk_team_id'=> $PK);
+			
+			$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+				
+				if(count($result) > 0)
+				{
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = $result;
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
 	
+		}
+		/* End of Get PD Team Mapping Details (Child Table info)*/
+
+		
 	/**
- * Company File Upload
- */
+	 * Company File Upload
+	 */
 	public function saveCompany_post(){
 		//echo "function in";
 		$records = json_decode($this->post('records'),true);
@@ -397,6 +590,37 @@ class Common_Masters_Controller extends REST_Controller {
 			}
 	}
 
+    /** End Of CompanyDetail */
 
+    /* For Update PD Notification Details*/
+	public function savePDNotification_post(){
 
+		$records = $this->post('records');
+		//$count = 0;
+		
+			
+		foreach( $records as $record){
+				$where_condition_array = array(PDNOTIFICATIONID => $record[PDNOTIFICATIONID]);	
+				$result = $this->Common_Masters_Model->updateRecords($record,PDNOTIFICATION,$where_condition_array);
+				// if($result == 1)
+				// {
+				// 	$count++;
+				// }
+		}
+		if($result)
+		{
+				
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else  
+		{		
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+	}
+		/* End of Update PD Notification Details*/
 }

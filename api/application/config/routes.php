@@ -66,16 +66,15 @@ $route['getListOfBranches'] = 'Common_Masters_Controller/getListOfBranches';
 $route['getListOfCompany'] = 'Common_Masters_Controller/getListOfCompany'; 
 $route['getListOfState'] = 'Common_Masters_Controller/getListOfState'; 
 $route['getListOfCity'] = 'Common_Masters_Controller/getListOfCity'; 
-$route['saveBranch'] = 'Common_Masters_Controller/saveBranch'; 
-
-$route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
-$route['saveMaster'] = 'Common_Masters_Controller/saveMaster';
-$route['savePDAllocationType'] = 'Common_Masters_Controller/savePDAllocationType';
-$route['savePDNotification'] = 'Common_Masters_Controller/savePDNotification';
 $route['getPDNotificationsList'] = 'Common_Masters_Controller/getPDNotificationsList';
-$route['saveCompany'] = 'Common_Masters_Controller/saveCompany'; 
 $route['getListOfPDTeam'] = 'Common_Masters_Controller/getListOfPDTeam';
 $route['getListOfPDTeamMap'] = 'Common_Masters_Controller/getListOfPDTeamMap';
+$route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
+$route['saveMaster'] = 'Common_Masters_Controller/saveMaster';
+$route['saveBranch'] = 'Common_Masters_Controller/saveBranch'; 
+$route['savePDAllocationType'] = 'Common_Masters_Controller/savePDAllocationType';
+$route['savePDNotification'] = 'Common_Masters_Controller/savePDNotification';
+$route['saveCompany'] = 'Common_Masters_Controller/saveCompany'; 
 $route['savePDTeam'] = 'Common_Masters_Controller/savePdTeam';
 $route['deletePdTeamMapping'] = 'Common_Masters_Controller/deletePdTeamMapping';
 
