@@ -104,12 +104,13 @@ class PD_Model extends SPARQ_Model {
 				  {  
 					
 					$bucket_name = 'lender'.$lender_id[0]['fk_lender_id'];
-					$profilepics3path = 'pd'.$pdid;
+					
 					 foreach($document_lists as $key => $value)
 					 {
-						$profilepics3path .=$value['pd_document_name'];
+						 
+						$profilepics3path = 'pd'.$pdid.'/'.$value['pd_document_name'];
 						$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+30 minutes');
-						$document_lists['doc_url'] = $singed_uri;
+						$document_lists[$key]['doc_url'] = $singed_uri;
 					 }
 					
 				   }

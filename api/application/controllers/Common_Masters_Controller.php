@@ -380,7 +380,7 @@ class Common_Masters_Controller extends REST_Controller {
 
 		
 			
-		$result = $this->Common_Masters_Model->saveRecords($records,'COMPANY');
+		$result = $this->Common_Masters_Model->saveRecords($records,COMPANY);
 		
 			if(count($result) > 0)
 			{

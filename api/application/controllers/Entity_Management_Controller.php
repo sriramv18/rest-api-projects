@@ -55,7 +55,12 @@ class Entity_Management_Controller extends REST_Controller {
 		
 		if($this->post('entity')){ $entity = $this->post('entity'); }
 		
-		if($this->post('entity_child')){ $entity_child = $this->post('entity_child'); }
+		if(array_key_exists('entity_child',$entity))
+			{
+				$entity_child = $entity['entity_child'];
+				unset($entity['entity_child']);
+			}
+			
 		
 		if($entity != "")
 		{
@@ -66,7 +71,7 @@ class Entity_Management_Controller extends REST_Controller {
 				{
 					foreach($entity_child as $child)
 					{
-						$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'createdon'=>$child['createdon'],'fk_createdby'=>$child['fk_createdby']);
+						$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'createdon'=>$entity['createdon'],'fk_createdby'=>$entity['fk_createdby']);
 						$this->User_Management_Model->saveRecords($entity_child_array,ENTITYCHILD);
 					}
 				}
@@ -92,7 +97,7 @@ class Entity_Management_Controller extends REST_Controller {
 				{
 					$data['dataStatus'] = false;
 					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-					$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+					$this->response($data,REST_Controller::HTTP_OK);
 				}
 		
 		
@@ -116,7 +121,11 @@ class Entity_Management_Controller extends REST_Controller {
 		
 		if($this->post('entity')){ $entity = $this->post('entity'); }
 		
-		if($this->post('entity_child')){ $entity_child = $this->post('entity_child'); }
+		if(array_key_exists('entity_child',$entity))
+			{
+				$entity_child = $entity['entity_child'];
+				unset($entity['entity_child']);
+			}
 		
 		if($entity != "")
 		{
@@ -128,7 +137,7 @@ class Entity_Management_Controller extends REST_Controller {
 				{
 					foreach($entity_child as $child)
 					{
-						$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'updatedon'=>$child['updatedon'],'fk_updatedby'=>$child['fk_updatedby'],'isactive'=>$child['isactive']);
+						$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'updatedon'=>$entity['updatedon'],'fk_updatedby'=>$entity['fk_updatedby'],'isactive'=>$child['isactive']);
 						$where_condition_array = array('entity_child_id'=>$child['entity_child_id']);
 						$this->User_Management_Model->updateRecords($entity_child_array,ENTITYCHILD,$where_condition_array);
 					}
@@ -147,7 +156,7 @@ class Entity_Management_Controller extends REST_Controller {
 				{
 					$data['dataStatus'] = false;
 					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-					$this->response($data,REST_Controller::HTTP_NOT_MODIFIED);
+					$this->response($data,REST_Controller::HTTP_OK);
 				}
 		
 		
@@ -159,6 +168,66 @@ class Entity_Management_Controller extends REST_Controller {
 	
 
 		
+	}
+	
+	/*
+	* Get Location Hierarchy as Region,state,city, and branch - wrapped as one array 
+	*/
+	public function getLocationHierarchy_get()
+	{
+		$fields = array('region_id','name as region_name');
+		$where_condition_array = array('isactive' => 1);
+		$region_data = $this->Entity_Management_Model->selectCustomRecords($fields,$where_condition_array,REGIONS);
+		
+		if(count($region_data))
+		{
+				foreach($region_data as $region_key => $region)
+				{			
+					$fields = array('state_id','name as state_name','code');
+					$where_condition_array = array('isactive' => 1,'fk_region_id'=>$region['region_id']);
+					$state_data = $this->Entity_Management_Model->selectCustomRecords($fields,$where_condition_array,STATE);
+					
+					
+					if(count($state_data))
+					{
+							foreach($state_data as $state_key => $state)
+									{
+										$fields = array('city_id','name as city_name');
+										$where_condition_array = array('isactive' => 1,'fk_state_id' => $state['state_id']);
+										$city_data = $this->Entity_Management_Model->selectCustomRecords($fields,$where_condition_array,CITY);
+										
+										if(count($city_data))
+										{
+											foreach($city_data as $city_key => $city)
+											{
+												$fields = array('branch_id','name as branch_name');
+												$where_condition_array = array('isactive' => 1,'fk_city_id' => $city['city_id']);
+												$branch_data = $this->Entity_Management_Model->selectCustomRecords($fields,$where_condition_array,BRANCH);
+												$city_data[$city_key]['branch_data'] = $branch_data;
+											}
+											$state_data[$state_key]['city_data'] = $city_data;
+										}
+									}		
+									
+								$region_data[$region_key]['state_data'] = $state_data;	
+					}
+				}
+		}
+		
+				if(count($region_data))
+				{
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = $region_data;
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$data['msg'] = 'Records Not Found';
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
 	}
 	
 	

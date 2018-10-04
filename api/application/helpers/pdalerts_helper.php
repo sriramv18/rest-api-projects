@@ -119,70 +119,72 @@ class PDALERTS
 				*/
 				
 				
-				if(count($core_details))
-			{
+				// if(count($core_details))
+			// {
 							
-				//pd cretaed entity type is 2 then sent mail only for that email
-				if($core_details['created_entity_type'] == 2) // 2 - Lender Type
-				{
-					if($pd_notification_configs['mail_lender'] == 1)
-					{
-						array_push($email_ids_to_send_notification,$core_details['created_mail']);
-					}
-				}					
-				else //sent email to all lender contacts associated to lender id
-				{
-					if($pd_notification_configs['mail_lender'] == 1)
-					{
+				// //pd cretaed entity type is 2 then sent mail only for that email
+				// if($core_details['created_entity_type'] == 2) // 2 - Lender Type
+				// {
+					// if($pd_notification_configs['mail_lender'] == 1)
+					// {
+						// array_push($email_ids_to_send_notification,$core_details['created_mail']);
+					// }
+				// }					
+				// else //sent email to all lender contacts associated to lender id
+				// {
+					// if($pd_notification_configs['mail_lender'] == 1)
+					// {
 						
-						$CI->db->SELECT("contact_email");
-						$CI->db->FROM(ENTITYCHILD);
-						$CI->db->WHERE("fk_entity_id",$core_details['fk_lender_id']);
-						$lender_emails = $CI->db->GET()->result_array();
-						if(count($lender_mobile_nos))
-						{
-							foreach($lender_emails as $lender_email)
-							{
-								array_push($email_ids_to_send_notification,$lender_email);
-							}
-						}
-					}
-				}
+						// $CI->db->SELECT("contact_email");
+						// $CI->db->FROM(ENTITYCHILD);
+						// $CI->db->WHERE("fk_entity_id",$core_details['fk_lender_id']);
+						// $lender_emails = $CI->db->GET()->result_array();
+						// if(count($lender_mobile_nos))
+						// {
+							// foreach($lender_emails as $lender_email)
+							// {
+								// array_push($email_ids_to_send_notification,$lender_email);
+							// }
+						// }
+					// }
+				// }
 				
-				//add pd officer email
-				if($pd_notification_configs['mail_pdofficer'] == 1)
-				{
-					array_push($email_ids_to_send_notification,$core_details['allocated_email']);
-				}
+				// //add pd officer email
+				// if($pd_notification_configs['mail_pdofficer'] == 1)
+				// {
+					// array_push($email_ids_to_send_notification,$core_details['allocated_email']);
+				// }
 				
-				//add pd incharge emails
-				if($pd_notification_configs['mail_pdincharge'] == 1)
-				{
-						$CI->db->DISTINCT();
-						$CI->db->SELECT("email");
-						$CI->db->FROM(USERPROFILE." as USERPROFILE");
-						$CI->db->JOIN(USERPROFILEROLES." as USERPROFILEROLES","USERPROFILE.userid = USERPROFILEROLES.fk_userid AND USERPROFILEROLES.isactive = 1");
-						$CI->db->WHERE("USERPROFILEROLES.user_role",'PDINCHAGRE');
-						$inchagre_email = $CI->db->GET()->result_array();
-						if(count($inchagre_email))
-						{
-							foreach($inchagre_email as $email)
-							{
-								array_push($email_ids_to_send_notification,$email);
-							}
-						}
-				}
+				// //add pd incharge emails
+				// if($pd_notification_configs['mail_pdincharge'] == 1)
+				// {
+						// $CI->db->DISTINCT();
+						// $CI->db->SELECT("email");
+						// $CI->db->FROM(USERPROFILE." as USERPROFILE");
+						// $CI->db->JOIN(USERPROFILEROLES." as USERPROFILEROLES","USERPROFILE.userid = USERPROFILEROLES.fk_userid AND USERPROFILEROLES.isactive = 1");
+						// $CI->db->WHERE("USERPROFILEROLES.user_role",'PDINCHAGRE');
+						// $inchagre_email = $CI->db->GET()->result_array();
+						// if(count($inchagre_email))
+						// {
+							// foreach($inchagre_email as $email)
+							// {
+								// array_push($email_ids_to_send_notification,$email);
+							// }
+						// }
+				// }
 				
-				//$msg = "PD for Lender Applicant ID:".$core_details['lender_applicant_id']."has been".$core_details['pd_status_name']; // status base configurable
-				foreach($email_ids_to_send_notification as $email)
-				{
+				// //$msg = "PD for Lender Applicant ID:".$core_details['lender_applicant_id']."has been".$core_details['pd_status_name']; // status base configurable
+				// foreach($email_ids_to_send_notification as $email)
+				// {
 					
-					//email SES	 have to config
-					//$CI->aws_ses->sendMail($email);
-				}
+					// //email SES	 have to config
+					// //$CI->aws_ses->sendMail($email);
+				// }
 				
 			
-			}
+			// }
+			
+			/*End of Email Functionality*/
 		}
 		
 		

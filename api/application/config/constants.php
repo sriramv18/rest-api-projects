@@ -265,5 +265,8 @@ defined('PDLOGSID') OR define('PDLOGSID','pd_trigger_id');
 defined('PDAPPLICANTSLOGS') OR define('PDAPPLICANTSLOGS','h_pd_co_applicants_details');
 defined('PDAPPLICANTSLOGSID') OR define('PDAPPLICANTSLOGSID','pd_co_applicant_trigger_id');
 
+defined('PDSCHEDULE') OR define('PDSCHEDULE','t_pd_schedule');
+defined('PDSCHEDULEID') OR define('PDSCHEDULEID','pd_schedule_id');
+
 
 

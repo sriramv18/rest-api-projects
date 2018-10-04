@@ -71,9 +71,13 @@ $route['saveBranch'] = 'Common_Masters_Controller/saveBranch';
 $route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
 $route['saveMaster'] = 'Common_Masters_Controller/saveMaster';
 $route['savePDAllocationType'] = 'Common_Masters_Controller/savePDAllocationType';
-$route['savePDNotifications'] = 'Common_Masters_Controller/savePDNotifications';
+$route['savePDNotification'] = 'Common_Masters_Controller/savePDNotification';
 $route['getPDNotificationsList'] = 'Common_Masters_Controller/getPDNotificationsList';
-$route['saveCompany'] = 'Common_Masters_Controller/saveCompany';
+$route['saveCompany'] = 'Common_Masters_Controller/saveCompany'; 
+$route['getListOfPDTeam'] = 'Common_Masters_Controller/getListOfPDTeam';
+$route['getListOfPDTeamMap'] = 'Common_Masters_Controller/getListOfPDTeamMap';
+$route['savePDTeam'] = 'Common_Masters_Controller/savePdTeam';
+$route['deletePdTeamMapping'] = 'Common_Masters_Controller/deletePdTeamMapping';
 
 
 
@@ -101,10 +105,11 @@ $route['updateAnswerStatus'] = 'Question_Management_Controller/updateAnswerStatu
 $route['(listAllEntites/:any)'] = 'Entity_Management_Controller/listAllEntites/'; 
 $route['saveNewEntity'] = 'Entity_Management_Controller/saveNewEntity'; 
 $route['saveExistEntity'] = 'Entity_Management_Controller/saveExistEntity'; 
+$route['getLocationHierarchy'] = 'Entity_Management_Controller/getLocationHierarchy'; 
 
 //PD RELATED
 $route['triggerNewPD'] = 'PD_Controller/triggerNewPD'; 
-$route['updateExistPD'] = 'PD_Controller/updateExistPD'; 
+$route['updatePDMaster'] = 'PD_Controller/updatePDMaster'; 
 $route['(listLessPDDetails/:any)'] = 'PD_Controller/listLessPDDetails/'; 
 $route['getListOfProducts'] = 'PD_Controller/getListOfProducts'; 
 $route['getListOfLenders'] = 'PD_Controller/getListOfLenders'; 
@@ -112,4 +117,6 @@ $route['getListOfCustomerSegments'] = 'PD_Controller/getListOfCustomerSegments';
 $route['getListOfPDAllocationTypes'] = 'PD_Controller/getListOfPDAllocationTypes'; 
 $route['getListOfStatesAndCities'] = 'PD_Controller/getListOfStatesAndCities'; 
 $route['getFullPDDetails'] = 'PD_Controller/getFullPDDetails'; 
+$route['updatePDDocs'] = 'PD_Controller/updatePDDocs'; 
+$route['updatePDApplicants'] = 'PD_Controller/updatePDApplicants'; 
 

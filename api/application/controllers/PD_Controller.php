@@ -278,8 +278,8 @@ class PD_Controller extends REST_Controller {
 				{
 					$tempdoc = $file['pddocuments']['tmp_name'];
 					$tempdocname = $file['pddocuments']['name'];
-					$bucketname = $pd_details['fk_lender_id'].$pd_id;
-					$key = $pd_id ;
+					$bucketname = 'lender'.$pd_details['fk_lender_id'];
+					$key = 'pd'.$pd_id.'/'.$tempdocname ;
 					$sourcefile = $tempdoc;
 				
 					$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
@@ -317,7 +317,7 @@ class PD_Controller extends REST_Controller {
 		if($pd_id != null || $pd_id != '' && $count != 0)
 		{
 			// CALL pdnotification Helper function to send pd alerts @ params pdid,pdstatus
-			//PDALERTS::pdnotification($pd_id,$pd_details['fk_pd_status']);
+			PDALERTS::pdnotification($pd_id);
 			
 						$data['dataStatus'] = true;
 						$data['status'] = REST_Controller::HTTP_OK;
@@ -335,28 +335,15 @@ class PD_Controller extends REST_Controller {
 	
 	
 	
-	
-	public function updateExistPD_post()
+	/*
+	*
+	*Update PD trigger Master Details(Web app only) from PD trigger Edit/view page
+	*/
+	public function updatePDMaster_post()
 	{
 		$pd_details = $this->post('pd_details');
-		$pd_applicant_details = $this->post('pd_applicant_details');
-		$count = 0;
-		
 		$where_condition_array = array('pd_id' => $pd_details['pd_id']);
 		$pd_id_modified = $this->PD_Model->updateRecords($pd_details,PDTRIGGER,$where_condition_array);
-		
-		if($pd_id_modified != null || $pd_id_modified != '')
-		{
-			foreach($pd_applicant_details as $pd_applicant_detail)
-			{
-				$where_condition_array = array('pd_co_applicant_id' => $pd_applicant_detail['pd_co_applicant_id']);
-				$co_applicant_id_modified = $this->PD_Model->updateRecords($pd_applicant_detail,PDAPPLICANTSDETAILS,$where_condition_array);
-				if($co_applicant_id_modified != null || $co_applicant_id_modified != '')
-				{
-					$count = $count + 1;
-				}
-			}
-		}
 		
 		if($pd_id_modified != null || $pd_id_modified != '' && $count != 0)
 		{
@@ -375,10 +362,225 @@ class PD_Controller extends REST_Controller {
 	}
 	
 	
+	/*
+	*
+	*Update PD trigger Applicats Details(Web app only) from PD trigger Edit/view page
+	*/
+	public function updatePDApplicants_post()
+	{
+		$pd_applicant_details = $this->post('pd_applicant_details');
+		$count = 0;
+		$pd_id = 0;
+		foreach($pd_applicant_details as $pd_applicant_detail)
+			{
+				if($pd_applicant_detail['pd_co_applicant_id'] != null || $pd_applicant_detail['pd_co_applicant_id'] != "")
+				{
+					$pd_id = $pd_applicant_detail['fk_pd_id'];
+					$where_condition_array = array('pd_co_applicant_id' => $pd_applicant_detail['pd_co_applicant_id']);
+					$co_applicant_id = $this->PD_Model->updateRecords($pd_applicant_detail,PDAPPLICANTSDETAILS,$where_condition_array);
+					if($co_applicant_id != null || $co_applicant_id != '')
+					{
+						$count = $count + 1;
+					}
+				}
+				else
+				{
+					$pd_applicant_detail['fk_pd_id'] = $pd_id;
+					$co_applicant_id = $this->PD_Model->saveRecords(PDAPPLICANTSDETAILS,$pd_applicant_detail);
+					if($co_applicant_id != null || $co_applicant_id != '')
+					{
+						$count = $count + 1;
+					}
+				}
+			}
+			
+			if($count != 0 && count($pd_applicant_details) == $count)
+			{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = true;
+						$this->response($data,REST_Controller::HTTP_OK);	
+			}
+			else
+			{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+						$this->response($data,REST_Controller::HTTP_OK);
+			}
+		
+	}
+	
+	/*
+	*
+	*Update PD Documents details from PD Trigger(Web application only) edit/view page 
+	*/
+	public function updatePDDocs_post()
+	{
+		
+		
+		$pd_document_titles = json_decode($this->post('pd_document_titles'),true);
+		if(count($pd_document_titles))
+		{
+			//Get Lender id from PD Master
+			$pdid = $pd_document_titles[0]['fk_pd_id'];
+			$fields = array('fk_lender_id');
+			$where_condition_array = array('pd_id' => $pdid);
+			$lender_id = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
+				foreach($pd_document_titles as $iter => $doc)
+				{
+					if($doc['pd_document_id'] != null || $doc['pd_document_id'] != '')
+					{
+							
+							$tempdoc = $_FILES['pddocuments']['tmp_name'][$iter];
+							$tempdocname = $_FILES['pddocuments']['name'][$iter];
+							$bucketname = 'lender'.$lender_id[0]['fk_lender_id'];
+							$key = 'pd'.$doc['fk_pd_id'].'/'.$tempdocname ;
+							$sourcefile = $tempdoc;
+						
+							$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+							$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
+							
+							if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+							{
+								
+								//delete old doc from s3 bucket_data
+								$fields = array('pd_document_name');
+								$where_condition_array1 = array('pd_document_id' => $doc['pd_document_id']);
+								$old_doc_name = $this->PD_Model->selectCustomRecords($fields,$where_condition_array1,PDDOCUMENTS);
+							
+								if($old_doc_name != "" || $old_doc_name != null)
+								{
+									 $key = 'pd'.$doc['fk_pd_id'].'/'.$old_doc_name[0]['pd_document_name'];
+									 $this->aws_s3->deleteSingleObjFromBucket($bucketname,$key);
+								}
+								
+								//Update entry in PD Doc table
+								$record_data = array('pd_document_name'=>$tempdocname);
+								$where_condition_array = array('pd_document_id' => $doc['pd_document_id']);
+								$this->PD_Model->updateRecords($record_data,PDDOCUMENTS,$where_condition_array);
+							}
+							
+						
+					}
+					else
+					{
+					
+						$tempdoc = $_FILES['pddocuments']['tmp_name'][$iter];
+						$tempdocname = $_FILES['pddocuments']['name'][$iter];
+						$bucketname = 'lender'.$lender_id;
+						$key = 'pd'.$doc['fk_pd_id'].'/'.$tempdocname ;
+						$sourcefile = $tempdoc;
+					
+						$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+						$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
+						
+						if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+						{
+							$record_data = array('fk_pd_id' => $pdid,'pd_document_title'=>$doc['pd_document_title'],'pd_document_name'=>$tempdocname);
+							$this->PD_Model->saveRecords($record_data,PDDOCUMENTS);
+						}
+					}
+				}
+				
+				
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = true;
+				$this->response($data,REST_Controller::HTTP_OK);
+				
+		}
+	}
+	
+	
+	
+	/*
+	*Allocate PD to Some PD officer
+	*/
+	public function allocatePD_post()
+	{
+		$records = $this->post('records');
+		
+		if($records['fk_pd_allocated_to'] != "" || $records['fk_pd_allocated_to'] != null)
+		{
+			$records['fk_pd_status'] = ALLOCATED;
+		}
+		$where_condition_array = array('pd_id' => $records['pd_id']);
+		$pd_id_modified = $this->PD_Model->updateRecords($records,PDTRIGGER,$where_condition_array);
+		if($pd_id_modified != "" || $pd_id_modified != null)
+				{
+					PDALERTS::pdnotification($records['pd_id']);
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = true;
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$data['msg'] = 'Not Updated! Try Later';
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+		
+	}
+	
+	
+	/*
+	*Schedule PD by PD officer(only on Manual Schedule)
+	*/
+	public function schdulePD_post()
+	{
+		$records = $this->post('records');
+		if($records['schedule_time'] != "" || $records['schedule_time'] != null)
+		{
+			$id = $this->PD_Model->saveRecords($records,PDSCHEDULE);
+			if($id != '' || $id != null)
+			{
+				$where_condition_array = array('pd_id' => $records['fk_pd_id']);
+				$temp_array = array('fk_pd_status' => SCHEDULED,'fk_updatedby'=>$records['fk_scheduled_by'],'updatedon'=>$records['createdon']);
+				$pd_id_modified = $this->PD_Model->updateRecords($temp_array,PDTRIGGER,$where_condition_array);
+				
+				if($pd_id_modified != "" || $pd_id_modified != null)
+				{
+					PDALERTS::pdnotification($records['fk_pd_id']);
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = true;
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$data['msg'] = 'Not Updated! Try Later';
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+			}
+		}
+		
+		
+	}
+	
+	
+	/*
+	*GET List of PD officers for PD edit/view page for manual allocation
+	*@param pd
+	*/
+	public function getListPDOfficers_post()
+	{
+		//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
+								$fields = array('fk_user_id,allocated');
+								
+								$where_condition_array = array('fk_pd_type_id' => $pd_details['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $pd_details['fk_customer_segment'],'fk_product_id' => $pd_details['fk_product_id'],'isactive' => 1);
+								
+								$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
+	}
+	
 	/*    PD_Triggerd and PD_Co_Applocants Details only for Listing Page
 		@param page/offset
 		@param limit
 		@param sorting order(ASC/DESC)
+		@param cid for category_id for filter question with category wise.
 	*/
 	public function listLessPDDetails_get()
 	{
