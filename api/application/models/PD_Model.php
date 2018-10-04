@@ -172,7 +172,7 @@ class PD_Model extends SPARQ_Model {
 			$result_array['pd_master_logs'] = $this->db->GET()->result_array();
 			
 			
-			$this->db->SELECT('PDAPPLICANTSLOGS.pd_co_applicant_id, PDAPPLICANTSLOGS.fk_pd_id, PDAPPLICANTSLOGS.applicant_name, PDAPPLICANTSLOGS.applicant_type, PDAPPLICANTSLOGS.mobile_no, PDAPPLICANTSLOGS.email, PDAPPLICANTSLOGS.addressline1, PDAPPLICANTSLOGS.addressline2, PDAPPLICANTSLOGS.addressline3, PDAPPLICANTSLOGS.fk_city, PDAPPLICANTSLOGS.fk_state, PDAPPLICANTSLOGS.pincode,PDAPPLICANTSDETAILS.relation');
+			$this->db->SELECT('PDAPPLICANTSLOGS.pd_co_applicant_id, PDAPPLICANTSLOGS.fk_pd_id, PDAPPLICANTSLOGS.applicant_name, PDAPPLICANTSLOGS.applicant_type, PDAPPLICANTSLOGS.mobile_no, PDAPPLICANTSLOGS.email, PDAPPLICANTSLOGS.addressline1, PDAPPLICANTSLOGS.addressline2, PDAPPLICANTSLOGS.addressline3, PDAPPLICANTSLOGS.fk_city, PDAPPLICANTSLOGS.fk_state, PDAPPLICANTSLOGS.pincode,PDAPPLICANTSLOGS.relation');
 			$this->db->FROM(PDAPPLICANTSLOGS.' as PDAPPLICANTSLOGS');
 			$this->db->JOIN(STATE.' as STATE','PDAPPLICANTSLOGS.fk_state = STATE.state_id');
 			$this->db->JOIN(CITY.' as CITY','PDAPPLICANTSLOGS.fk_city = CITY.city_id');
