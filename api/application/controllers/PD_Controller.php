@@ -568,12 +568,85 @@ class PD_Controller extends REST_Controller {
 	*/
 	public function getListPDOfficers_post()
 	{
-		//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
-								$fields = array('fk_user_id,allocated');
+		$pdid = $this->post('pdid');
+		//1.Get LenderID and CityID  by using pdid
+		$fields = array('fk_lender_id','fk_city','fk_pd_type','fk_product_id','fk_customer_segment');
+		$where_condition_array = array('pdid'=>$pdid)
+		$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
+		
+		//2.Get Team Map  Details based on step 1
+		if(count($res_array))
+		{
+				$where_condition_array = array('fk_city_id' => $res_array[0]['fk_city'],'fk_lender_id' => $res_array[0]['fk_lender_id']);
+				$temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
+				
+				if(count($temp_city_id))
+				{
+					if(isset($temp_city_id[0]['type']))
+					{
+						if($temp_city_id[0]['type'] == 0) // Allocate to Vendor
+						{
+							// $pd_details['pd_agency_id'] = $temp_city_id[0]['fk_team_id'];
+							// $pd_details['fk_pd_allocated_to'] = ALLOCATED_TO_PARTNER;
+						}
+						else //Allocate to SineEdge Team with allocation logics
+						{
+										//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
+										$fields = array('fk_user_id,allocated');
+										
+										$where_condition_array = array('fk_pd_type_id' => $res_array['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $res_array['fk_customer_segment'],'fk_product_id' => $res_array['fk_product_id'],'isactive' => 1);
+										
+										$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);	
+										if(count($list_of_pd_officers))
+										{
+											foreach($list_of_pd_officers as $key => $pdofficer)
+											{
+												$this->db->SELECT('USERPROFILE.first_name,USERPROFILE.last_name');
+												$this->db->FROM(USERPROFILE.' as USERPROFILE');
+												$this->db->WHERE('USERPROFILE.userid',$pdofficer['fk_user_id']);
+												$data = $this->db->GET()->result_array();
+												$list_of_pd_officers[$key]['first_name'] = $data[0]['first_name'];
+												$list_of_pd_officers[$key]['last_name'] = $data[0]['last_name'];
+												
+											}
+											
+											$data['dataStatus'] = true;
+											$data['status'] = REST_Controller::HTTP_OK;
+											$data['records'] = $list_of_pd_officers;
+											$this->response($data,REST_Controller::HTTP_OK);
+										}
+										else
+										{
+											$data['dataStatus'] = false;
+											$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+											$data['msg'] = 'Officers Records Not Found!';
+											$this->response($data,REST_Controller::HTTP_OK);
+										}
+										
+									
+									
 								
-								$where_condition_array = array('fk_pd_type_id' => $pd_details['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $pd_details['fk_customer_segment'],'fk_product_id' => $pd_details['fk_product_id'],'isactive' => 1);
-								
-								$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
+						}
+					}
+					else
+					{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$data['msg'] = 'Team Records Not Found!';
+					    $this->response($data,REST_Controller::HTTP_OK);
+					}
+				
+			
+									
+				}
+	}
+			else
+			{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$data['msg'] = 'Master Records Not Found!';
+					    $this->response($data,REST_Controller::HTTP_OK);
+			}
 	}
 	
 	/*    PD_Triggerd and PD_Co_Applocants Details only for Listing Page
