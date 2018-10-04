@@ -98,7 +98,7 @@ $route['saveExistQuestion'] = 'Question_Management_Controller/saveExistQuestion'
 $route['updateAnswerStatus'] = 'Question_Management_Controller/updateAnswerStatus'; 
 
 //ENTITY MANAGEMENT
-$route['listAllEntites'] = 'Entity_Management_Controller/listAllEntites'; 
+$route['(listAllEntites/:any)'] = 'Entity_Management_Controller/listAllEntites/'; 
 $route['saveNewEntity'] = 'Entity_Management_Controller/saveNewEntity'; 
 $route['saveExistEntity'] = 'Entity_Management_Controller/saveExistEntity'; 
 
