@@ -118,4 +118,7 @@ $route['getListOfStatesAndCities'] = 'PD_Controller/getListOfStatesAndCities';
 $route['getFullPDDetails'] = 'PD_Controller/getFullPDDetails'; 
 $route['updatePDDocs'] = 'PD_Controller/updatePDDocs'; 
 $route['updatePDApplicants'] = 'PD_Controller/updatePDApplicants'; 
+$route['allocatePD'] = 'PD_Controller/allocatePD'; 
+$route['schdulePD'] = 'PD_Controller/schdulePD'; 
+$route['getListPDOfficers'] = 'PD_Controller/getListPDOfficers'; 
 
