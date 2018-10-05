@@ -149,7 +149,7 @@ class Entity_Management_Controller extends REST_Controller {
 						}
 						else
 						{
-							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'createdon'=>$records['createdon'],'fk_createdby'=>$records['fk_createdby']);
+							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'createdon'=>$records['updatedon'],'fk_createdby'=>$records['fk_updatedby']);
 							$this->Entity_Management_Model->saveRecords($entity_child_array,ENTITYCHILD);
 						}
 					}
