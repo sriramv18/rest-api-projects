@@ -141,7 +141,7 @@ class Entity_Management_Controller extends REST_Controller {
 					{
 						if($child['entity_child_id'] != "" || $child['entity_child_id'] != null)
 						{
-							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'updatedon'=>$records['updatedon'],'fk_updatedby'=>$records['fk_updatedby'],'isactive'=>$child['isactive']);
+							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$child['fk_entity_id'],'updatedon'=>$records['updatedon'],'fk_updatedby'=>$records['fk_updatedby'],'isactive'=>$child['isactive']);
 							
 							$where_condition_array = array('entity_child_id'=>$child['entity_child_id']);
 							
@@ -149,7 +149,7 @@ class Entity_Management_Controller extends REST_Controller {
 						}
 						else
 						{
-							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'createdon'=>$records['updatedon'],'fk_createdby'=>$records['fk_updatedby']);
+							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$records['entity_id'],'createdon'=>$records['updatedon'],'fk_createdby'=>$records['fk_updatedby']);
 							$this->Entity_Management_Model->saveRecords($entity_child_array,ENTITYCHILD);
 						}
 					}

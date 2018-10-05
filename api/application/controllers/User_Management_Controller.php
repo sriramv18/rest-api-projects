@@ -157,7 +157,7 @@ class User_Management_Controller extends REST_Controller {
 	{
 		$roles = "";
 		$lender_hierarchy = "";
-		
+		$pdofficer = "";
 		if($this->post('roles')){ $roles = $this->post('roles'); }
 		if($this->post('pdofficer')){ $pdofficer = json_decode($this->post('pdofficer'),true);}		
 		if($this->post('lender_hierarchy')){ $lender_hierarchy = json_decode($this->post('lender_hierarchy'),true); }
