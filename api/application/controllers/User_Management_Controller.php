@@ -282,7 +282,7 @@ class User_Management_Controller extends REST_Controller {
 			$userid = $this->post('userid');
 
 			$result = $this->User_Management_Model->getUserDetails($userid);
-		//echo "result";
+		
 		if($result['data_status'])
 		{
 				$data['dataStatus'] = true;
