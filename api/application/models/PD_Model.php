@@ -32,7 +32,7 @@ class PD_Model extends SPARQ_Model {
 			$this->db->ORDER_BY('PDTRIGGER.pd_id',$sort);
 			$this->db->LIMIT($limit,$page);
 			$result_array = $this->db->GET()->result_array();
-			
+			print_r($this->db->last_query());
 			if(count($result_array) != 0)
 			{
 				foreach($result_array as $key => $result)
@@ -40,8 +40,8 @@ class PD_Model extends SPARQ_Model {
 					
 					$this->db->SELECT('PDAPPLICANTSDETAILS.pd_co_applicant_id, PDAPPLICANTSDETAILS.fk_pd_id, PDAPPLICANTSDETAILS.applicant_name, PDAPPLICANTSDETAILS.applicant_type, PDAPPLICANTSDETAILS.mobile_no, PDAPPLICANTSDETAILS.email, PDAPPLICANTSDETAILS.addressline1, PDAPPLICANTSDETAILS.addressline2, PDAPPLICANTSDETAILS.addressline3, PDAPPLICANTSDETAILS.fk_city, PDAPPLICANTSDETAILS.fk_state, PDAPPLICANTSDETAILS.pincode,PDAPPLICANTSDETAILS.relation');
 					$this->db->FROM(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS');
-					$this->db->JOIN(STATE.' as STATE','PDAPPLICANTSDETAILS.fk_state = STATE.state_id ');
-					$this->db->JOIN(CITY.' as CITY','PDAPPLICANTSDETAILS.fk_city = CITY.city_id');
+					$this->db->JOIN(STATE.' as STATE','PDAPPLICANTSDETAILS.fk_state = STATE.state_id','LEFT');
+					$this->db->JOIN(CITY.' as CITY','PDAPPLICANTSDETAILS.fk_city = CITY.city_id','LEFT');
 					$this->db->WHERE('PDAPPLICANTSDETAILS.fk_pd_id ',$result['pd_id']);
 					$result_child_array = $this->db->GET()->result_array();
 					if(count($result_child_array) != 0)
