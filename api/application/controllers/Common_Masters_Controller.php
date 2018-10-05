@@ -538,16 +538,15 @@ class Common_Masters_Controller extends REST_Controller {
 	 * Company File Upload
 	 */
 	public function saveCompany_post(){
-		//echo "function in";
+		
 		$records = json_decode($this->post('records'),true);
-
 		if(!empty($_FILES['logo']['tmp_name']))
 		{
 						
 				$logo = $_FILES['logo']['tmp_name'];
 				$logoname = $_FILES['logo']['name'];
 				$logoname = strtolower($logoname);
-				$logos3path = "";
+				//$logos3path = "";
 				$logos3path = 'sineedge/'.$logoname;
 				$bucketname = PROFILE_PICTURE_BUCKET_NAME;
 				$key = $logos3path;
@@ -555,7 +554,7 @@ class Common_Masters_Controller extends REST_Controller {
 				
 				$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
 				$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
-				
+				print_r($s3result);
 				if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
 				{
 					$records['logo'] = $logoname;
@@ -571,11 +570,9 @@ class Common_Masters_Controller extends REST_Controller {
 				
 		}
 
-		
-			
 		$result = $this->Common_Masters_Model->saveRecords($records,COMPANY);
 		
-			if(count($result) > 0)
+			if($result != "" || $result != null)
 			{
 				$data['dataStatus'] = true;
 				$data['status'] = REST_Controller::HTTP_OK;

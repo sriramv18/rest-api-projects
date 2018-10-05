@@ -100,10 +100,10 @@ $db['dev'] = array(
 
 $db['test'] = array(
 	'dsn'	=> '',
-    'hostname' => 'apollodec.com',
-    'username' => 'apollod4_DEV',
-    'password' => 'apollo1234',
-    'database' => 'apollod4_ApolloDECDev',
+    'hostname' => 'sine-edge-dev.cya6cheplup2.ap-south-1.rds.amazonaws.com',
+    'username' => 'asparqdev_mas001',
+    'password' => 'sparqvenba',
+    'database' => 'sine_edge_test',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
