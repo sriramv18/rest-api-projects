@@ -140,13 +140,13 @@ class Entity_Management_Controller extends REST_Controller {
 					foreach($entity_child as $child)
 					{
 						if($child['entity_child_id'] != "" || $child['entity_child_id'] != null)
-						(
+						{
 							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'updatedon'=>$records['updatedon'],'fk_updatedby'=>$records['fk_updatedby'],'isactive'=>$child['isactive']);
 							
 							$where_condition_array = array('entity_child_id'=>$child['entity_child_id']);
 							
 							$this->Entity_Management_Model->updateRecords($entity_child_array,ENTITYCHILD,$where_condition_array);
-						)
+						}
 						else
 						{
 							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'createdon'=>$records['createdon'],'fk_createdby'=>$records['fk_createdby']);
