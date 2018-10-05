@@ -487,12 +487,18 @@ class Common_Masters_Controller extends REST_Controller {
 	/* End Of Get PD Team Details (Master Table info)*/
 
 	/* For Get PD Team Mapping Details (Child Table info)*/
-		public function getListOfPDTeamMap_post(){
+	public function getListOfPDTeamMap_post(){
 			
-			$PK = $this->post('primary_key');
-			
+			if(!empty($this->post())){
+				$PK = $this->post('primary_key');
+			}
+			else{
+				$PK = '';
+			}
+
 			$columns = array('m_city.name as city_name',
-			                 'm_entities.full_name as lender_name',
+							 'm_entities.full_name as lender_name',
+							 'm_pdteam.team_name as team_name',
 							 'PDTEAMMAP.pdteam_map_id as pdteam_map_id', 
 							 'PDTEAMMAP.fk_city_id as fk_city_id',
 							 'PDTEAMMAP.fk_team_id as fk_team_id',
@@ -510,12 +516,22 @@ class Common_Masters_Controller extends REST_Controller {
 					'table' => 'm_entities',
 					'condition' => 'PDTEAMMAP.fk_lender_id = m_entities.entity_id',
 					'jointype' => 'INNER'
+				),
+				array(
+					'table' => 'm_pdteam',
+					'condition' => 'PDTEAMMAP.fk_team_id = m_pdteam.pdteam_id',
+					'jointype' => 'INNER'
 				)
 			);
-			$where_condition_array = array('PDTEAMMAP.fk_team_id'=> $PK);
-			
-			$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
-				
+			if($PK != '')
+			{
+					$where_condition_array = array('PDTEAMMAP.fk_team_id'=> $PK);
+					$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+			}
+			else{
+		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
+			} 
+						
 				if(count($result) > 0)
 				{
 					$data['dataStatus'] = true;
@@ -532,6 +548,8 @@ class Common_Masters_Controller extends REST_Controller {
 	
 		}
 		/* End of Get PD Team Mapping Details (Child Table info)*/
+
+
 
 		
 	/**

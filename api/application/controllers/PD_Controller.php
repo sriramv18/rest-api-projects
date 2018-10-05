@@ -180,17 +180,18 @@ class PD_Controller extends REST_Controller {
 	*/
 	public function triggerNewPD_post()
 	{
+		
+		 
 		$pd_details = json_decode($this->post('pd_details'),true);
 		
 		$pd_applicant_details = json_decode($this->post('pd_applicant_details'),true);
-		$pd_document_titles = json_decode($this->post('pd_document_titles'),true);
+		$pd_document_titles = "";
+		if($this->post('pd_document_titles')){ json_decode($this->post('pd_document_titles'),true); }
 		$pd_documents = array();
-		if(!empty($_FILES['pddocuments']))
-		{
-			
-		}
+		
 		$count = 0;
 		/***********************CHOOSE PD TEMPALATE*********************/
+		
 		 $fields = array('fk_template_id');
 		 
 		 $where_condition_array = array('fk_lender_id'=>1 ,'fk_product_id'=> 1,'fk_customer_segment'=> 1,'isactive' => 1);
@@ -207,6 +208,7 @@ class PD_Controller extends REST_Controller {
 		
 		/***********************PD ALLOCATION TYPE PROCESS **********/
 		
+		$pd_details['fk_pd_allocated_to'] = TRIGGERED;
 		$pd_details['fk_pd_allocated_to'] = null;
 		$where_condition_array = array('fk_city_id' => $pd_details['fk_city'],'fk_lender_id' => $pd_details['fk_lender_id']);
 		$temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
@@ -272,13 +274,13 @@ class PD_Controller extends REST_Controller {
 		/***********************PD DOCUMENTS UPLOAD SECTION  ***********/
 		if($pd_id != null || $pd_id != '')
 		{
-			if(!empty($_FILES['pddocuments']))
+			if(!empty($_FILES['pddocuments']) && !empty($pd_document_titles))
 			{	
 				
-				foreach($_FILES['pddocuments'] as $key => $file)
+				foreach($pd_document_titles as $iter => $title)
 				{
-					$tempdoc = $file['pddocuments']['tmp_name'];
-					$tempdocname = $file['pddocuments']['name'];
+					$tempdoc = $_FILES['pddocuments']['tmp_name'][$iter];
+					$tempdocname = $_FILES['pddocuments']['name'][$iter];
 					$bucketname = LENDER_BUCKET_NAME_PREFIX.$pd_details['fk_lender_id'];
 					$key = 'pd'.$pd_id.'/'.$tempdocname ;
 					$sourcefile = $tempdoc;
@@ -288,7 +290,7 @@ class PD_Controller extends REST_Controller {
 					
 					if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
 					{
-						$record_data = array('fk_pd_id' => $pd_id,'pd_document_title'=>$pd_document_titles[$key],'pd_document_name'=>$tempdocname);
+						$record_data = array('fk_pd_id' => $pd_id,'pd_document_title'=>$title[$pd_document_title],'pd_document_name'=>$tempdocname);
 						$this->saveRecords($record_data,PDDOCUMENTS);
 					}
 					
@@ -372,7 +374,7 @@ class PD_Controller extends REST_Controller {
 		$pd_applicant_details = $this->post('pd_applicant_details');
 		$count = 0;
 		$pd_id = 0;
-		
+		//print_r($this->post());die();
 		foreach($pd_applicant_details as $pd_applicant_detail)
 			{
 				if($pd_applicant_detail['pd_co_applicant_id'] != null || $pd_applicant_detail['pd_co_applicant_id'] != "")
@@ -388,7 +390,7 @@ class PD_Controller extends REST_Controller {
 				else
 				{
 					$pd_applicant_detail['fk_pd_id'] = $pd_id;
-					$co_applicant_id = $this->PD_Model->saveRecords(PDAPPLICANTSDETAILS,$pd_applicant_detail);
+					$co_applicant_id = $this->PD_Model->saveRecords($pd_applicant_detail,PDAPPLICANTSDETAILS);
 					if($co_applicant_id != null || $co_applicant_id != '')
 					{
 						$count = $count + 1;
