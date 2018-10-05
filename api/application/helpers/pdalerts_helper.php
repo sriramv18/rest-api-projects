@@ -34,8 +34,8 @@ class PDALERTS
 			//1.Get Current Status and createdby , lenders info by pdid
 			$CI->db->SELECT("PDTRIGGER.fk_lender_id,PDTRIGGER.lender_applicant_id,PDTRIGGER.fk_pd_status,PDSTATUS.pd_status_name,PDTRIGGER.fk_createdby,USERPROFILE.fk_entity_id as created_entity_type,USERPROFILE.email as created_mail,USERPROFILE.mobile_no as created_mobile_no,PDTRIGGER.fk_pd_allocated_to,ALLOCATED.email as allocated_email,ALLOCATED.mobile_no as allocated_mobile_no,ALLOCATED.fk_entity_id as allocated_entity_type,PDTRIGGER.pd_agency_id");
 			$CI->db->FROM(PDTRIGGER." as PDTRIGGER");
-			$CI->db->JOIN(USERPROFILE." as USERPROFILE","PDTRIGGER.fk_createdby = USERPROFILE.user_id");
-			$CI->db->JOIN(USERPROFILE." as ALLOCATED","PDTRIGGER.fk_pd_allocated_to = ALLOCATED.user_id");
+			$CI->db->JOIN(USERPROFILE." as USERPROFILE","PDTRIGGER.fk_createdby = USERPROFILE.userid");
+			$CI->db->JOIN(USERPROFILE." as ALLOCATED","PDTRIGGER.fk_pd_allocated_to = ALLOCATED.userid");
 			$CI->db->JOIN(PDSTATUS." as PDSTATUS","PDTRIGGER.fk_pd_status = PDSTATUS.pd_status_id");
 			$CI->db->WHERE("PDTRIGGER.pd_id",$pdid);
 			$core_details = $CI->db->GET()->result_array();

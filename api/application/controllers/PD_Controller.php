@@ -181,6 +181,7 @@ class PD_Controller extends REST_Controller {
 	public function triggerNewPD_post()
 	{
 		$pd_details = json_decode($this->post('pd_details'),true);
+		
 		$pd_applicant_details = json_decode($this->post('pd_applicant_details'),true);
 		$pd_document_titles = json_decode($this->post('pd_document_titles'),true);
 		$pd_documents = array();
@@ -200,13 +201,13 @@ class PD_Controller extends REST_Controller {
 		 
 		 if(count($choosed_template_id))
 		 { 
-			$pd_details['fk_template_id'] = $choosed_template_id[0]['fk_template_id']; 
+			$pd_details['fk_pd_template_id'] = $choosed_template_id[0]['fk_template_id']; 
 		 }
 		 
 		
 		/***********************PD ALLOCATION TYPE PROCESS **********/
 		
-		
+		$pd_details['fk_pd_allocated_to'] = null;
 		$where_condition_array = array('fk_city_id' => $pd_details['fk_city'],'fk_lender_id' => $pd_details['fk_lender_id']);
 		$temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
 		if(count($temp_city_id))
@@ -265,7 +266,7 @@ class PD_Controller extends REST_Controller {
 		/***********************END OF PD ALLOCATION TYPE AND PROCESS***********/
 		
 		$pd_details['pd_date_of_initiation'] = date("Y-m-d H:i:s");
-		$pd_id = $this->PD_Model->saveRecords(PDTRIGGER,$pd_details);
+		$pd_id = $this->PD_Model->saveRecords($pd_details,PDTRIGGER);
 		
 		
 		/***********************PD DOCUMENTS UPLOAD SECTION  ***********/
@@ -301,7 +302,7 @@ class PD_Controller extends REST_Controller {
 			foreach($pd_applicant_details as $pd_applicant_detail)
 			{
 				$pd_applicant_detail['fk_pd_id'] = $pd_id;
-				$co_applicant_id = $this->PD_Model->saveRecords(PDAPPLICANTSDETAILS,$pd_applicant_detail);
+				$co_applicant_id = $this->PD_Model->saveRecords($pd_applicant_detail,PDAPPLICANTSDETAILS);
 				if($co_applicant_id != null || $co_applicant_id != '')
 				{
 					$count = $count + 1;
@@ -321,7 +322,7 @@ class PD_Controller extends REST_Controller {
 			
 						$data['dataStatus'] = true;
 						$data['status'] = REST_Controller::HTTP_OK;
-						$data['records'] = $template_id;
+						$data['records'] = $pd_id;
 						$this->response($data,REST_Controller::HTTP_OK);
 		}
 		else
