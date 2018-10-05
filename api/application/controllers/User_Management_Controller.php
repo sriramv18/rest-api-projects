@@ -307,7 +307,7 @@ class User_Management_Controller extends REST_Controller {
 		$userid = $this->post('userid');
 		$entityid = $this->post('entityid');
 		$profilepic = $this->post('profilepic');
-		
+		 
 		$profilepics3path = '';
 							if($entityid == 1) //1 means sine_edge Profile
 							{
