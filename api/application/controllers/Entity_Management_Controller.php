@@ -31,7 +31,7 @@ class Entity_Management_Controller extends REST_Controller {
 		if($this->get('sort')) { $sort  = $this->get('sort'); }
 		if($this->get('etid')) { $entity_type_id  = $this->get('etid'); }
 		
-		$result = $this->Entity_Management_Model->$listAllEntities($page,$limit,$sort,$entity_type_id);
+		$result = $this->Entity_Management_Model->listAllEntities($page,$limit,$sort,$entity_type_id);
 		if($result['data_status'])
 		{
 				$data['dataStatus'] = true;
@@ -49,36 +49,38 @@ class Entity_Management_Controller extends REST_Controller {
 
 	public function saveNewEntity_post()
 	{
-		$entity = "";
+		
+		//print_r($this->post());
+		$records = "";
 		$entity_child = "";
 		$entity_id = "";
 		
-		if($this->post('entity')){ $entity = $this->post('entity'); }
-		
-		if(array_key_exists('entity_child',$entity))
+		if($this->post('records')){ $records = $this->post('records'); }
+		//print_r();
+		if(array_key_exists('entity_child',$records))
 			{
-				$entity_child = $entity['entity_child'];
-				unset($entity['entity_child']);
+				$entity_child = $records['entity_child'];
+				unset($records['entity_child']);
 			}
 			
 		
-		if($entity != "")
+		if($records != "")
 		{
-			$entity_id = $this->User_Management_Model->saveRecords($entity,ENTITY);//insert user records and get userid
+			$entity_id = $this->Entity_Management_Model->saveRecords($records,ENTITY);//insert user records and get userid
 		}
 				
 				if($entity_child != "")
 				{
 					foreach($entity_child as $child)
 					{
-						$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'createdon'=>$entity['createdon'],'fk_createdby'=>$entity['fk_createdby']);
-						$this->User_Management_Model->saveRecords($entity_child_array,ENTITYCHILD);
+						$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'createdon'=>$records['createdon'],'fk_createdby'=>$records['fk_createdby']);
+						$this->Entity_Management_Model->saveRecords($entity_child_array,ENTITYCHILD);
 					}
 				}
 				
 				if($entity_id != '' || $entity_id != null)
 				{
-					 if($entity['fk_entity_type_id'] == 2)// If New Entity is Lender(2) type, then create a S3 bucket for corresponding lender. 
+					 if($records['fk_entity_type_id'] == 2)// If New Entity is Lender(2) type, then create a S3 bucket for corresponding lender. 
 					 {
 						  $bucket_name = 'lender'.$entity_id;
 						  $bucket_status = $this->aws_s3->createNewBucket($bucket_name);
@@ -115,31 +117,31 @@ class Entity_Management_Controller extends REST_Controller {
 	
 	public function saveExistEntity_post()
 	{
-		$entity = "";
+		$records = "";
 		$entity_child = "";
 		$entity_id = "";
 		
-		if($this->post('entity')){ $entity = $this->post('entity'); }
+		if($this->post('records')){ $records = $this->post('records'); }
 		
-		if(array_key_exists('entity_child',$entity))
+		if(array_key_exists('entity_child',$records))
 			{
-				$entity_child = $entity['entity_child'];
-				unset($entity['entity_child']);
+				$entity_child = $records['entity_child'];
+				unset($records['entity_child']);
 			}
 		
-		if($entity != "")
+		if($records != "")
 		{
-			$where_condition_array = array('entity_id' => $entity['entity_id'],$where_condition_array);
-			$entity_id = $this->User_Management_Model->updateRecords($entity,ENTITY,$where_condition_array);
+			$where_condition_array = array('entity_id' => $records['entity_id']);
+			$entity_id = $this->Entity_Management_Model->updateRecords($records,ENTITY,$where_condition_array);
 		}
 				
 				if($entity_child != "")
 				{
 					foreach($entity_child as $child)
 					{
-						$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'updatedon'=>$entity['updatedon'],'fk_updatedby'=>$entity['fk_updatedby'],'isactive'=>$child['isactive']);
+						$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'updatedon'=>$records['updatedon'],'fk_updatedby'=>$records['fk_updatedby'],'isactive'=>$child['isactive']);
 						$where_condition_array = array('entity_child_id'=>$child['entity_child_id']);
-						$this->User_Management_Model->updateRecords($entity_child_array,ENTITYCHILD,$where_condition_array);
+						$this->Entity_Management_Model->updateRecords($entity_child_array,ENTITYCHILD,$where_condition_array);
 					}
 				}
 				

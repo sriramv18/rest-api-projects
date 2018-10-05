@@ -571,7 +571,7 @@ class PD_Controller extends REST_Controller {
 		$pdid = $this->post('pdid');
 		//1.Get LenderID and CityID  by using pdid
 		$fields = array('fk_lender_id','fk_city','fk_pd_type','fk_product_id','fk_customer_segment');
-		$where_condition_array = array('pdid'=>$pdid)
+		$where_condition_array = array('pdid'=>$pdid);
 		$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
 		
 		//2.Get Team Map  Details based on step 1
