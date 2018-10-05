@@ -109,7 +109,7 @@ class PD_Controller extends REST_Controller {
 	
 	public function getListOfPDAllocationTypes_get()
 	{
-		$fields = array('pd_allocation_type_id','pd_allocation_type_name','pd_allocation_type_name','default');
+		$fields = array('pd_allocation_type_id','pd_allocation_type_name','pd_allocation_logic','default');
 		$where_condition_array = array('isactive' => 1);
 		$result_data['pd_allocation_type'] = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDALLOCATIONTYPE);
 		
