@@ -279,7 +279,7 @@ class PD_Controller extends REST_Controller {
 				{
 					$tempdoc = $file['pddocuments']['tmp_name'];
 					$tempdocname = $file['pddocuments']['name'];
-					$bucketname = 'lender'.$pd_details['fk_lender_id'];
+					$bucketname = LENDER_BUCKET_NAME_PREFIX.$pd_details['fk_lender_id'];
 					$key = 'pd'.$pd_id.'/'.$tempdocname ;
 					$sourcefile = $tempdoc;
 				
@@ -372,6 +372,7 @@ class PD_Controller extends REST_Controller {
 		$pd_applicant_details = $this->post('pd_applicant_details');
 		$count = 0;
 		$pd_id = 0;
+		
 		foreach($pd_applicant_details as $pd_applicant_detail)
 			{
 				if($pd_applicant_detail['pd_co_applicant_id'] != null || $pd_applicant_detail['pd_co_applicant_id'] != "")
@@ -434,7 +435,7 @@ class PD_Controller extends REST_Controller {
 							
 							$tempdoc = $_FILES['pddocuments']['tmp_name'][$iter];
 							$tempdocname = $_FILES['pddocuments']['name'][$iter];
-							$bucketname = 'lender'.$lender_id[0]['fk_lender_id'];
+							$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
 							$key = 'pd'.$doc['fk_pd_id'].'/'.$tempdocname ;
 							$sourcefile = $tempdoc;
 						
@@ -468,7 +469,7 @@ class PD_Controller extends REST_Controller {
 					
 						$tempdoc = $_FILES['pddocuments']['tmp_name'][$iter];
 						$tempdocname = $_FILES['pddocuments']['name'][$iter];
-						$bucketname = 'lender'.$lender_id;
+						$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id;
 						$key = 'pd'.$doc['fk_pd_id'].'/'.$tempdocname ;
 						$sourcefile = $tempdoc;
 					
