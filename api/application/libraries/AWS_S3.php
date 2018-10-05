@@ -44,13 +44,13 @@ class AWS_S3
 	{
 		
 		try {
-				$result = $this->S3->createBucket(['Bucket' => $BUCKET_NAME,'ACL' => 'authenticated-read']);
+				$result = $this->S3->createBucket(['ACL' => 'authenticated-read','Bucket' => $BUCKET_NAME]);
 				
-				//print_r($result);
+				return $result;
 			} catch (AwsException $e) {
 				// output error message if fails
-				echo $e->getMessage();
-				echo "\n";
+				// echo $e->getMessage();
+				// echo "\n";
 			}
 	}
 	

@@ -80,10 +80,14 @@ class Entity_Management_Controller extends REST_Controller {
 				
 				if($entity_id != '' || $entity_id != null)
 				{
-					 if($records['fk_entity_type_id'] == 2)// If New Entity is Lender(2) type, then create a S3 bucket for corresponding lender. 
+					 
+					 // If New Entity is Lender(2) type, then create a S3 bucket for corresponding lender. 
+					 if($records['fk_entity_type_id'] == 2)
 					 {
+						  //echo "LENDER TYPE";
 						  $bucket_name = 'lender'.$entity_id;
 						  $bucket_status = $this->aws_s3->createNewBucket($bucket_name);
+						  //print_r($bucket_status);
 						 
 					 }
 				}
