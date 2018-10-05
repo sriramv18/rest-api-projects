@@ -32,7 +32,6 @@ class PD_Model extends SPARQ_Model {
 			$this->db->ORDER_BY('PDTRIGGER.pd_id',$sort);
 			$this->db->LIMIT($limit,$page);
 			$result_array = $this->db->GET()->result_array();
-			print_r($this->db->last_query());
 			if(count($result_array) != 0)
 			{
 				foreach($result_array as $key => $result)
