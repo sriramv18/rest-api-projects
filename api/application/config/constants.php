@@ -85,11 +85,12 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 // define login route name for token verification
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
-//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'saveNewEntity'); // no errors
+//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'saveNewEntity'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
+defined('LENDER_BUCKET_NAME_PREFIX') OR define('LENDER_BUCKET_NAME_PREFIX','lender');
 /*********************END of AWS resources Constants*************************************************/
 
 /*******************Constants PD status*********************************/

@@ -102,7 +102,7 @@ class PD_Model extends SPARQ_Model {
 				  if(count($document_lists))
 				  {  
 					
-					$bucket_name = 'lender'.$lender_id[0]['fk_lender_id'];
+					$bucket_name = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
 					
 					 foreach($document_lists as $key => $value)
 					 {
