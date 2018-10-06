@@ -35,7 +35,7 @@ class AWS_SNS
 			// "PhoneNumber" => "+917402014940"
 		// );
 		$mobile_no = "+91".$mobile_no;
-		echo 'IN SNS--'.$mobile_no;
+		//echo 'IN SNS--'.$mobile_no;
 		$args = array(
 				"MessageAttributes" => [
 							'AWS.SNS.SMS.SenderID' => [
