@@ -422,9 +422,13 @@ class PD_Controller extends REST_Controller {
 		
 	}
 	
-	
-	public function updatePDDocs_post()
+	/*
+	*
+	*delete single PD Document - delete form table entry and S3 obj
+	*/
+	public function deletePDDoc_post()
 	{
+		
 	}
 	
 	/*
