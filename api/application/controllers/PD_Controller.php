@@ -181,12 +181,13 @@ class PD_Controller extends REST_Controller {
 	public function triggerNewPD_post()
 	{
 		
-		 
+		
 		$pd_details = json_decode($this->post('pd_details'),true);
 		
 		$pd_applicant_details = json_decode($this->post('pd_applicant_details'),true);
 		$pd_document_titles = "";
-		if($this->post('pd_document_titles')){ json_decode($this->post('pd_document_titles'),true); }
+		if($this->post('pd_document_titles')){ $pd_document_titles = json_decode($this->post('pd_document_titles'),true); }
+		
 		$pd_documents = array();
 		
 		$count = 0;
@@ -208,7 +209,7 @@ class PD_Controller extends REST_Controller {
 		
 		/***********************PD ALLOCATION TYPE PROCESS **********/
 		
-		$pd_details['fk_pd_allocated_to'] = TRIGGERED;
+		$pd_details['fk_pd_status'] = TRIGGERED;
 		$pd_details['fk_pd_allocated_to'] = null;
 		$where_condition_array = array('fk_city_id' => $pd_details['fk_city'],'fk_lender_id' => $pd_details['fk_lender_id']);
 		$temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
@@ -219,7 +220,7 @@ class PD_Controller extends REST_Controller {
 				if($temp_city_id[0]['type'] == 0) // Allocate to Vendor
 				{
 					$pd_details['pd_agency_id'] = $temp_city_id[0]['fk_team_id'];
-					$pd_details['fk_pd_allocated_to'] = ALLOCATED_TO_PARTNER;
+					$pd_details['fk_pd_status'] = ALLOCATED_TO_PARTNER;
 				}
 				else //Allocate to SineEdge Team with allocation logics
 				{
@@ -268,35 +269,42 @@ class PD_Controller extends REST_Controller {
 		/***********************END OF PD ALLOCATION TYPE AND PROCESS***********/
 		
 		$pd_details['pd_date_of_initiation'] = date("Y-m-d H:i:s");
+		if($pd_details['fk_pd_status'] == "" || $pd_details['fk_pd_status'] == null)
+		{
+			$pd_details['fk_pd_status'] = TRIGGERED;
+		}
 		$pd_id = $this->PD_Model->saveRecords($pd_details,PDTRIGGER);
 		
 		
 		/***********************PD DOCUMENTS UPLOAD SECTION  ***********/
 		if($pd_id != null || $pd_id != '')
 		{
+		
 			if(!empty($_FILES['pddocuments']) && !empty($pd_document_titles))
 			{	
 				
 				foreach($pd_document_titles as $iter => $title)
 				{
+					
 					$tempdoc = $_FILES['pddocuments']['tmp_name'][$iter];
 					$tempdocname = $_FILES['pddocuments']['name'][$iter];
 					$bucketname = LENDER_BUCKET_NAME_PREFIX.$pd_details['fk_lender_id'];
 					$key = 'pd'.$pd_id.'/'.$tempdocname ;
 					$sourcefile = $tempdoc;
-				
+					
 					$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
 					$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
 					
 					if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
 					{
-						$record_data = array('fk_pd_id' => $pd_id,'pd_document_title'=>$title[$pd_document_title],'pd_document_name'=>$tempdocname);
-						$this->saveRecords($record_data,PDDOCUMENTS);
+						$record_data = array('fk_pd_id' => $pd_id,'pd_document_title'=>$title,'pd_document_name'=>$tempdocname);
+						$this->PD_Model->saveRecords($record_data,PDDOCUMENTS);
 					}
 					
 				}
 			}
 		}
+		
 		/***********************END OF PD DOCUMENTS UPLOAD SECTION ***********/
 		if($pd_id != null || $pd_id != '')
 		{
@@ -412,6 +420,11 @@ class PD_Controller extends REST_Controller {
 						$this->response($data,REST_Controller::HTTP_OK);
 			}
 		
+	}
+	
+	
+	public function updatePDDocs_post()
+	{
 	}
 	
 	/*
