@@ -28,7 +28,7 @@ class PD_Controller extends REST_Controller {
 	{
 		$fields = array('entity_id','full_name','short_name');
 		$where_condition_array = array('isactive' => 1,'fk_entity_type_id' => 2);
-		$result_data = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,ENTITY);
+		$result_data = $this->PD_Model->selectCustomRecords($fields,$whe++++re_condition_array,ENTITY);
 		if(count($result_data))
 		{
 						
