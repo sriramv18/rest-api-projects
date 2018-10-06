@@ -34,7 +34,8 @@ class AWS_SNS
 			// "Message" => "Hi Rajasekar this is from AWS SNS service.",
 			// "PhoneNumber" => "+917402014940"
 		// );
-		
+		$mobile_no = "+91".$mobile_no;
+		echo 'IN SNS--'.$mobile_no;
 		$args = array(
 				"MessageAttributes" => [
 							'AWS.SNS.SMS.SenderID' => [
@@ -47,7 +48,7 @@ class AWS_SNS
 							]
 						],
 				"Message" => $msg,
-				"PhoneNumber" => "+91".$mobile_no
+				"PhoneNumber" => $mobile_no
 			);
 
 		$result = $this->sns->publish($args);

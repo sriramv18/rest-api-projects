@@ -15,6 +15,7 @@ class PDALERTS
 	*/
 	public static function pdnotification($pdid)
 	{
+		echo "called";
 		if($pdid != "" || $pdid != null)
 		{
 			
@@ -111,7 +112,9 @@ class PDALERTS
 				foreach($mobile_nos_to_send_notification as $no)
 				{
 					
+					
 					$no = (string)$no;
+					echo "SNSNO-".$no;
 					$CI->aws_sns->sendSMS($msg,$no);
 				}
 				
