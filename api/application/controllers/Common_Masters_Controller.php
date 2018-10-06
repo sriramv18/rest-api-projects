@@ -371,8 +371,7 @@ class Common_Masters_Controller extends REST_Controller {
 				
 			}
 
-			
-			if(count($result) !=0 )
+			if(!empty($result))
 			{
 				$data['dataStatus'] = true;
 				$data['status'] = REST_Controller::HTTP_OK;
