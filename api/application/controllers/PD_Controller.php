@@ -428,6 +428,38 @@ class PD_Controller extends REST_Controller {
 	*/
 	public function deletePDDoc_post()
 	{
+		$pd_document_details = $this->post('pd_document_details');
+		
+		if(count($pd_document_details))
+		{
+		  //Select lender_id userin pdid
+			$pdid = $pd_document_details[0]['fk_pd_id'];
+			$fields = array('fk_lender_id');
+			$where_condition_array = array('pd_id' => $pdid);
+			$lender_id = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
+			
+			 $bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
+			 $key = 'pd'.$pd_document_details[0]['fk_pd_id'].'/'.$pd_document_details[0]['pd_document_name'];
+			 $this->aws_s3->deleteSingleObjFromBucket($bucketname,$key);
+			 
+			 //delete old entry
+			 $modified = $this->db->where('pd_document_id',$pdid)->$this->db->delete(PDDOCUMENTS);
+			 if($modified)
+			 {
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = true;
+						$this->response($data,REST_Controller::HTTP_OK);
+			 }
+			 else
+			 {
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+						$this->response($data,REST_Controller::HTTP_OK);
+			 }
+			 
+			 
+		}
 		
 	}
 	
@@ -592,7 +624,7 @@ class PD_Controller extends REST_Controller {
 		$pdid = $this->post('pdid');
 		//1.Get LenderID and CityID  by using pdid
 		$fields = array('fk_lender_id','fk_city','fk_pd_type','fk_product_id','fk_customer_segment');
-		$where_condition_array = array('pdid'=>$pdid);
+		$where_condition_array = array('pd_id'=>$pdid);
 		$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
 		
 		//2.Get Team Map  Details based on step 1
@@ -603,21 +635,24 @@ class PD_Controller extends REST_Controller {
 				
 				if(count($temp_city_id))
 				{
-					if(isset($temp_city_id[0]['type']))
+					if(isset($temp_city_id[0]['team_type']))
 					{
-						if($temp_city_id[0]['type'] == 0) // Allocate to Vendor
+						if($temp_city_id[0]['team_type'] == 0) // Allocate to Vendor
 						{
 							// $pd_details['pd_agency_id'] = $temp_city_id[0]['fk_team_id'];
 							// $pd_details['fk_pd_allocated_to'] = ALLOCATED_TO_PARTNER;
+							
 						}
 						else //Allocate to SineEdge Team with allocation logics
 						{
+							
 										//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
-										$fields = array('fk_user_id,allocated');
+										$fields = array('fk_user_id','allocated','scheduled','inprogress');
 										
-										$where_condition_array = array('fk_pd_type_id' => $res_array['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $res_array['fk_customer_segment'],'fk_product_id' => $res_array['fk_product_id'],'isactive' => 1);
+										$where_condition_array = array('fk_pd_type_id' => $res_array[0]['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $res_array[0]['fk_customer_segment'],'fk_product_id' => $res_array[0]['fk_product_id'],'isactive' => 1);
 										
-										$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);	
+										$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
+												
 										if(count($list_of_pd_officers))
 										{
 											foreach($list_of_pd_officers as $key => $pdofficer)
@@ -625,9 +660,9 @@ class PD_Controller extends REST_Controller {
 												$this->db->SELECT('USERPROFILE.first_name,USERPROFILE.last_name');
 												$this->db->FROM(USERPROFILE.' as USERPROFILE');
 												$this->db->WHERE('USERPROFILE.userid',$pdofficer['fk_user_id']);
-												$data = $this->db->GET()->result_array();
-												$list_of_pd_officers[$key]['first_name'] = $data[0]['first_name'];
-												$list_of_pd_officers[$key]['last_name'] = $data[0]['last_name'];
+												$names = $this->db->GET()->result_array();
+												$list_of_pd_officers[$key]['first_name'] = $names[0]['first_name'];
+												$list_of_pd_officers[$key]['last_name'] = $names[0]['last_name'];
 												
 											}
 											
