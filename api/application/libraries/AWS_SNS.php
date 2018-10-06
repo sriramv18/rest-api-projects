@@ -19,7 +19,9 @@ class AWS_SNS
         // Construct the parent class
         //parent::__construct();
 		$this->sns = SnsClient::factory($this->sns_properties);
-        
+        // echo "caleed";
+		// $this->sendSMS('hi','9698262400');
+		// $this->sendSMS('hi2','9688895898');
 		
     }
 	
@@ -45,7 +47,7 @@ class AWS_SNS
 							]
 						],
 				"Message" => $msg,
-				"PhoneNumber" => $mobile_no
+				"PhoneNumber" => "+91".$mobile_no
 			);
 
 		$result = $this->sns->publish($args);

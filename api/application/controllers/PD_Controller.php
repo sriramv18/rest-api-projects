@@ -19,7 +19,7 @@ class PD_Controller extends REST_Controller {
         parent::__construct();
 		$this->load->model('PD_Model');
 		$this->load->library('AWS_S3');
-		$this->load->library('AWS_SES');
+		$this->load->library('AWS_SNS');
         
     }
     /***********************Get get List Of Lenders  Details for PD Trigger Page************************/
@@ -221,6 +221,7 @@ class PD_Controller extends REST_Controller {
 				{
 					$pd_details['pd_agency_id'] = $temp_city_id[0]['fk_team_id'];
 					$pd_details['fk_pd_status'] = ALLOCATED_TO_PARTNER;
+					$pd_details['fk_pd_allocated_to'] = null;
 				}
 				else //Allocate to SineEdge Team with allocation logics
 				{

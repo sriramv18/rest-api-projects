@@ -39,7 +39,7 @@ class PDALERTS
 			$CI->db->JOIN(PDSTATUS." as PDSTATUS","PDTRIGGER.fk_pd_status = PDSTATUS.pd_status_id");
 			$CI->db->WHERE("PDTRIGGER.pd_id",$pdid);
 			$core_details = $CI->db->GET()->result_array();
-			
+			//print_r($core_details);
 			if(count($core_details))
 			{
 			
@@ -49,45 +49,47 @@ class PDALERTS
 				$CI->db->SELECT("PDNOTIFICATION.pdnotification_id, PDNOTIFICATION.fk_pd_status_id, PDSTATUS.pd_status_name,PDNOTIFICATION.sms_lender, PDNOTIFICATION.sms_pdofficer, PDNOTIFICATION.sms_pdincharge, PDNOTIFICATION.mail_lender, PDNOTIFICATION.mail_pdincharge, PDNOTIFICATION.mail_pdofficer");
 				$CI->db->FROM(PDNOTIFICATION." as PDNOTIFICATION");
 				$CI->db->JOIN(PDSTATUS." as PDSTATUS","PDNOTIFICATION.fk_pd_status_id = PDSTATUS.pd_status_id AND PDSTATUS.isactive = 1");
-				$CI->db->WHERE("PDNOTIFICATION.fk_pd_status_id = $pdstatus");
+				$CI->db->WHERE("PDNOTIFICATION.fk_pd_status_id",$core_details[0]['fk_pd_status']);
 				$pd_notification_configs = $CI->db->GET()->result_array();
 				//print_r($pd_notification_configs);
 				
 				//pd cretaed entity type is 2 then sent sms only for that mobile no
-				if($core_details['created_entity_type'] == 2) // 2 - Lender Type
+				if($core_details[0]['created_entity_type'] == 2) // 2 - Lender Type
 				{
-					if($pd_notification_configs['sms_lender'] == 1)
+					if($pd_notification_configs[0]['sms_lender'] == 1)
 					{
-						array_push($mobile_nos_to_send_notification,$core_details['created_mobile_no']);
+						array_push($mobile_nos_to_send_notification,$core_details[0]['created_mobile_no']);
 					}
 				}					
 				else //sent sms to all lender contacts associated to lender id
 				{
-					if($pd_notification_configs['sms_lender'] == 1)
+					if($pd_notification_configs[0]['sms_lender'] == 1)
 					{
 						
 						$CI->db->SELECT("contact_mobile_no");
 						$CI->db->FROM(ENTITYCHILD);
-						$CI->db->WHERE("fk_entity_id",$core_details['fk_lender_id']);
+						$CI->db->WHERE("fk_entity_id",$core_details[0]['fk_lender_id']);
 						$lender_mobile_nos = $CI->db->GET()->result_array();
+						//print_r($lender_mobile_nos);
+						//print_r($lender_mobile_nos);
 						if(count($lender_mobile_nos))
 						{
 							foreach($lender_mobile_nos as $mobile)
 							{
-								array_push($mobile_nos_to_send_notification,$mobile);
+								array_push($mobile_nos_to_send_notification,$mobile['contact_mobile_no']);
 							}
 						}
 					}
 				}
 				
 				//add pd officer no
-				if($pd_notification_configs['sms_pdofficer'] == 1)
+				if($pd_notification_configs[0]['sms_pdofficer'] == 1)
 				{
-					array_push($mobile_nos_to_send_notification,$core_details['allocated_mobile_no']);
+					array_push($mobile_nos_to_send_notification,$core_details[0]['allocated_mobile_no']);
 				}
 				
 				//add pd incharge mobile_no's
-				if($pd_notification_configs['sms_pdincharge'] == 1)
+				if($pd_notification_configs[0]['sms_pdincharge'] == 1)
 				{
 						$CI->db->DISTINCT();
 						$CI->db->SELECT("mobile_no");
@@ -104,11 +106,13 @@ class PDALERTS
 						}
 				}
 				
-				$msg = "PD for Lender Applicant ID:".$core_details['lender_applicant_id']."has been".$$core_details['pd_status_name']; // status base configurable
+				$msg = "PD for Lender Applicant ID:".$core_details[0]['lender_applicant_id']."has been".$core_details[0]['pd_status_name']; // status base configurable
+				//print_r($mobile_nos_to_send_notification);
 				foreach($mobile_nos_to_send_notification as $no)
 				{
 					
-					$CI->aws_s3->sendSMS($msg,$no);
+					$no = (string)$no;
+					$CI->aws_sns->sendSMS($msg,$no);
 				}
 				
 				
