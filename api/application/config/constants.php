@@ -86,7 +86,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'triggerNewPD'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListOfUsers'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -268,6 +268,9 @@ defined('PDAPPLICANTSLOGSID') OR define('PDAPPLICANTSLOGSID','pd_co_applicant_tr
 
 defined('PDSCHEDULE') OR define('PDSCHEDULE','t_pd_schedule');
 defined('PDSCHEDULEID') OR define('PDSCHEDULEID','pd_schedule_id');
+
+defined('ROLES') OR define('ROLES','m_roles');
+defined('ROLESID') OR define('ROLESID','role_id');
 
 
 

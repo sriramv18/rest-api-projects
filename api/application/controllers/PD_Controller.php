@@ -314,15 +314,15 @@ class PD_Controller extends REST_Controller {
 		if($pd_id != null || $pd_id != '')
 		{
 			
-			// foreach($pd_applicant_details as $pd_applicant_detail)
-			// {
-				// $pd_applicant_detail['fk_pd_id'] = $pd_id;
-				// $co_applicant_id = $this->PD_Model->saveRecords($pd_applicant_detail,PDAPPLICANTSDETAILS);
-				// if($co_applicant_id != null || $co_applicant_id != '')
-				// {
-					// $count = $count + 1;
-				// }
-			// }
+			foreach($pd_applicant_details as $pd_applicant_detail)
+			{
+				$pd_applicant_detail['fk_pd_id'] = $pd_id;
+				$co_applicant_id = $this->PD_Model->saveRecords($pd_applicant_detail,PDAPPLICANTSDETAILS);
+				if($co_applicant_id != null || $co_applicant_id != '')
+				{
+					$count = $count + 1;
+				}
+			}
 		}
 		
 		// update into pd officer details 
