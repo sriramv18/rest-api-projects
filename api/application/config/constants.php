@@ -197,11 +197,11 @@ defined('LENDERHIERARCHYID') OR define('LENDERHIERARCHYID','lender_hierarchy_id'
 defined('USERPROFILE') OR define('USERPROFILE','m_user_profile');
 defined('USERPROFILEID') OR define('USERPROFILEID','userid');
 
-defined('ENTITY') OR define('ENTITY','m_entities');
+defined('ENTITY') OR define('ENTITY','m_entity');
 defined('ENTITYID') OR define('ENTITYID','entity_id');
 
-defined('ENTITYCHILD') OR define('ENTITYCHILD','m_entity_child');
-defined('ENTITYCHILDID') OR define('ENTITYCHILDID','entity_child_id');
+defined('ENTITYBILLING') OR define('ENTITYBILLING','m_entity_billing');
+defined('ENTITYBILLINGID') OR define('ENTITYBILLINGID','entity_billing_id');
 
 defined('USERPROFILEHIERARCHY') OR define('USERPROFILEHIERARCHY','m_user_lender_hierarchy');
 defined('USERPROFILEHIERARCHYID') OR define('USERPROFILEHIERARCHYID','user_lender_hierarchy_id');
@@ -277,6 +277,30 @@ defined('PDTEAMPRODUCTID') OR define('PDTEAMPRODUCTID','pdteam_product_id');
 
 defined('PDTEAMCUSTOMERSEGMENT') OR define('PDTEAMCUSTOMERSEGMENT','m_pdteam_customer_segment');
 defined('PDTEAMCUSTOMERSEGMENTID') OR define('PDTEAMCUSTOMERSEGMENTID','pdteam_customer_segment_id');
+
+defined('ENTITYREGION') OR define('ENTITYREGION','m_entity_region');
+defined('ENTITYREGIONID') OR define('ENTITYREGIONID','entity_region_id');
+
+defined('ENTITYSTATE') OR define('ENTITYSTATE','m_entity_state');
+defined('ENTITYSTATEID') OR define('ENTITYSTATEID','entity_state_id');
+
+defined('ENTITYCITY') OR define('ENTITYCITY','m_entity_city');
+defined('ENTITYCITYID') OR define('ENTITYCITYID','entity_city_id');
+
+defined('ENTITYBRANCH') OR define('ENTITYBRANCH','m_entity_branch');
+defined('ENTITYBRANCHID') OR define('ENTITYBRANCHID','entity_branch_id');
+
+defined('ENTITYBRANCH') OR define('ENTITYBRANCH','m_entity_branch');
+defined('ENTITYBRANCHID') OR define('ENTITYBRANCHID','entity_branch_id');
+
+defined('ENTITYBILLINGCONTACTINFO') OR define('ENTITYBILLINGCONTACTINFO','m_entity_billing_contact_info');
+defined('ENTITYBILLINGCONTACTINFOID') OR define('ENTITYBILLINGCONTACTINFOID','entity_billing_contact_id');
+
+defined('ENTITYTAT') OR define('ENTITYTAT','m_entity_tat');
+defined('ENTITYTATID') OR define('ENTITYTATID','entity_tat_id');
+
+defined('ENTITYPDPRICEINFO') OR define('ENTITYPDPRICEINFO','m_entity_pdprice_info');
+defined('ENTITYPDPRICEINFOID') OR define('ENTITYPDPRICEINFOID','entity_pdprice_id');
 
 
 
