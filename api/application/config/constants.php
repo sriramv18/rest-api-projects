@@ -197,7 +197,7 @@ defined('LENDERHIERARCHYID') OR define('LENDERHIERARCHYID','lender_hierarchy_id'
 defined('USERPROFILE') OR define('USERPROFILE','m_user_profile');
 defined('USERPROFILEID') OR define('USERPROFILEID','userid');
 
-defined('ENTITY') OR define('ENTITY','m_entities');
+defined('ENTITY') OR define('ENTITY','m_entity');
 defined('ENTITYID') OR define('ENTITYID','entity_id');
 
 defined('ENTITYCHILD') OR define('ENTITYCHILD','m_entity_child');
