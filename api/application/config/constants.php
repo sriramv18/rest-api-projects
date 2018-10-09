@@ -302,5 +302,8 @@ defined('ENTITYTATID') OR define('ENTITYTATID','entity_tat_id');
 defined('ENTITYPDPRICEINFO') OR define('ENTITYPDPRICEINFO','m_entity_pdprice_info');
 defined('ENTITYPDPRICEINFOID') OR define('ENTITYPDPRICEINFOID','entity_pdprice_id');
 
+defined('VENDORCITYMAP') OR define('VENDORCITYMAP','m_vendor_city_map');
+defined('VENDORCITYMAPID') OR define('VENDORCITYMAPID','vendor_city_map_id');
+
 
 
