@@ -105,13 +105,13 @@ defined('INPROGRESS') OR define('INPROGRESS','8'); // PD inprogress
 defined('COMPLETED') OR define('COMPLETED','9'); // PD Completed
 defined('QC_INPROGRESS') OR define('QC_INPROGRESS','10'); // QC_INPROGRESS
 defined('QC_COMPLETED') OR define('QC_COMPLETED','11'); // QC_COMPLETED
-defined('PD_REPORT_ACCEPTED') OR define('PD_REPORT_ACCEPTED','12'); //PD_REPORT_ACCEPTED by Lender
+defined('PD_REPORT_GENERATED') OR define('PD_REPORT_GENERATED','12'); //PD_REPORT_ACCEPTED by Lender
 defined('PD_CHNAGE_REQUEST') OR define('PD_CHNAGE_REQUEST','13'); // From Lender side requesting change of PD report
 defined('ALLOCATED_TO_PARTNER') OR define('ALLOCATED_TO_PARTNER','14'); // PD Allocated to PD agency not for PD officer
 defined('ARCHIVED') OR define('ARCHIVED','15');
 defined('CANCELLED') OR define('CANCELLED','16');
-defined('RESCHEDULED') OR define('RESCHEDULED','17');
-defined('PLANNEDSCHEDULED') OR define('PLANNEDSCHEDULED','18');
+defined('DRAFT') OR define('DRAFT','17');
+
 
 /*******************End Of Constants PD status**************************/
 
@@ -248,8 +248,8 @@ defined('PDSTATUSID') OR define('PDSTATUSID','pd_status_id');
 defined('PDTEAM') OR define('PDTEAM','m_pdteam');
 defined('PDTEAMID') OR define('PDTEAMID','pdteam_id');
 
-defined('PDTEAMMAP') OR define('PDTEAMMAP','m_pdteam_map');
-defined('PDTEAMMAPID') OR define('PDTEAMMAPID','pdteam_map_id');
+defined('PDTEAMCITY') OR define('PDTEAMCITY','m_pdteam_city');
+defined('PDTEAMCITYID') OR define('PDTEAMCITYID','pdteam_city_id');
 
 defined('PDOFFICIERSDETAILS') OR define('PDOFFICIERSDETAILS','m_pd_officiers_details');
 defined('PDOFFICIERSDETAILSID') OR define('PDOFFICIERSDETAILSID','pd_officier_id');
@@ -271,6 +271,12 @@ defined('PDSCHEDULEID') OR define('PDSCHEDULEID','pd_schedule_id');
 
 defined('ROLES') OR define('ROLES','m_roles');
 defined('ROLESID') OR define('ROLESID','role_id');
+
+defined('PDTEAMPRODUCT') OR define('PDTEAMPRODUCT','m_pdteam_product');
+defined('PDTEAMPRODUCTID') OR define('PDTEAMPRODUCTID','pdteam_product_id');
+
+defined('PDTEAMCUSTOMERSEGMENT') OR define('PDTEAMCUSTOMERSEGMENT','m_pdteam_customer_segment');
+defined('PDTEAMCUSTOMERSEGMENTID') OR define('PDTEAMCUSTOMERSEGMENTID','pdteam_customer_segment_id');
 
 
 
