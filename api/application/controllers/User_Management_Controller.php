@@ -49,13 +49,14 @@ class User_Management_Controller extends REST_Controller {
 		$roles = "";
 		$lender_hierarchy = "";
 		$pdofficer = "";
+		
 		if($this->post('roles')){ $roles = json_decode($this->post('roles'),true); }
-		if($this->post('pdofficer')){ $pdofficer = json_decode($this->post('pdofficer'),true);}
-		if($this->post('lender_hierarchy')){ $lender_hierarchy = json_decode($this->post('lender_hierarchy'),true); }
+		if($this->post('pdofficer')){ $pdofficer = json_decode($this->post('pdofficer'),true); }
+		
 		
 		
 		$records = json_decode($this->post('records'),true);
-
+		
 		
 		if(!empty($_FILES['profilepic']['tmp_name']))
 		{
@@ -66,9 +67,9 @@ class User_Management_Controller extends REST_Controller {
 				$profilepicname = strtolower($profilepicname);
 				$profilepics3path = "";
 				
-				if(array_key_exists('fk_entity_id',$records))
+				if(array_key_exists('fk_entity_type_id',$records))
 				{
-					$entity_id = $records['fk_entity_id'];
+					$entity_id = $records['fk_entity_type_id'];
 						if($entity_id == 1) //1 means sine_edge Profile
 						{
 							$profilepics3path = 'sineedge/'.$profilepicname;
@@ -109,24 +110,24 @@ class User_Management_Controller extends REST_Controller {
 				
 				if($roles != "")
 				{
-					foreach($roles as $role)
-					{
-						$role_array = array('user_role'=>$role['user_role'],'fk_userid'=>$user_id);//insert roles againest user
+					// foreach($roles as $role)
+					// {
+						$role_array = array('user_role'=>$roles['user_role'],'fk_userid'=>$user_id);//insert roles againest user
 						$this->User_Management_Model->saveRecords($role_array,USERPROFILEROLES);
-					}
+					// }
 				}
 		
 				
-				if($lender_hierarchy != "")
-				{
+				// if($lender_hierarchy != "")
+				// {
 					
-					foreach($lender_hierarchy as $hierarchy)
-					{	
-						$hierarchy = array('fk_hierarchy_id'=>$hierarchy['lender_hierarchy_id'],'fk_user_id'=>$user_id);
-						$this->User_Management_Model->saveRecords($hierarchy,USERPROFILEHIERARCHY);
-					}
-				}
-
+				// 	foreach($lender_hierarchy as $hierarchy)
+				// 	{	
+				// 		$hierarchy = array('fk_hierarchy_id'=>$hierarchy['lender_hierarchy_id'],'fk_user_id'=>$user_id);
+				// 		$this->User_Management_Model->saveRecords($hierarchy,USERPROFILEHIERARCHY);
+				// 	}
+				// }
+					//print_r($pdofficer);die;
 				if($pdofficer != ""){
 					$pdofficer['fk_user_id'] = $user_id;
 					//print_r($pdofficer);
@@ -158,12 +159,13 @@ class User_Management_Controller extends REST_Controller {
 		$roles = "";
 		$lender_hierarchy = "";
 		$pdofficer = "";
-		if($this->post('roles')){ $roles = $this->post('roles'); }
+		
 		if($this->post('pdofficer')){ $pdofficer = json_decode($this->post('pdofficer'),true);}		
 		if($this->post('lender_hierarchy')){ $lender_hierarchy = json_decode($this->post('lender_hierarchy'),true); }
 		
 		
 		$records = json_decode($this->post('records'),true);
+		// $records = array_filter($recordsData);
 		$roles = json_decode($this->post('roles'),true);
 		
 		// $lender_hierarchy  = json_decode($this->post('lender_hierarchy'),true);
@@ -177,9 +179,9 @@ class User_Management_Controller extends REST_Controller {
 				$profilepicname = strtolower($profilepicname);
 				$profilepics3path = "";
 				
-				if(array_key_exists('fk_entity_id',$records))
+				if(array_key_exists('fk_entity_type_id',$records))
 				{
-					$entity_id = $records['fk_entity_id'];
+					$entity_id = $records['fk_entity_type_id'];
 						if($entity_id == 1) //1 means sine_edge Profile
 						{
 							$profilepics3path = 'sineedge/'.$profilepicname;
@@ -220,39 +222,21 @@ class User_Management_Controller extends REST_Controller {
 				
 				if($roles != "")
 				{
-					foreach($roles as $role)
-					{
+					
 						
 						$this->User_Management_Model->updateRecords(array('isactive'=>0),USERPROFILEROLES,array('fk_userid'=>$records['userid']));
 						
 						
-					}
-					foreach($roles as $role)
-					{
+					
+					
 						
 						
-						$role_array = array('user_role'=>$role['user_role'],'fk_userid'=>$records['userid']);
+						$role_array = array('user_role'=>$roles['user_role'],'fk_userid'=>$records['userid']);
 						$this->User_Management_Model->saveRecords($role_array,USERPROFILEROLES);
-					}
 				}
 				
-				if($lender_hierarchy != "")
-				{
-					foreach($lender_hierarchy as $hierarchy)
-					{
-						
-						$this->User_Management_Model->updateRecords(array('isactive'=>0),USERPROFILEHIERARCHY,array('fk_user_id'=>$records['userid']));
-						$hierarchy = array('fk_hierarchy_id'=>$hierarchy['lender_hierarchy_id'],'fk_user_id'=>$records['userid']);//insert hierarchy  againest lender type users
-						
-					}
-
-					foreach($lender_hierarchy as $hierarchy)
-					{
-						
-						//insert hierarchy  againest lender type users
-						$this->User_Management_Model->saveRecords($hierarchy,USERPROFILEHIERARCHY);
-					}
-				}
+				
+				
 
 				if($pdofficer != ""){
 					$this->User_Management_Model->updateRecords($pdofficer,PDOFFICIERSDETAILS,$pdofficer['fk_user_id']);
@@ -341,4 +325,5 @@ class User_Management_Controller extends REST_Controller {
 							
 							
 	}
+	
 }
