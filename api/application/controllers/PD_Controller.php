@@ -175,7 +175,7 @@ class PD_Controller extends REST_Controller {
 	/*
 	sample data
 	{
-    "pd_details":{ "fk_lender_id": "1", "lender_applicant_id":"12458","fk_product_id":"2","fk_subproduct_id":"1","fk_pd_type":"2", "fk_pd_status":"2","pd_specific_clarification":"nothing","createdon":"2017","fk_createdby":"2","fk_pd_allocation_type":"3","fk_pd_allocated_to":"1","fk_pd_template_id":"2","fk_customer_segment":"1","pd_officier_final_judgement":"54561","pd_agency_id":"1","loan_amount":"1589655","addressline1":"1", "addressline2":"2", "addressline3":"3", "fk_city":"1", "fk_state":"2", "pincode":"966852"}
+    "pd_details":{ "fk_lender_id": "1", "lender_applicant_id":"12458","fk_product_id":"2","fk_subproduct_id":"1","fk_pd_type":"2", "pd_status":"2","pd_specific_clarification":"nothing","createdon":"2017","fk_createdby":"2","fk_pd_allocation_type":"3","fk_pd_allocated_to":"1","fk_pd_template_id":"2","fk_customer_segment":"1","pd_officier_final_judgement":"54561","pd_agency_id":"1","loan_amount":"1589655","addressline1":"1", "addressline2":"2", "addressline3":"3", "fk_city":"1", "fk_state":"2", "pincode":"966852"}
 	}
 	*/
 	public function triggerNewPD_post()
@@ -209,7 +209,7 @@ class PD_Controller extends REST_Controller {
 		
 		/***********************PD ALLOCATION TYPE PROCESS **********/
 		
-		$pd_details['fk_pd_status'] = TRIGGERED;
+		$pd_details['pd_status'] = TRIGGERED;
 		$pd_details['fk_pd_allocated_to'] = null;
 		$where_condition_array = array('fk_city_id' => $pd_details['fk_city'],'fk_lender_id' => $pd_details['fk_lender_id']);
 		$temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
@@ -221,7 +221,7 @@ class PD_Controller extends REST_Controller {
 				if($temp_city_id[0]['team_type'] == 0) // Allocate to Vendor
 				{
 					$pd_details['pd_agency_id'] = $temp_city_id[0]['fk_team_id'];
-					$pd_details['fk_pd_status'] = ALLOCATED_TO_PARTNER;
+					$pd_details['pd_status'] = ALLOCATED_TO_PARTNER;
 					$pd_details['fk_pd_allocated_to'] = null;
 				}
 				else //Allocate to SineEdge Team with allocation logics
@@ -251,7 +251,7 @@ class PD_Controller extends REST_Controller {
 								// $final_pd_officer_to_allocate = isset($list_of_pd_officers[$key])? $list_of_pd_officers[$key]: null;
 								
 								$pd_details['fk_pd_allocated_to'] = $final_pd_officer_to_allocate;
-								$pd_details['fk_pd_status'] = ALLOCATED;
+								$pd_details['pd_status'] = ALLOCATED;
 								//echo "final".$final_pd_officer_to_allocate;
 							
 						}
@@ -274,9 +274,9 @@ class PD_Controller extends REST_Controller {
 		/***********************END OF PD ALLOCATION TYPE AND PROCESS***********/
 		
 		$pd_details['pd_date_of_initiation'] = date("Y-m-d H:i:s");
-		if($pd_details['fk_pd_status'] == "" || $pd_details['fk_pd_status'] == null)
+		if($pd_details['pd_status'] == "" || $pd_details['pd_status'] == null)
 		{
-			$pd_details['fk_pd_status'] = TRIGGERED;
+			$pd_details['pd_status'] = TRIGGERED;
 		}
 		$pd_id = $this->PD_Model->saveRecords($pd_details,PDTRIGGER);
 		
@@ -560,7 +560,7 @@ class PD_Controller extends REST_Controller {
 		
 		if($records['fk_pd_allocated_to'] != "" || $records['fk_pd_allocated_to'] != null)
 		{
-			$records['fk_pd_status'] = ALLOCATED;
+			$records['pd_status'] = ALLOCATED;
 		}
 		$where_condition_array = array('pd_id' => $records['pd_id']);
 		$pd_id_modified = $this->PD_Model->updateRecords($records,PDTRIGGER,$where_condition_array);
@@ -595,7 +595,7 @@ class PD_Controller extends REST_Controller {
 			if($id != '' || $id != null)
 			{
 				$where_condition_array = array('pd_id' => $records['fk_pd_id']);
-				$temp_array = array('fk_pd_status' => SCHEDULED,'fk_updatedby'=>$records['fk_scheduled_by'],'updatedon'=>$records['createdon']);
+				$temp_array = array('pd_status' => SCHEDULED,'fk_updatedby'=>$records['fk_scheduled_by'],'updatedon'=>$records['createdon']);
 				$pd_id_modified = $this->PD_Model->updateRecords($temp_array,PDTRIGGER,$where_condition_array);
 				
 				if($pd_id_modified != "" || $pd_id_modified != null)
