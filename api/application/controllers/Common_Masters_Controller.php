@@ -235,6 +235,118 @@ class Common_Masters_Controller extends REST_Controller {
 	/*  End of State Listing */
 
 	/*  For City Listing */
+	/**
+	 * Get PD Manage Function
+	 * sriram
+	 */
+	public function getPdManage_get()
+	{
+		
+		
+		
+		
+		$columns = array("*");
+			$table = PDTEAM. ' as PDTEAM';
+			$joins = array(
+				array('table'=>ENTITY.' as ENTITY',
+				'condition'=>'ENTITY.entity_id = PDTEAM.fk_lender_id and PDTEAM.isactive =1','jointype'=>'JOIN'),
+			);
+			$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
+			
+		if(count($result) !=0){
+			foreach($result as $index=>$res){
+				/**CUSTOMERSEGMENT */
+			$columns = array("CUSTOMERSEGMENT.*");
+			$table = PDTEAMCUSTOMERSEGMENT. ' as PDTEAMCUSTOMERSEGMENT';
+			$joins = array(
+				array('table'=>CUSTOMERSEGMENT.' as CUSTOMERSEGMENT',
+				'condition'=>'PDTEAMCUSTOMERSEGMENT.fk_cs_id = CUSTOMERSEGMENT.customer_segment_id and CUSTOMERSEGMENT.isactive =1','jointype'=>'JOIN'),
+			);
+			$where_condition_array = array('PDTEAMCUSTOMERSEGMENT.fk_pdteam_id'=>$res['pdteam_id']);
+			$result[$index]['CUSTOMERSEGMENT'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);	
+				/**CITY */
+			$columns = array("CITY.name");
+			$table = PDTEAMCITY.' as PDTEAMCITY';
+			$joins = array(
+				array('table'=>CITY.' as CITY','condition'=>'PDTEAMCITY.fk_city_id = CITY.city_id and CITY.isactive = 1','jointype'=>'JOIN')
+			);
+			$where_condition_array = array('PDTEAMCITY.fk_pdteam_id'=>$res['pdteam_id']);
+			$result[$index]['CITYMAP'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+			/**PRODUCT */
+			$columns = array("PRODUCTS.name");
+			$table = PDTEAMPRODUCT.' as PDTEAMPRODUCT';
+			$joins = array(
+				array('table'=>PRODUCTS.' as PRODUCTS',
+					'condition'=>'PDTEAMPRODUCT.fk_product_id = PRODUCTS.product_id and PRODUCTS.isactive =1','jointype'=>'JOIN')
+				
+			);
+			$where_condition_array = array('PDTEAMPRODUCT.fk_pdteam_id'=>$res['pdteam_id']);
+			$result[$index]['PRODUCTS'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+			/**USERPROFILE */
+
+			$columns = array("USERPROFILE.userid,concat(USERPROFILE.first_name,' ',USERPROFILE.last_name)as user_full_name");
+			$table = USERPROFILE.' as USERPROFILE';
+			$joins = array(
+				array('table'=>PDOFFICIERSDETAILS.' as PDOFFICIERSDETAILS','condition'=>'USERPROFILE.userid = PDOFFICIERSDETAILS.fk_user_id and USERPROFILE.isactive =1','jointype'=>'JOIN')
+			);
+			$where_condition_array = array('PDOFFICIERSDETAILS.fk_team_id'=>$res['pdteam_id']);
+			$result[$index]['USERPROFILE'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+		}
+		
+		}
+
+		if(count($result) > 0)
+			{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+			else
+			{
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+	}
+	/**
+	 * Save PD Team Manage 
+	 * by sriram
+	 */
+
+		public function savePdTeamManage_post()
+		{
+			$records = $this->post('records');
+			// print_r($records);die;
+			if(!empty($records))
+			{
+				foreach($records['teamDetails'] as $users)
+				{
+					$record['fk_user_id'] = $users['userid'];
+					$record['fk_team_id'] = $users['newTeamName'];
+					$record['updatedon'] = $records['updatedon'];
+					$record['fk_updatedby'] = $records['fk_updatedby'];
+					$where_condition_array = array('fk_user_id' => $record['fk_user_id']);	
+				$result = $this->Common_Masters_Model->updateRecords($record,PDOFFICIERSDETAILS,$where_condition_array);
+				}
+			}
+			if(count($result) > 0)
+			{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+			else
+			{
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$this->response($data,REST_Controller::HTTP_OK);
+			}
+		}
+	/**
+	 * End of the Function
+	 */
 	public function getListOfCity_get(){
 	    $columns = array('m_states.name as state_name','CITY.*');
 		$table = CITY.' as CITY';
