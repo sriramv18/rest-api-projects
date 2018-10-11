@@ -39,6 +39,7 @@ class SPARQ_Model extends CI_Model {
 	{
 		
 		$data =  $this->db->update($table_name,$record_data,$where_condition_array);
+		
 		if($print_query == 1)
 		{
 			print_r($this->db->last_query());

@@ -25,7 +25,7 @@ class User_Management_Controller extends REST_Controller {
 	public function listAllUsers_get()
 	{
 		//echo "function";
-
+			
 		$result = $this->User_Management_Model->listAllUsers();
 		//echo "result";
 		if($result['data_status'])
@@ -128,10 +128,24 @@ class User_Management_Controller extends REST_Controller {
 				// 	}
 				// }
 					//print_r($pdofficer);die;
-				if($pdofficer != ""){
+					if(array_key_exists('fk_entity_type_id',$records))
+					{
+						$entity_id = $records['fk_entity_type_id'];
+						$roles = $roles['user_role'];
+					if($entity_id ==1 && $roles == 5 || $roles ==4){
+						if($roles == 5)
+						{
+							$pdofficer['fk_pd_type_id'] = 1;
+						}else if($roles == 4)
+						{
+							$pdofficer['fk_pd_type_id'] = 2;
+						}
+						
 					$pdofficer['fk_user_id'] = $user_id;
 					//print_r($pdofficer);
 					$this->User_Management_Model->saveRecords($pdofficer,PDOFFICIERSDETAILS);
+				
+				}
 				}
 				if($user_id != '' || $user_id != null)
 				{
@@ -237,10 +251,28 @@ class User_Management_Controller extends REST_Controller {
 				
 				
 				
-
-				if($pdofficer != ""){
-					$this->User_Management_Model->updateRecords($pdofficer,PDOFFICIERSDETAILS,$pdofficer['fk_user_id']);
+					// print_r($records);
+					// print_r($roles);die;
+				if(array_key_exists('fk_entity_type_id',$records))
+					{
+						
+						$entity_id = $records['fk_entity_type_id'];
+						$roles = $roles['user_role'];
+					
+						if($entity_id ==1 && $roles == 5 || $roles ==4){
+							if($roles == 5)
+							{
+								$pdofficer['fk_pd_type_id'] = 1;
+							}else if($roles == 4)
+							{
+								$pdofficer['fk_pd_type_id'] = 2;
+							}
+							//print_r($pdofficer);die;
+							//print_r($pdofficer);die;
+						$arr = array('fk_user_id'=>$pdofficer['fk_user_id']);
+					$this->User_Management_Model->updateRecords($pdofficer,PDOFFICIERSDETAILS,$arr);
 				}
+			}
 				
 				if($modified != '' || $modified != null || $modified != 0)
 				{

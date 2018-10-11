@@ -19,20 +19,20 @@ class Common_Masters_Model extends SPARQ_Model {
 		/**
 		 * This Function is used to Get The PD Team Related Datas for Listing
 		 */
-		public function pdteamlist(){
+		// public function pdteamlist(){
 		 
-			$result = $this->db->get(PDTEAM)->result_array();
+		// 	$result = $this->db->get(PDTEAM)->result_array();
 		
-			if(count($result) !=0){
-				foreach($result as $key=> $r){
+		// 	if(count($result) !=0){
+		// 		foreach($result as $key=> $r){
 					
-					$cities = $this->db->get_where(PDTEAMMAP,array('fk_team_id'=>$r['pdteam_id']))->result_array();
-					array_push($result[$key],$cities);
-				}
-			}
+		// 			$cities = $this->db->get_where(PDTEAMMAP,array('fk_team_id'=>$r['pdteam_id']))->result_array();
+		// 			array_push($result[$key],$cities);
+		// 		}
+		// 	}
 
-			return $result;
-		 }
+		// 	return $result;
+		//  }
 
 		 /**
 		 * This Function is used to Delete The Datas 
