@@ -93,6 +93,11 @@ $route['(listAllTemplates/:any)'] = 'Template_Management_Controller/listAllTempl
 $route['saveNewTemplateName'] = 'Template_Management_Controller/saveNewTemplateName'; 
 $route['saveTemplateLenderDetails'] = 'Template_Management_Controller/saveTemplateLenderDetails'; 
 $route['saveTemplateCategoryDetails'] = 'Template_Management_Controller/saveTemplateCategoryDetails'; 
+$route['saveTemplateQuestionAnswers'] = 'Template_Management_Controller/saveTemplateQuestionAnswers'; 
+$route['getTemplateMaster'] = 'Template_Management_Controller/getTemplateMaster'; 
+$route['getTemplateLenders'] = 'Template_Management_Controller/getTemplateLenders'; 
+$route['getTemplateCategories'] = 'Template_Management_Controller/getTemplateCategories'; 
+$route['getTemplateQuestionAnswers'] = 'Template_Management_Controller/getTemplateQuestionAnswers'; 
 
 //QUESTION MANAGEMENT
 $route['(listAllQuestions/:any)'] = 'Question_Management_Controller/listAllQuestions/'; 
