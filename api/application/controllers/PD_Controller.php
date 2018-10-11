@@ -32,7 +32,12 @@ class PD_Controller extends REST_Controller {
 		if(count($result_data))
 		{
 						
-						
+						foreach($result_data as $key => $value)
+						{
+							$fields = array('*');
+							$where_condition_array = array('isactive' => 1,'fk_entity_id' => $value['entity_id']);
+							$result_data[$key]['billing_address'] = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,ENTITYBILLING);
+						}
 						$data['dataStatus'] = true;
 						$data['status'] = REST_Controller::HTTP_OK;
 						$data['records'] = $result_data;
@@ -209,74 +214,71 @@ class PD_Controller extends REST_Controller {
 		
 		/***********************PD ALLOCATION TYPE PROCESS **********/
 		
-		$pd_details['pd_status'] = TRIGGERED;
-		$pd_details['fk_pd_allocated_to'] = null;
-		$where_condition_array = array('fk_city_id' => $pd_details['fk_city'],'fk_lender_id' => $pd_details['fk_lender_id']);
-		$temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
-		//print_r($temp_city_id);
-		if(count($temp_city_id))
-		{
-			if(isset($temp_city_id[0]['team_type']))
-			{
-				if($temp_city_id[0]['team_type'] == 0) // Allocate to Vendor
-				{
-					$pd_details['pd_agency_id'] = $temp_city_id[0]['fk_team_id'];
-					$pd_details['pd_status'] = ALLOCATED_TO_PARTNER;
-					$pd_details['fk_pd_allocated_to'] = null;
-				}
-				else //Allocate to SineEdge Team with allocation logics
-				{
-					//echo "SineEdge TEAm";
-						$local_pd_allocation_type = $pd_details['fk_pd_allocation_type'];
-						if($local_pd_allocation_type == 1)// AUTO - Load Balance Allocation
-						{
+		// $pd_details['pd_status'] = TRIGGERED;
+		// $pd_details['fk_pd_allocated_to'] = null;
+		// $where_condition_array = array('fk_city_id' => $pd_details['fk_city'],'fk_lender_id' => $pd_details['fk_lender_id']);
+		// $temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
+		// //print_r($temp_city_id);
+		// if(count($temp_city_id))
+		// {
+			// if(isset($temp_city_id[0]['team_type']))
+			// {
+				// if($temp_city_id[0]['team_type'] == 0) // Allocate to Vendor
+				// {
+					// $pd_details['pd_agency_id'] = $temp_city_id[0]['fk_team_id'];
+					// $pd_details['pd_status'] = ALLOCATED_TO_PARTNER;
+					// $pd_details['fk_pd_allocated_to'] = null;
+				// }
+				// else //Allocate to SineEdge Team with allocation logics
+				// {
+					// //echo "SineEdge TEAm";
+						// $local_pd_allocation_type = $pd_details['fk_pd_allocation_type'];
+						// if($local_pd_allocation_type == 1)// AUTO - Load Balance Allocation
+						// {
 							
-							//echo "AUTO LOAD";
-								//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
-								$fields = array('fk_user_id','allocated');
+							// //echo "AUTO LOAD";
+								// //select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
+								// $fields = array('fk_user_id','allocated');
 								
-								$where_condition_array = array('fk_pd_type_id' => $pd_details['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $pd_details['fk_customer_segment'],'fk_product_id' => $pd_details['fk_product_id'],'isactive' => 1);
+								// $where_condition_array = array('fk_pd_type_id' => $pd_details['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $pd_details['fk_customer_segment'],'fk_product_id' => $pd_details['fk_product_id'],'isactive' => 1);
 								
-								$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
-								//echo "PD OFF";
-								//print_r($list_of_pd_officers);
-								$allocated_values = array_column($list_of_pd_officers,'allocated');
+								// $list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
+								// //echo "PD OFF";
+								// //print_r($list_of_pd_officers);
+								// $allocated_values = array_column($list_of_pd_officers,'allocated');
 								
-								$min_allocated = min($allocated_values);
-								$key = array_search($min_allocated,$allocated_values);
-								$final_pd_officer_to_allocate = $list_of_pd_officers[$key]['fk_user_id'];
+								// $min_allocated = min($allocated_values);
+								// $key = array_search($min_allocated,$allocated_values);
+								// $final_pd_officer_to_allocate = $list_of_pd_officers[$key]['fk_user_id'];
 								
-								//For Random Allocaiton not in use
-								// $key = mt_rand(0, count($list_of_pd_officers) - 1);
-								// $final_pd_officer_to_allocate = isset($list_of_pd_officers[$key])? $list_of_pd_officers[$key]: null;
+								// //For Random Allocaiton not in use
+								// // $key = mt_rand(0, count($list_of_pd_officers) - 1);
+								// // $final_pd_officer_to_allocate = isset($list_of_pd_officers[$key])? $list_of_pd_officers[$key]: null;
 								
-								$pd_details['fk_pd_allocated_to'] = $final_pd_officer_to_allocate;
-								$pd_details['pd_status'] = ALLOCATED;
-								//echo "final".$final_pd_officer_to_allocate;
+								// $pd_details['fk_pd_allocated_to'] = $final_pd_officer_to_allocate;
+								// $pd_details['pd_status'] = ALLOCATED;
+								// //echo "final".$final_pd_officer_to_allocate;
 							
-						}
-						else if($local_pd_allocation_type == 2) // AUTO - NEAREST Allocation
-						{
+						// }
+						// else if($local_pd_allocation_type == 2) // AUTO - NEAREST Allocation
+						// {
 							
-						}
-						else // Manual Allocation
-						{
-							//  Do nothing, cause fk_pd_allocated_to value comes from front end.
-						}
+						// }
+						// else // Manual Allocation
+						// {
+							// //  Do nothing, cause fk_pd_allocated_to value comes from front end.
+						// }
 					
-				}
-			}//End Of isset
-		}
-		
-		
-					
+				// }
+			// }//End Of isset
+		// }
 		
 		/***********************END OF PD ALLOCATION TYPE AND PROCESS***********/
 		
 		$pd_details['pd_date_of_initiation'] = date("Y-m-d H:i:s");
 		if($pd_details['pd_status'] == "" || $pd_details['pd_status'] == null)
 		{
-			$pd_details['pd_status'] = TRIGGERED;
+			$pd_details['pd_status'] = DRAFT;
 		}
 		$pd_id = $this->PD_Model->saveRecords($pd_details,PDTRIGGER);
 		

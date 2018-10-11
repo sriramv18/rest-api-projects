@@ -23,13 +23,13 @@ class Template_Management_Controller extends REST_Controller {
    
 	public function listAllTemplates_get()
 	{
-		
-		$result = $this->User_Management_Model->$listAllTemplates();
-		if($result['data_status'])
+		$page = "";$limit = ""; $sort = "asc";
+		$result = $this->Template_Management_Model->listAllTemplates($page,$limit,$sort);
+		if(count($result))
 		{
 				$data['dataStatus'] = true;
 				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result['data'];
+				$data['records'] = $result;
 				$this->response($data,REST_Controller::HTTP_OK);
 		}
 		else
@@ -42,11 +42,11 @@ class Template_Management_Controller extends REST_Controller {
 
 	public function saveNewTemplateName_post()
 	{
-		$template_name = $this->post('template_name');
+		$records = $this->post('records');
 		
-		if(array_key_exists('template_id',$template_name))
+		if($records['template_id'] == null || $records['template_id'] == "")
 		{
-				$template_id = $this->Template_Management_Model->saveRecords($template_name,TEMPLATE);
+				$template_id = $this->Template_Management_Model->saveRecords($records,TEMPLATE);
 				if($template_id != "" || $template_id != null)
 				{
 						$data['dataStatus'] = true;
@@ -64,8 +64,8 @@ class Template_Management_Controller extends REST_Controller {
 		}
 		else
 		{
-			$where_condition_array = array('template_id'=>$template_name['template_id']);
-			$modified = $this->db->updateRecords($template_name,TEMPLATE,$where_condition_array);
+			$where_condition_array = array('template_id'=>$records['template_id']);
+			$modified = $this->db->updateRecords($records,TEMPLATE,$where_condition_array);
 			if($template_id != "" || $template_id != null)
 				{
 						$data['dataStatus'] = true;
@@ -76,7 +76,7 @@ class Template_Management_Controller extends REST_Controller {
 				else
 				{
 						$data['dataStatus'] = false;
-						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
 						$this->response($data,REST_Controller::HTTP_OK);
 					
 				}
@@ -88,27 +88,21 @@ class Template_Management_Controller extends REST_Controller {
 	
 	public function saveTemplateLenderDetails_post()
 	{
-		$template_id = '';
+		
 		$count = 0;
-		
-		if($this->post('template_id'))
-		{
-			$template_id = $this->post('template_id');
-		}
-		
-		$template_lender_details = $this->post('template_lender_details');
+		$template_lender_details = $this->post('records');
 		
 		foreach($template_lender_details as $template_lender_detail)
 		{
-				if(array_key_exists('lender_template_id',$template_lender_detail))
+				if($template_lender_detail['template_lender_map_id'] != null || $template_lender_detail['template_lender_map_id'] != "")
 				{
-					$where_condition_array = array('lender_template_id'=>$template_lender_detail['lender_template_id']);
-					$modified = $this->Template_Management_Model->updateRecords(template_lender_detail,LENDERTEMPLATE,$where_condition_array);
+					$where_condition_array = array('fk_template_id'=>$template_lender_detail['fk_template_id']);
+					$modified = $this->Template_Management_Model->updateRecords($template_lender_detail,LENDERTEMPLATE,$where_condition_array);
 					if($modified != "" || $modified != null){ $count++; } 
 				}
 				else
 				{
-					$template_lender_detail['fk_template_id'] = $template_id;
+					
 					$id = $this->Template_Management_Model->saveRecords($template_lender_detail,LENDERTEMPLATE);
 					if($id != "" || $id != null){ $count++; }
 				}
@@ -135,19 +129,13 @@ class Template_Management_Controller extends REST_Controller {
 	
 	public function saveTemplateCategoryDetails_post()
 	{
-		$template_id = '';
-		$count = 0;
-		
-		if($this->post('template_id'))
-		{
-			$template_id = $this->post('template_id');
-		}
-		
-		$template_category_details = $this->post('template_category_details');
+	
+		$count = 0;	
+		$template_category_details = $this->post('records');
 		
 		foreach($template_category_details as $template_category_detail)
 		{
-			if(array_key_exists('template_catagory_weightage_id',$template_category_detail))
+			if($template_category_detail['template_catagory_weightage_id'] != null || $template_category_detail['template_catagory_weightage_id'] != "")
 			{
 				$where_condition_array = array('template_catagory_weightage_id'=>$template_category_detail['template_catagory_weightage_id']);
 				$modified = $this->Template_Management_Model->updateRecords($template_category_detail,TEMPLATECATAGORYWEIGHTAGE,$where_condition_array);
@@ -155,7 +143,7 @@ class Template_Management_Controller extends REST_Controller {
 			}
 			else
 			{
-					$template_category_detail['fk_template_id'] = $template_id;
+					
 					$id = $this->Template_Management_Model->saveRecords($template_lender_detail,TEMPLATECATAGORYWEIGHTAGE);
 					if($id != "" || $id != null){ $count++; }
 			}
@@ -177,6 +165,100 @@ class Template_Management_Controller extends REST_Controller {
 				}
 		
 		
+	}
+	
+	
+	public function saveTemplateQuestionAnswers_post()
+	{
+		$count = 0;	
+		$template_question_answers_details = $this->post('records');
+		
+		foreach($template_question_answers_details as $key => $template_question_answers_detail)
+		{
+			$answers_array = array();
+			if($template_question_answers_detail['template_question_id'] != null || $template_question_answers_detail['template_question_id'] != "")
+			{
+					if(isset($template_question_answers_detail['answers_details']))
+					{
+						$answers_array = $template_question_answers_detail['answers_details'];
+						unset($template_question_answers_detail['answers_details']);
+					}
+					
+					$where_condition_array = array('template_question_id' => $template_question_answers_detail['template_question_id']);
+					$question_modified = $this->Template_Management_Model->updateRecords($template_question_answers_detail,TEMPLATEQUESTION,$where_condition_array);
+					
+					if(count($answers_array))
+					{
+						foreach($answers_array as $key => $answer)
+						{
+							if($answer['template_answer_weightage_id'] != "" || $answer['template_answer_weightage_id'] != null)
+							{
+								$where_condition_array = array('template_answer_weightage_id' => $answer['template_answer_weightage_id']);
+								$answer_modified = $this->Template_Management_Model->updateRecords($answer,TEMPLATEANSWERWEIGHTAGE,$where_condition_array);
+								
+								if($answer_modified != "" || $answer_modified != null) {$count++;}
+							}
+							else
+							{
+								$answer_inserted = $this->Template_Management_Model->saveRecords($answer,TEMPLATEANSWERWEIGHTAGE);
+								
+								if($answer_inserted != "" || $answer_inserted != null) {$count++;}
+							}
+						}
+					}
+					
+					if(($question_modified != "" || $question_modified != null) && count($answers_array) == $count)
+					{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = true;
+						$this->response($data,REST_Controller::HTTP_OK);
+					}
+					else
+					{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+						$this->response($data,REST_Controller::HTTP_OK);
+					}
+					
+			}
+			else
+			{
+				if(isset($template_question_answers_detail['answers_details']))
+					{
+						$answers_array = $template_question_answers_detail['answers_details'];
+						unset($template_question_answers_detail['answers_details']);
+					}
+					
+					$question_id = $this->Template_Management_Model->saveRecords($template_question_answers_detail,TEMPLATEQUESTION);
+					
+					if(count($answers_array))
+					{
+						foreach($answers_array as $key => $answer)
+						{
+							$answer_inserted = $this->Template_Management_Model->saveRecords($answer,TEMPLATEANSWERWEIGHTAGE);
+							if($answer_inserted != "" || $answer_inserted != null) {$count++;}
+						}
+					}
+					
+					
+					if(($question_id != "" || $question_id != null) && count($answers_array) == $count)
+					{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $question_id;
+						$this->response($data,REST_Controller::HTTP_OK);
+					}
+					else
+					{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+						$this->response($data,REST_Controller::HTTP_OK);
+					}
+					
+					
+			}
+		}
 	}
 	
 	

@@ -92,7 +92,7 @@ $route['getUsersDetails'] = 'User_Management_Controller/getUsersDetails';
 $route['getSingedProfilePicURL'] = 'User_Management_Controller/getSingedProfilePicURL'; 
 
 // TEMPLATE MANAGEMENT
-$route['listAllTemplates'] = 'Template_Management_Controller/listAllTemplates'; 
+$route['(listAllTemplates/:any)'] = 'Template_Management_Controller/listAllTemplates/'; 
 $route['saveNewTemplateName'] = 'Template_Management_Controller/saveNewTemplateName'; 
 $route['saveTemplateLenderDetails'] = 'Template_Management_Controller/saveTemplateLenderDetails'; 
 $route['saveTemplateCategoryDetails'] = 'Template_Management_Controller/saveTemplateCategoryDetails'; 
