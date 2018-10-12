@@ -245,7 +245,7 @@ class Common_Masters_Controller extends REST_Controller {
 		
 		
 		
-		$columns = array("*");
+		$columns = array("PDTEAM.pdteam_id","PDTEAM.team_name","ENTITY.short_name");
 			$table = PDTEAM. ' as PDTEAM';
 			$joins = array(
 				array('table'=>ENTITY.' as ENTITY',
@@ -256,7 +256,7 @@ class Common_Masters_Controller extends REST_Controller {
 		if(count($result) !=0){
 			foreach($result as $index=>$res){
 				/**CUSTOMERSEGMENT */
-			$columns = array("CUSTOMERSEGMENT.*");
+			$columns = array("CUSTOMERSEGMENT.abbr");
 			$table = PDTEAMCUSTOMERSEGMENT. ' as PDTEAMCUSTOMERSEGMENT';
 			$joins = array(
 				array('table'=>CUSTOMERSEGMENT.' as CUSTOMERSEGMENT',
@@ -272,8 +272,10 @@ class Common_Masters_Controller extends REST_Controller {
 			);
 			$where_condition_array = array('PDTEAMCITY.fk_pdteam_id'=>$res['pdteam_id']);
 			$result[$index]['CITYMAP'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+			
+			
 			/**PRODUCT */
-			$columns = array("PRODUCTS.name");
+			$columns = array("PRODUCTS.name","PRODUCTS.abbr");
 			$table = PDTEAMPRODUCT.' as PDTEAMPRODUCT';
 			$joins = array(
 				array('table'=>PRODUCTS.' as PRODUCTS',
@@ -291,10 +293,42 @@ class Common_Masters_Controller extends REST_Controller {
 			);
 			$where_condition_array = array('PDOFFICIERSDETAILS.fk_team_id'=>$res['pdteam_id']);
 			$result[$index]['USERPROFILE'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+				
 		}
 		
 		}
+		//print_r($result);die;
+		foreach($result as $parent_key=> $records)
+		{
+			//print_r($records['CITYMAP']);
+				//print_r($result[$index]['CITYMAP']);
+				$city_str = "";
+				$product_str ="";
+				$cs_str = "";
+			foreach($records['CITYMAP'] as $CITY)
+			{
+				$city_str .= $CITY['name'].',';
 
+			}
+			foreach($records['PRODUCTS'] as $PRO)
+			{
+				$product_str .= $PRO['abbr'].',';
+
+			}
+			foreach($records['CUSTOMERSEGMENT'] as $CS)
+			{
+				$cs_str .= $CS['abbr'].',';
+
+			}
+			
+			
+			 $result[$parent_key]['CITYMAP'] = $city_str;
+			$result[$parent_key]['PRODUCTS'] = $product_str;
+			 $result[$parent_key]['CUSTOMERSEGMENT'] = $cs_str;
+			
+			
+		}
+		//print_r($result);die;
 		if(count($result) > 0)
 			{
 				$data['dataStatus'] = true;
