@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListOfLenders'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getTemplateCategories'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -228,8 +228,8 @@ defined('TEMPLATEID') OR define('TEMPLATEID','template_id');
 defined('LENDERTEMPLATE') OR define('LENDERTEMPLATE','m_template_lender_map');
 defined('LENDERTEMPLATEID') OR define('LENDERTEMPLATEID','template_lender_map_id');
 
-defined('TEMPLATECATAGORYWEIGHTAGE') OR define('TEMPLATECATAGORYWEIGHTAGE','m_template_catagory_weightage');
-defined('TEMPLATECATAGORYWEIGHTAGEID') OR define('TEMPLATECATAGORYWEIGHTAGEID','template_catagory_weightage_id');
+defined('TEMPLATECATEGORYWEIGHTAGE') OR define('TEMPLATECATEGORYWEIGHTAGE','m_template_category_weightage');
+defined('TEMPLATECATEGORYWEIGHTAGEID') OR define('TEMPLATECATEGORYWEIGHTAGEID','template_category_weightage_id');
 
 defined('TEMPLATEQUESTION') OR define('TEMPLATEQUESTION','m_template_question');
 defined('TEMPLATEQUESTIONID') OR define('TEMPLATEQUESTIONID','template_question_id');

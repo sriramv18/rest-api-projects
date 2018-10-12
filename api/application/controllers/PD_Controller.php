@@ -192,20 +192,20 @@ class PD_Controller extends REST_Controller {
 		
 		$count = 0;
 		/***********************CHOOSE PD TEMPALATE*********************/
-		if($pd_details['pd_status'] == TRIGGERED;)
+		if($pd_details['pd_status'] == TRIGGERED)
 		{
-		 $fields = array('fk_template_id');
-		 
-		 $where_condition_array = array('fk_lender_id'=>1 ,'fk_product_id'=> 1,'fk_customer_segment'=> 1,'isactive' => 1);
-		 
-		 $table = LENDERTEMPLATE;
-		 
-		 $choosed_template_id = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,$table);
-		 
-		 if(count($choosed_template_id))
-		 { 
-			$pd_details['fk_pd_template_id'] = $choosed_template_id[0]['fk_template_id']; 
-		 }
+			 $fields = array('fk_template_id');
+			 
+			 $where_condition_array = array('fk_lender_id'=>1 ,'fk_product_id'=> 1,'fk_customer_segment'=> 1,'isactive' => 1);
+			 
+			 $table = LENDERTEMPLATE;
+			 
+			 $choosed_template_id = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,$table);
+			 
+			 if(count($choosed_template_id))
+			 { 
+				$pd_details['fk_pd_template_id'] = $choosed_template_id[0]['fk_template_id']; 
+			 }
 		}
 		
 		/***********************PD ALLOCATION TYPE PROCESS **********/

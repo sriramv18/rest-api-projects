@@ -137,16 +137,16 @@ class Template_Management_Controller extends REST_Controller {
 		//print_r($template_category_details);die();
 		foreach($template_category_details as $template_category_detail)
 		{
-			if($template_category_detail['template_catagory_weightage_id'] != null || $template_category_detail['template_catagory_weightage_id'] != "")
+			if($template_category_detail['template_category_weightage_id'] != null || $template_category_detail['template_category_weightage_id'] != "")
 			{
-				$where_condition_array = array('template_catagory_weightage_id'=>$template_category_detail['template_catagory_weightage_id']);
-				$modified = $this->Template_Management_Model->updateRecords($template_category_detail,TEMPLATECATAGORYWEIGHTAGE,$where_condition_array);
+				$where_condition_array = array('template_category_weightage_id'=>$template_category_detail['template_category_weightage_id']);
+				$modified = $this->Template_Management_Model->updateRecords($template_category_detail,TEMPLATECATEGORYWEIGHTAGE,$where_condition_array);
 				if($modified != "" || $modified != null){ $count++; } 
 			}
 			else
 			{
 					
-					$id = $this->Template_Management_Model->saveRecords($template_category_detail,TEMPLATECATAGORYWEIGHTAGE);
+					$id = $this->Template_Management_Model->saveRecords($template_category_detail,TEMPLATECATEGORYWEIGHTAGE);
 					if($id != "" || $id != null){ $count++; }
 			}
 		}
