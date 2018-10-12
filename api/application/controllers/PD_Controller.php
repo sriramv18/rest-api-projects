@@ -177,12 +177,7 @@ class PD_Controller extends REST_Controller {
 	
 	
 	/********For Save New PD while Trigger****/
-	/*
-	sample data
-	{
-    "pd_details":{ "fk_lender_id": "1", "lender_applicant_id":"12458","fk_product_id":"2","fk_subproduct_id":"1","fk_pd_type":"2", "pd_status":"2","pd_specific_clarification":"nothing","createdon":"2017","fk_createdby":"2","fk_pd_allocation_type":"3","fk_pd_allocated_to":"1","fk_pd_template_id":"2","fk_customer_segment":"1","pd_officier_final_judgement":"54561","pd_agency_id":"1","loan_amount":"1589655","addressline1":"1", "addressline2":"2", "addressline3":"3", "fk_city":"1", "fk_state":"2", "pincode":"966852"}
-	}
-	*/
+	
 	public function triggerNewPD_post()
 	{
 		
@@ -197,7 +192,8 @@ class PD_Controller extends REST_Controller {
 		
 		$count = 0;
 		/***********************CHOOSE PD TEMPALATE*********************/
-		
+		if($pd_details['pd_status'] == TRIGGERED;)
+		{
 		 $fields = array('fk_template_id');
 		 
 		 $where_condition_array = array('fk_lender_id'=>1 ,'fk_product_id'=> 1,'fk_customer_segment'=> 1,'isactive' => 1);
@@ -210,7 +206,7 @@ class PD_Controller extends REST_Controller {
 		 { 
 			$pd_details['fk_pd_template_id'] = $choosed_template_id[0]['fk_template_id']; 
 		 }
-		 
+		}
 		
 		/***********************PD ALLOCATION TYPE PROCESS **********/
 		
@@ -276,10 +272,10 @@ class PD_Controller extends REST_Controller {
 		/***********************END OF PD ALLOCATION TYPE AND PROCESS***********/
 		
 		$pd_details['pd_date_of_initiation'] = date("Y-m-d H:i:s");
-		if($pd_details['pd_status'] == "" || $pd_details['pd_status'] == null)
-		{
-			$pd_details['pd_status'] = DRAFT;
-		}
+		// if($pd_details['pd_status'] == "" || $pd_details['pd_status'] == null)
+		// {
+			// $pd_details['pd_status'] = DRAFT;
+		// }
 		$pd_id = $this->PD_Model->saveRecords($pd_details,PDTRIGGER);
 		
 		
@@ -365,6 +361,7 @@ class PD_Controller extends REST_Controller {
 		
 		if($pd_id_modified != null || $pd_id_modified != '' && $count != 0)
 		{
+						PDALERTS::pdnotification($pd_id);
 						$data['dataStatus'] = true;
 						$data['status'] = REST_Controller::HTTP_OK;
 						$data['records'] = true;
