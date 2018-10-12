@@ -23,6 +23,7 @@ class Template_Management_Controller extends REST_Controller {
    
 	public function listAllTemplates_get()
 	{
+		
 		$page = "";$limit = ""; $sort = "asc";
 		$result = $this->Template_Management_Model->listAllTemplates($page,$limit,$sort);
 		if(count($result))
