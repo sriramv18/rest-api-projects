@@ -85,9 +85,9 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 // define login route name for token verification
-//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getTemplateQuestionAnswers'); // no errors
+//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListPDOfficers'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -116,6 +116,9 @@ defined('DRAFT') OR define('DRAFT','17');
 
 /*******************End Of Constants PD status**************************/
 
+
+/*******************Define Constants for Table Names and Primarykeys**************************/
+defined('PDTEAM_CTY_PRODUCT_CS_COMBINATIONS') OR define('PDTEAM_CTY_PRODUCT_CS_COMBINATIONS','PDTEAM_CTY_PRODUCT_CS_COMBINATIONS');
 
 /*******************Define Constants for Table Names and Primarykeys**************************/
 

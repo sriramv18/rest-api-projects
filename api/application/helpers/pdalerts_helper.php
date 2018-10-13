@@ -107,7 +107,7 @@ class PDALERTS
 						}
 				}
 				
-				$msg = "PD for Lender Applicant ID -:". $core_details[0]['lender_applicant_id'] ."  has been   ".   $core_details[0]['pd_status_name']; // status base configurable
+				$msg = "PD for Lender Applicant ID -:". $core_details[0]['lender_applicant_id'] ."  has been  ". $core_details[0]['pd_status_name']; // status base configurable
 				//print_r($mobile_nos_to_send_notification);
 				foreach($mobile_nos_to_send_notification as $no)
 				{

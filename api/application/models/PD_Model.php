@@ -11,7 +11,7 @@ class PD_Model extends SPARQ_Model {
         }
 		
 	
-		public function listLessPDDetails($page,$limit,$sort)// $page represents mysql offset
+		public function listLessPDDetails($page,$limit,$sort,$pdofficerid,$datetype,$fdate,$tdate)// $page represents mysql offset
 		{
 			$this->db->SELECT('PDTRIGGER.pd_id, PDTRIGGER.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name, PDTRIGGER.lender_applicant_id, DATE_FORMAT(PDTRIGGER.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDTRIGGER.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDTRIGGER.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDTRIGGER.fk_pd_type,PDTYPE.type_name as pd_type_name, PDTRIGGER.pd_status,PDSTATUS.pd_status_name, PDTRIGGER.pd_specific_clarification, DATE_FORMAT(PDTRIGGER.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDTRIGGER.fk_createdby, DATE_FORMAT(PDTRIGGER.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDTRIGGER.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDTRIGGER.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDTRIGGER.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDTRIGGER.fk_pd_template_id,TEMPLATE.template_name, PDTRIGGER.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDTRIGGER.pd_officier_final_judgement, PDTRIGGER.pd_agency_id,AGENCY.full_name as agency_name, PDTRIGGER.loan_amount,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode');
 			$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
@@ -29,9 +29,42 @@ class PD_Model extends SPARQ_Model {
 			$this->db->JOIN(ENTITY.' as AGENCY','PDTRIGGER.pd_agency_id = AGENCY.entity_id','LEFT');
 			$this->db->JOIN(STATE.' as STATE','PDTRIGGER.fk_state = STATE.state_id ','LEFT');
 			$this->db->JOIN(CITY.' as CITY','PDTRIGGER.fk_city = CITY.city_id','LEFT');
+			
+			if($pdofficerid != "" || $pdofficerid != null)
+			{
+				$this->db->WHERE('PDTRIGGER.fk_pd_allocated_to',$pdofficerid);
+			}
+			
+			if($datetype != "" || $datetype != null)
+			{
+				if($datetype == 1)
+				{
+					if($fdate != "" || $fdate != null)
+					{	
+						$this->db->WHERE('PDTRIGGER.pd_date_of_initiation >=',$fdate);
+					}
+					if($tdate != "" || $tdate != null)
+					{	
+						$this->db->WHERE('PDTRIGGER.pd_date_of_initiation <=',$tdate);
+					}
+				}
+				else if($datetype == 2)
+				{
+					if($fdate != "" || $fdate != null)
+					{
+						$this->db->WHERE('PDTRIGGER.scheduled_on >=',$fdate);
+					}
+					if($tdate != "" || $tdate != null)
+					{	
+						$this->db->WHERE('PDTRIGGER.scheduled_on <=',$tdate);
+					}
+				}
+				
+			}
 			$this->db->ORDER_BY('PDTRIGGER.pd_id',$sort);
 			$this->db->LIMIT($limit,$page);
 			$result_array = $this->db->GET()->result_array();
+			print_r($this->db->last_query());
 			if(count($result_array) != 0)
 			{
 				foreach($result_array as $key => $result)

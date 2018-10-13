@@ -140,7 +140,7 @@ class Template_Management_Model extends SPARQ_Model {
 			  
 	}
 
-return  $categories;   
+	return  $categories;   
    }
 
 }

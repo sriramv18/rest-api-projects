@@ -590,11 +590,10 @@ class PD_Controller extends REST_Controller {
 		$records = $this->post('records');
 		if($records['schedule_time'] != "" || $records['schedule_time'] != null)
 		{
-			$id = $this->PD_Model->saveRecords($records,PDSCHEDULE);
-			if($id != '' || $id != null)
-			{
+			//$id = $this->PD_Model->saveRecords($records,PDSCHEDULE);
+			
 				$where_condition_array = array('pd_id' => $records['fk_pd_id']);
-				$temp_array = array('pd_status' => SCHEDULED,'fk_updatedby'=>$records['fk_scheduled_by'],'updatedon'=>$records['createdon']);
+				$temp_array = array('pd_status' => SCHEDULED,'fk_updatedby'=>$records['fk_scheduled_by'],'updatedon'=>$records['createdon'],'scheduled_on'=>$records['schedule_time']);
 				$pd_id_modified = $this->PD_Model->updateRecords($temp_array,PDTRIGGER,$where_condition_array);
 				
 				if($pd_id_modified != "" || $pd_id_modified != null)
@@ -612,7 +611,7 @@ class PD_Controller extends REST_Controller {
 					$data['msg'] = 'Not Updated! Try Later';
 					$this->response($data,REST_Controller::HTTP_OK);
 				}
-			}
+			
 		}
 		
 		
@@ -631,12 +630,13 @@ class PD_Controller extends REST_Controller {
 		$where_condition_array = array('pd_id'=>$pdid);
 		$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
 		
-		//2.Get Team Map  Details based on step 1
+		//2.Get Team ID based on Lender ID
 		if(count($res_array))
 		{
-				$where_condition_array = array('fk_city_id' => $res_array[0]['fk_city'],'fk_lender_id' => $res_array[0]['fk_lender_id']);
-				$temp_city_id = $this->PD_Model->selectRecords(PDTEAMMAP,$where_condition_array,$limit=0,$offset=0);
-				
+				//$where_condition_array = array('lender_id' => $res_array[0]['fk_lender_id'],'city_id' =>$res_array[0]['fk_city'] ,'cs_id' =>$res_array[0]['fk_customer_segment'] ,'product_id' =>$res_array[0]['fk_product_id']);
+				$where_condition_array = array('lender_id' => 2,'city_id' => 17 ,'cs_id' => 1 ,'product_id' => 1);
+				$temp_city_id = $this->PD_Model->selectRecords(PDTEAM_CTY_PRODUCT_CS_COMBINATIONS,$where_condition_array,$limit=0,$offset=0);
+				//print_r($temp_city_id);die();
 				if(count($temp_city_id))
 				{
 					if(isset($temp_city_id[0]['team_type']))
@@ -651,9 +651,9 @@ class PD_Controller extends REST_Controller {
 						{
 							
 										//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
-										$fields = array('fk_user_id','allocated','scheduled','inprogress');
+										$fields = array('fk_user_id','fk_pd_type_id','allocated','scheduled','inprogress');
 										
-										$where_condition_array = array('fk_pd_type_id' => $res_array[0]['fk_pd_type'],'fk_team_id' => $temp_city_id[0]['fk_team_id'],'fk_customer_segment' => $res_array[0]['fk_customer_segment'],'fk_product_id' => $res_array[0]['fk_product_id'],'isactive' => 1);
+										$where_condition_array = array('fk_team_id' => $temp_city_id[0]['pdteam_id'],'isactive' => 1);
 										
 										$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
 												
@@ -665,9 +665,10 @@ class PD_Controller extends REST_Controller {
 												$this->db->FROM(USERPROFILE.' as USERPROFILE');
 												$this->db->WHERE('USERPROFILE.userid',$pdofficer['fk_user_id']);
 												$names = $this->db->GET()->result_array();
+												if(count($names)){
 												$list_of_pd_officers[$key]['first_name'] = $names[0]['first_name'];
 												$list_of_pd_officers[$key]['last_name'] = $names[0]['last_name'];
-												
+												}
 											}
 											
 											$data['dataStatus'] = true;
@@ -717,12 +718,16 @@ class PD_Controller extends REST_Controller {
 	*/
 	public function listLessPDDetails_get()
 	{
-			$page = 0;$limit = 50;$sort = 'DESC';
+			$page = 0;$limit = 50;$sort = 'DESC';$pdofficerid = "";$datetype = "";$fdate ="";$tdate ="";
 			if($this->get('page')) { $page  = $this->get('page'); }
 			if($this->get('limit')){ $limit = $this->get('limit'); }
 			if($this->get('sort')) { $sort  = $this->get('sort'); }
+			if($this->get('pdofficerid')) { $pdofficerid  = $this->get('pdofficerid'); }
+			if($this->get('datetype')) { $datetype = $this->get('datetype'); }
+			if($this->get('fdate')) { $fdate = $this->get('fdate'); }
+			if($this->get('tdate')) { $tdate = $this->get('tdate'); }
 			
-			$result_data = $this->PD_Model->listLessPDDetails($page,$limit,$sort);
+			$result_data = $this->PD_Model->listLessPDDetails($page,$limit,$sort,$pdofficerid,$datetype,$fdate,$tdate);
 			
 			if($result_data['data_status'] == true)
 			{
