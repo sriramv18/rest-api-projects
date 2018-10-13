@@ -105,6 +105,7 @@ class Template_Management_Controller extends REST_Controller {
 				else
 				{
 					
+					
 					$id = $this->Template_Management_Model->saveRecords($template_lender_detail,LENDERTEMPLATE);
 					if($id != "" || $id != null){ $count++; }
 				}
