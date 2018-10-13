@@ -359,6 +359,11 @@ class PD_Controller extends REST_Controller {
 		$where_condition_array = array('pd_id' => $pd_details['pd_id']);
 		$pd_id_modified = $this->PD_Model->updateRecords($pd_details,PDTRIGGER,$where_condition_array);
 		
+		if($records['pd_status'] == TRIGGERED)
+		{
+			// Create entries on `t_pd_category_weightage` table from Template Category weightage 
+		}
+		
 		if($pd_id_modified != null || $pd_id_modified != '' && $count != 0)
 		{
 						PDALERTS::pdnotification($pd_id);
@@ -804,7 +809,16 @@ class PD_Controller extends REST_Controller {
 		 
 	}
 	
-	
+	/* for Load Whole PD Template for PD Conduct Screen*/
+	// public function loadFullTemplate_get()
+	// {
+		// $template_id = "";
+		// if($this->get('template_id')) { $template_id = $this->get('template_id'); }
+		// if($template_id != "" || $template_id != null)
+		// {
+			
+		// }
+	// }
 	
 	
 	
