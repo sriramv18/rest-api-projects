@@ -41,6 +41,8 @@ class Template_Management_Controller extends REST_Controller {
 		}
 	}
 
+	
+	/******** Save and Update  Template Name  ********/
 	public function saveNewTemplateName_post()
 	{
 		$records = $this->post('records');
@@ -87,7 +89,7 @@ class Template_Management_Controller extends REST_Controller {
 		
 	}
 	
-	
+	/******** save and Edit Template Lender,Product, and Customer Segments  ********/
 	public function saveTemplateLenderDetails_post()
 	{
 		
@@ -130,6 +132,8 @@ class Template_Management_Controller extends REST_Controller {
 		
 	}
 	
+	
+	/******** Save and Update Template Categories  ********/
 	public function saveTemplateCategoryDetails_post()
 	{
 	
@@ -170,7 +174,7 @@ class Template_Management_Controller extends REST_Controller {
 		
 	}
 	
-	
+	/******** Save/update Template Question and Answers  ********/
 	public function saveTemplateQuestionAnswers_post()
 	{
 		$count = 0;	
@@ -265,6 +269,7 @@ class Template_Management_Controller extends REST_Controller {
 		}
 	}
 	
+	/******** Load Existed Template Master Details for Edit page @param template id ********/
 	public function getTemplateMaster_post()
 	{
 		$template_id = $this->post('template_id');
@@ -285,7 +290,7 @@ class Template_Management_Controller extends REST_Controller {
 	}
 	
 	
-	
+	/******** Load Existed Template Lender Mapping for Edit page @param template id ********/
 	public function getTemplateLenders_post()
 	{
 		$template_id = $this->post('template_id');
@@ -306,7 +311,7 @@ class Template_Management_Controller extends REST_Controller {
 	}
 	
 	
-	
+	/******** Load Existed Template Categories for Edit page @param template id ********/
 	public function getTemplateCategories_post()
 	{
 		$template_id = $this->post('template_id');
@@ -326,6 +331,8 @@ class Template_Management_Controller extends REST_Controller {
 		}
 	}
 	
+	
+	/******** Load Existed Template Question and Answers for Edit page @param template id ********/
 	public function getTemplateQuestionAnswers_post()
 	{
 		$template_id = $this->post('template_id');
@@ -345,7 +352,7 @@ class Template_Management_Controller extends REST_Controller {
 		}
 	}
 	
-	
+	/************** Get List of Categories to Template Add/Edit Page DropDown ***************/
 	public function getListOfCategories_get()
 	{
 		$fields = array('question_category_id','category_name');

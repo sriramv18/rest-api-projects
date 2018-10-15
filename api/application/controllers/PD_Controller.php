@@ -809,16 +809,16 @@ class PD_Controller extends REST_Controller {
 		 
 	}
 	
-	/* for Load Whole PD Template for PD Conduct Screen*/
-	// public function loadFullTemplate_get()
-	// {
-		// $template_id = "";
-		// if($this->get('template_id')) { $template_id = $this->get('template_id'); }
-		// if($template_id != "" || $template_id != null)
-		// {
-			
-		// }
-	// }
+	/********  for Load Whole PD Template for PD Screen @param template_id***************/
+	public function loadFullTemplate_get()
+	{
+		$template_id = "";
+		if($this->get('template_id')) { $template_id = $this->get('template_id'); }
+		if($template_id != "" || $template_id != null)
+		{
+		     
+		}
+	}
 	
 	
 	
