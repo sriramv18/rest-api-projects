@@ -348,7 +348,7 @@ class Template_Management_Controller extends REST_Controller {
 	
 	public function getListOfCategories_get()
 	{
-		$fields = array('question_categroy_id','categroy_name');
+		$fields = array('question_category_id','category_name');
 		$where_condition_array = array('isactive' => 1);
 		$result_data = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,QUESTIONCATEGORY);
 		if(count($result_data))
