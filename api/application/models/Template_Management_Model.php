@@ -79,9 +79,9 @@ class Template_Management_Model extends SPARQ_Model {
    
    public function getTemplateCategories($template_id)
    {
-			  $this->db->SELECT('QUESTIONCATEGORY.question_categroy_id,QUESTIONCATEGORY.categroy_name,TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weigthage, DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.createdon,"%d/%m/%Y") as createdon, TEMPLATECATEGORYWEIGHTAGE.fk_createdby,  DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.updatedon, "%d/%m/%Y") as updatedon, TEMPLATECATEGORYWEIGHTAGE.isactive, TEMPLATECATEGORYWEIGHTAGE.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby');
+			  $this->db->SELECT('QUESTIONCATEGORY.question_category_id,QUESTIONCATEGORY.category_name,TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weightage, DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.createdon,"%d/%m/%Y") as createdon, TEMPLATECATEGORYWEIGHTAGE.fk_createdby,  DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.updatedon, "%d/%m/%Y") as updatedon, TEMPLATECATEGORYWEIGHTAGE.isactive, TEMPLATECATEGORYWEIGHTAGE.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby');
 			  $this->db->FROM(QUESTIONCATEGORY .' as QUESTIONCATEGORY');
-			  $this->db->JOIN(TEMPLATECATEGORYWEIGHTAGE.' as TEMPLATECATEGORYWEIGHTAGE',"TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id = QUESTIONCATEGORY.question_categroy_id AND TEMPLATECATEGORYWEIGHTAGE.fk_template_id = $template_id",'LEFT');
+			  $this->db->JOIN(TEMPLATECATEGORYWEIGHTAGE.' as TEMPLATECATEGORYWEIGHTAGE',"TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id = QUESTIONCATEGORY.question_category_id AND TEMPLATECATEGORYWEIGHTAGE.fk_template_id = $template_id",'LEFT');
 			  $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATECATEGORYWEIGHTAGE.fk_createdby = USERPROFILE.userid','LEFT');
 			  $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATECATEGORYWEIGHTAGE.fk_updatedby = USERPROFILE1.userid','LEFT');
 			 // $this->db->WHERE('TEMPLATECATEGORYWEIGHTAGE.fk_template_id',$template_id);
@@ -97,9 +97,9 @@ class Template_Management_Model extends SPARQ_Model {
    public function getTemplateQuestionAnswers($template_id)
    {
 			 
-			  $this->db->SELECT('QUESTIONCATEGORY.question_categroy_id,QUESTIONCATEGORY.categroy_name,TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weigthage,  TEMPLATECATEGORYWEIGHTAGE.isactive');
+			  $this->db->SELECT('QUESTIONCATEGORY.question_category_id,QUESTIONCATEGORY.category_name,TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weightage,  TEMPLATECATEGORYWEIGHTAGE.isactive');
 			  $this->db->FROM(QUESTIONCATEGORY .' as QUESTIONCATEGORY');
-			  $this->db->JOIN(TEMPLATECATEGORYWEIGHTAGE.' as TEMPLATECATEGORYWEIGHTAGE',"TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id = QUESTIONCATEGORY.question_categroy_id AND TEMPLATECATEGORYWEIGHTAGE.fk_template_id = $template_id",'LEFT');
+			  $this->db->JOIN(TEMPLATECATEGORYWEIGHTAGE.' as TEMPLATECATEGORYWEIGHTAGE',"TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id = QUESTIONCATEGORY.question_category_id AND TEMPLATECATEGORYWEIGHTAGE.fk_template_id = $template_id",'LEFT');
 			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATECATEGORYWEIGHTAGE.fk_createdby = USERPROFILE.userid','LEFT');
 			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATECATEGORYWEIGHTAGE.fk_updatedby = USERPROFILE1.userid','LEFT');
 			  $categories = $this->db->GET()->result_array();

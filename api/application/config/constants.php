@@ -85,9 +85,9 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 // define login route name for token verification
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
+//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-//defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListPDOfficers'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListOfCategories'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -223,7 +223,7 @@ defined('QUESTIONANSWERS') OR define('QUESTIONANSWERS','m_question_answers');
 defined('QUESTIONANSWERSID') OR define('QUESTIONANSWERSID','question_answer_id');
 
 defined('QUESTIONCATEGORY') OR define('QUESTIONCATEGORY','m_question_category');
-defined('QUESTIONCATEGORYID') OR define('QUESTIONCATEGORYID','question_categroy_id');
+defined('QUESTIONCATEGORYID') OR define('QUESTIONCATEGORYID','question_category_id');
 
 defined('TEMPLATE') OR define('TEMPLATE','m_template');
 defined('TEMPLATEID') OR define('TEMPLATEID','template_id');

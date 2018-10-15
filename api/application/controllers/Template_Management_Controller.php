@@ -346,4 +346,28 @@ class Template_Management_Controller extends REST_Controller {
 	}
 	
 	
+	public function getListOfCategories_get()
+	{
+		$fields = array('question_categroy_id','categroy_name');
+		$where_condition_array = array('isactive' => 1);
+		$result_data = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,QUESTIONCATEGORY);
+		if(count($result_data))
+		{
+						
+						
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $result_data;
+						$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$this->response($data,REST_Controller::HTTP_OK);
+			
+		}
+	}
+	
+	
 }
