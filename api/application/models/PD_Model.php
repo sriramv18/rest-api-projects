@@ -74,7 +74,7 @@ class PD_Model extends SPARQ_Model {
 					$this->db->FROM(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS');
 					$this->db->JOIN(STATE.' as STATE','PDAPPLICANTSDETAILS.fk_state = STATE.state_id','LEFT');
 					$this->db->JOIN(CITY.' as CITY','PDAPPLICANTSDETAILS.fk_city = CITY.city_id','LEFT');
-					$this->db->JOIN(RELATIONSHIPS.' as RELATIONSHIPS','PDAPPLICANTSDETAILS.relation = RELATIONSHIPS.RELATIONSHIPS','LEFT');
+					$this->db->JOIN(RELATIONSHIPS.' as RELATIONSHIPS','PDAPPLICANTSDETAILS.relation = RELATIONSHIPS.relationship_id','LEFT');
 					$this->db->WHERE('PDAPPLICANTSDETAILS.fk_pd_id ',$result['pd_id']);
 					$result_child_array = $this->db->GET()->result_array();
 					if(count($result_child_array) != 0)
