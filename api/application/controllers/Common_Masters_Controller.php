@@ -456,24 +456,66 @@ class Common_Masters_Controller extends REST_Controller {
 
 			$where_condition_array = array(PDTEAMID => $records[PDTEAMID]);
 
-			$pdTeamMaster = array('team_name'=>$records['team_name'],'updatedon'=>$records['updatedon'],'fk_updatedby'=>$records['fk_updatedby']);
+			//$pdTeamMaster = array('team_name'=>$records['team_name'],'updatedon'=>$records['updatedon'],'fk_updatedby'=>$records['fk_updatedby']);
 			//pdteam_id, team_name, createdon, fk_createdby, updatedon, fk_updatedby, isactive
+			$pdTeamMaster = array('team_name'=>$records['team_name'],
+								  'updatedon'=>$records['updatedon'],
+								  'fk_updatedby'=>$records['fk_updatedby'],
+								  'fk_lender_id'=>$records['fk_lender']);
+
 			$result = $this->Common_Masters_Model->updateRecords($pdTeamMaster,PDTEAM,$where_condition_array);
 			//print_r($pdTeamMaster);
 
 			if($result == true){
-				$root_array = $records['temp_array'];
-				if(!empty($root_array)){
-				foreach($root_array as $key => $value){
-								
-					$pdTeamChild = array(
-						        'fk_city_id'=>$value['cityid']['city_id'],
-								'fk_team_id'=>$records['pdteam_id'],
-								'team_type' => 1,
-								'fk_lender_id' =>$value['lenderid']['entity_id']);
+				//$root_array = $records['temp_array'];
+				$root_array_city = $records['fk_city'];
+				$root_array_product = $records['fk_product'];
+				$root_array_customersegment = $records['fk_customer_segment'];
 
-					$this->Common_Masters_Model->saveRecords($pdTeamChild,PDTEAMMAP);
-				}}
+				if(!empty($root_array_city)){
+					foreach($root_array_city as $key => $value){
+								
+						$pdTeamForCity= array(
+							'fk_city_id'=>$value,
+							'fk_pdteam_id'=>$result);
+						$this->Common_Masters_Model->saveRecords($pdTeamForCity,PDTEAMCITY);
+						
+					}
+				}
+
+				if(!empty($root_array_product)){
+					foreach($root_array_product as $key => $value){
+								
+						$pdTeamForProduct = array(
+									'fk_product_id'=>$value,
+									'fk_pdteam_id'=>$result);
+	
+						$this->Common_Masters_Model->saveRecords($pdTeamForProduct,PDTEAMPRODUCT);
+					}
+				}
+				
+				if(!empty($root_array_customersegment)){
+					foreach($root_array_customersegment as $key => $value){
+								
+						$pdTeamForCS = array(
+									'fk_cs_id'=>$value,
+									'fk_pdteam_id'=>$result);
+	
+						$this->Common_Masters_Model->saveRecords($pdTeamForCS,PDTEAMCUSTOMERSEGMENT);
+					}
+				}
+				
+				// if(!empty($root_array)){
+				// foreach($root_array as $key => $value){
+								
+				// 	$pdTeamChild = array(
+				// 		        'fk_city_id'=>$value['cityid']['city_id'],
+				// 				'fk_team_id'=>$records['pdteam_id'],
+				// 				'team_type' => 1,
+				// 				'fk_lender_id' =>$value['lenderid']['entity_id']);
+
+				// 	$this->Common_Masters_Model->saveRecords($pdTeamChild,PDTEAMMAP);
+				// }}
 			
 			}
 			
@@ -496,23 +538,59 @@ class Common_Masters_Controller extends REST_Controller {
 		else 	// Insert Record	
 		{
 
-		$pdTeamMaster = array('team_name'=>$records['team_name'],'fk_createdby'=>$records['fk_createdby'],'createdon'=>$records['createdon']);
+		//$pdTeamMaster = array('team_name'=>$records['team_name'],'fk_createdby'=>$records['fk_createdby'],'createdon'=>$records['createdon']);
+		$pdTeamMaster = array('team_name'=>$records['team_name'],
+							  'fk_createdby'=>$records['fk_createdby'],
+							  'createdon'=>$records['createdon'],
+							  'fk_lender_id'=>$records['fk_lender'],
+							  'team_type' => 1
+							);
 		
 		$result = $this->Common_Masters_Model->saveRecords($pdTeamMaster,PDTEAM);
 		
 			if(!empty($result)){
 		
-				$root_array = $records['temp_array'];
+				//$root_array = $records['temp_array'];
+				$root_array_city = $records['fk_city'];
+				$root_array_product = $records['fk_product'];
+				$root_array_customersegment = $records['fk_customer_segment'];
 
-				foreach($root_array as $key => $value){
+				// foreach($root_array as $key => $value){
 								
-					$pdTeamChild = array(
-						        'fk_city_id'=>$value['cityid']['city_id'],
-								'fk_team_id'=>$result,
-								'team_type' => 1,
-								'fk_lender_id' =>$value['lenderid']['entity_id']);
+				// 	$pdTeamChild = array(
+				// 		        'fk_city_id'=>$value['cityid']['city_id'],
+				// 				'fk_team_id'=>$result,
+				// 				'team_type' => 1,
+				// 				'fk_lender_id' =>$value['lenderid']['entity_id']);
 
-					$this->Common_Masters_Model->saveRecords($pdTeamChild,PDTEAMMAP);
+				// 	$this->Common_Masters_Model->saveRecords($pdTeamChild,PDTEAMMAP);
+				// }
+
+				foreach($root_array_city as $key => $value){
+								
+					$pdTeamForCity= array(
+						        'fk_city_id'=>$value,
+								'fk_pdteam_id'=>$result);
+					$this->Common_Masters_Model->saveRecords($pdTeamForCity,PDTEAMCITY);
+					
+				}
+
+				foreach($root_array_product as $key => $value){
+								
+					$pdTeamForProduct = array(
+								'fk_product_id'=>$value,
+								'fk_pdteam_id'=>$result);
+
+					$this->Common_Masters_Model->saveRecords($pdTeamForProduct,PDTEAMPRODUCT);
+				}
+
+				foreach($root_array_customersegment as $key => $value){
+								
+					$pdTeamForCS = array(
+								'fk_cs_id'=>$value,
+								'fk_pdteam_id'=>$result);
+
+					$this->Common_Masters_Model->saveRecords($pdTeamForCS,PDTEAMCUSTOMERSEGMENT);
 				}
 				
 			}
@@ -611,26 +689,151 @@ class Common_Masters_Controller extends REST_Controller {
 	}
 	
 	/* For Get PD Team Details (Master Table info)*/
-	public function getListOfPDTeam_get()
-		{		
-			$result = $this->Common_Masters_Model->pdteamlist();
+	// public function getListOfPDTeam_get()
+	// 	{		
+	// 		$result = $this->Common_Masters_Model->pdteamlist();
 		
-			if(count($result) > 0)
-			{
-				$data['dataStatus'] = true;
-				$data['status'] = REST_Controller::HTTP_OK;
-				$data['records'] = $result;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-			else
-			{
-				$data['dataStatus'] = false;
-				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-				$this->response($data,REST_Controller::HTTP_OK);
-			}
-		}
+	// 		if(count($result) > 0)
+	// 		{
+	// 			$data['dataStatus'] = true;
+	// 			$data['status'] = REST_Controller::HTTP_OK;
+	// 			$data['records'] = $result;
+	// 			$this->response($data,REST_Controller::HTTP_OK);
+	// 		}
+	// 		else
+	// 		{
+	// 			$data['dataStatus'] = false;
+	// 			$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+	// 			$this->response($data,REST_Controller::HTTP_OK);
+	// 		}
+	// 	}
 	/* End Of Get PD Team Details (Master Table info)*/
 
+	public function getListOfPDTeam_post(){
+		
+		if(!empty($this->post())){	
+			$PK = $this->post('primary_key') ;
+		}
+		else{
+			$PK = '';
+		}
+		
+		$columns = array('m_entity.full_name as lender_name','PDTEAM.*');
+		$table = PDTEAM.' as PDTEAM';
+		$joins = array(
+			array(
+				'table' => 'm_entity',
+				'condition' => 'PDTEAM.fk_lender_id = m_entity.entity_id',
+				'jointype' => 'INNER'
+			)
+		);
+		
+		if($PK != '')
+		{
+			$where_condition_array = array('PDTEAM.pdteam_id'=>$PK);
+		    $result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+			
+			if(count($result) !=0){
+			foreach($result as $index=>$res){
+						
+						/**CUSTOMERSEGMENT */
+						$columns = array("CUSTOMERSEGMENT.*");
+						$table = PDTEAMCUSTOMERSEGMENT. ' as PDTEAMCUSTOMERSEGMENT';
+						$joins = array(
+							array(
+								'table'=>CUSTOMERSEGMENT.' as CUSTOMERSEGMENT',
+								'condition'=>'PDTEAMCUSTOMERSEGMENT.fk_cs_id = CUSTOMERSEGMENT.customer_segment_id and CUSTOMERSEGMENT.isactive =1',
+								'jointype'=>'JOIN'),
+						);
+						$where_condition_array = array('PDTEAMCUSTOMERSEGMENT.fk_pdteam_id'=>$PK);
+						$result[$index]['CUSTOMERSEGMENT'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);	
+						
+						/**CITY */
+						$columns = array("CITY.*");
+						$table = PDTEAMCITY.' as PDTEAMCITY';
+						$joins = array(
+							array('table'=>CITY.' as CITY',
+							  'condition'=>'PDTEAMCITY.fk_city_id = CITY.city_id and CITY.isactive = 1',
+						       'jointype'=>'JOIN')
+						);
+						$where_condition_array = array('PDTEAMCITY.fk_pdteam_id'=>$PK);
+						$result[$index]['CITYMAP'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+			
+						/**PRODUCT */
+						$columns = array("PRODUCTS.*");
+						$table = PDTEAMPRODUCT.' as PDTEAMPRODUCT';
+						$joins = array(
+							array('table'=>PRODUCTS.' as PRODUCTS',
+							  'condition'=>'PDTEAMPRODUCT.fk_product_id = PRODUCTS.product_id and PRODUCTS.isactive =1',
+							   'jointype'=>'JOIN')
+							
+						);
+						$where_condition_array = array('PDTEAMPRODUCT.fk_pdteam_id'=>$PK);
+						$result[$index]['PRODUCTS'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+			
+			}
+		  }
+		}
+		else{
+			$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
+		}
+		
+		if(count($result) > 0){
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = $result;
+					$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else{
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+					$this->response($data,REST_Controller::HTTP_OK);
+		}
+		
+	}
+	
+	/** For validation purpose  To Check duplication for Team*/
+	public function getListOfPDTeamCityMapping_get()
+	{
+		
+		$columns = array('m_entity.full_name as lender_name','PDTEAM.*');
+		$table = PDTEAM.' as PDTEAM';
+		$joins = array(
+			array(
+				'table' => 'm_entity',
+				'condition' => 'PDTEAM.fk_lender_id = m_entity.entity_id',
+				'jointype' => 'INNER'
+			)
+		);
+
+		$result = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins);
+		
+		if(count($result) !=0){
+			foreach($result as $index=>$res){
+				
+	        /**CITY */
+			$columns = array("CITY.*");
+			$table = PDTEAMCITY.' as PDTEAMCITY';
+			$joins = array(
+				array('table'=>CITY.' as CITY','condition'=>'PDTEAMCITY.fk_city_id = CITY.city_id and CITY.isactive = 1','jointype'=>'JOIN')
+			);
+			$where_condition_array = array('PDTEAMCITY.fk_pdteam_id'=>$res['pdteam_id']);
+			$result[$index]['CITYMAP'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+		}
+		
+		}
+		if(count($result) > 0){
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $result;
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+	}
 	/* For Get PD Team Mapping Details (Child Table info)*/
 	public function getListOfPDTeamMap_post(){
 			
@@ -783,4 +986,32 @@ class Common_Masters_Controller extends REST_Controller {
 		}
 	}
 		/* End of Update PD Notification Details*/
-}
+		public function getListOfPdTeamCityMapping(){
+			$records = $this->post('records');
+			//$count = 0;
+			
+				
+			foreach( $records as $record){
+					$where_condition_array = array(PDNOTIFICATIONID => $record[PDNOTIFICATIONID]);	
+					$result = $this->Common_Masters_Model->updateRecords($record,PDNOTIFICATION,$where_condition_array);
+					// if($result == 1)
+					// {
+					// 	$count++;
+					// }
+			}
+			if($result)
+			{
+					
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = $result;
+					$this->response($data,REST_Controller::HTTP_OK);
+			}
+			else  
+			{		
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$this->response($data,REST_Controller::HTTP_OK);
+			}
+		}
+	}

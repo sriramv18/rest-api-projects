@@ -70,8 +70,8 @@ $route['getPDNotificationsList'] = 'Common_Masters_Controller/getPDNotifications
 $route['getListOfPDTeam'] = 'Common_Masters_Controller/getListOfPDTeam';
 $route['getPdManage'] = 'Common_Masters_Controller/getPdManage';
 $route['savePdTeamManage'] = 'Common_Masters_Controller/savePdTeamManage';
-
-$route['getListOfPDTeamMap'] = 'Common_Masters_Controller/getListOfPDTeamMap';
+$route['getListOfPDTeamCityMapping'] =  'Common_Masters_Controller/getListOfPDTeamCityMapping';
+//$route['getListOfPDTeamMap'] = 'Common_Masters_Controller/getListOfPDTeamMap';
 $route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
 $route['saveMaster'] = 'Common_Masters_Controller/saveMaster';
 $route['saveBranch'] = 'Common_Masters_Controller/saveBranch'; 
