@@ -99,7 +99,7 @@ class Template_Management_Model extends SPARQ_Model {
 			 
 			  $this->db->SELECT('QUESTIONCATEGORY.question_category_id,QUESTIONCATEGORY.category_name,TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weightage,  TEMPLATECATEGORYWEIGHTAGE.isactive');
 			  $this->db->FROM(QUESTIONCATEGORY .' as QUESTIONCATEGORY');
-			  $this->db->JOIN(TEMPLATECATEGORYWEIGHTAGE.' as TEMPLATECATEGORYWEIGHTAGE',"TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id = QUESTIONCATEGORY.question_category_id AND TEMPLATECATEGORYWEIGHTAGE.fk_template_id = $template_id",'LEFT');
+			  $this->db->JOIN(TEMPLATECATEGORYWEIGHTAGE.' as TEMPLATECATEGORYWEIGHTAGE',"TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id = QUESTIONCATEGORY.question_category_id AND TEMPLATECATEGORYWEIGHTAGE.fk_template_id = $template_id",'LEFT');
 			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATECATEGORYWEIGHTAGE.fk_createdby = USERPROFILE.userid','LEFT');
 			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATECATEGORYWEIGHTAGE.fk_updatedby = USERPROFILE1.userid','LEFT');
 			  $categories = $this->db->GET()->result_array();
@@ -115,7 +115,7 @@ class Template_Management_Model extends SPARQ_Model {
 				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive');
 				//$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
 				$this->db->FROM(QUESTIONS.' as QUESTIONS');
-				$this->db->JOIN(TEMPLATEQUESTION.' as TEMPLATEQUESTION','QUESTIONS.question_id = TEMPLATEQUESTION.template_question_id','LEFT');
+				$this->db->JOIN(TEMPLATEQUESTION.' as TEMPLATEQUESTION','QUESTIONS.question_id = TEMPLATEQUESTION.fk_question_id','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
 				$this->db->WHERE('QUESTIONS.fk_question_category',$category['fk_question_category_id']);

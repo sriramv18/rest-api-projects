@@ -396,7 +396,7 @@ class PD_Controller extends REST_Controller {
 			{
 				if($pd_applicant_detail['pd_co_applicant_id'] != null || $pd_applicant_detail['pd_co_applicant_id'] != "")
 				{
-					$pd_id = $pd_applicant_detail['fk_pd_id'];
+					//$pd_id = $pd_applicant_detail['fk_pd_id'];
 					$where_condition_array = array('pd_co_applicant_id' => $pd_applicant_detail['pd_co_applicant_id']);
 					$co_applicant_id = $this->PD_Model->updateRecords($pd_applicant_detail,PDAPPLICANTSDETAILS,$where_condition_array);
 					if($co_applicant_id != null || $co_applicant_id != '')
@@ -406,7 +406,7 @@ class PD_Controller extends REST_Controller {
 				}
 				else
 				{
-					$pd_applicant_detail['fk_pd_id'] = $pd_id;
+					//$pd_applicant_detail['fk_pd_id'] = $pd_id;
 					$co_applicant_id = $this->PD_Model->saveRecords($pd_applicant_detail,PDAPPLICANTSDETAILS);
 					if($co_applicant_id != null || $co_applicant_id != '')
 					{
