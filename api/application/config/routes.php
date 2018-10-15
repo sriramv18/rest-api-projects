@@ -130,4 +130,5 @@ $route['updatePDApplicants'] = 'PD_Controller/updatePDApplicants';
 $route['allocatePD'] = 'PD_Controller/allocatePD'; 
 $route['schdulePD'] = 'PD_Controller/schdulePD'; 
 $route['getListPDOfficers'] = 'PD_Controller/getListPDOfficers'; 
+$route['loadFullTemplate'] = 'PD_Controller/loadFullTemplate'; 
 

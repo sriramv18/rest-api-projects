@@ -84,7 +84,7 @@ class Template_Management_Model extends SPARQ_Model {
 			 // $this->db->JOIN(TEMPLATECATEGORYWEIGHTAGE.' as TEMPLATECATEGORYWEIGHTAGE',"TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id = QUESTIONCATEGORY.question_category_id AND TEMPLATECATEGORYWEIGHTAGE.fk_template_id = $template_id");
 			//  $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATECATEGORYWEIGHTAGE.fk_createdby = USERPROFILE.userid','LEFT');
 			  //$this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATECATEGORYWEIGHTAGE.fk_updatedby = USERPROFILE1.userid','LEFT');
-			 // $this->db->WHERE('TEMPLATECATEGORYWEIGHTAGE.fk_template_id',$template_id);
+			 $this->db->WHERE('TEMPLATECATEGORYWEIGHTAGE.fk_template_id',$template_id);
 			  $data = $this->db->GET()->result_array();	
 			  return $data;   
    }
@@ -97,11 +97,12 @@ class Template_Management_Model extends SPARQ_Model {
    public function getTemplateQuestionAnswers($template_id)
    {
 			 
-			  $this->db->SELECT('QUESTIONCATEGORY.question_category_id,QUESTIONCATEGORY.category_name,TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weightage,  TEMPLATECATEGORYWEIGHTAGE.isactive');
-			  $this->db->FROM(QUESTIONCATEGORY .' as QUESTIONCATEGORY');
-			  $this->db->JOIN(TEMPLATECATEGORYWEIGHTAGE.' as TEMPLATECATEGORYWEIGHTAGE',"TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id = QUESTIONCATEGORY.question_category_id AND TEMPLATECATEGORYWEIGHTAGE.fk_template_id = $template_id",'LEFT');
+			  $this->db->SELECT('TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weightage, DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.createdon,"%d/%m/%Y") as createdon, TEMPLATECATEGORYWEIGHTAGE.fk_createdby,  DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.updatedon, "%d/%m/%Y") as updatedon, TEMPLATECATEGORYWEIGHTAGE.isactive, TEMPLATECATEGORYWEIGHTAGE.fk_updatedby');
+			  $this->db->FROM(TEMPLATECATEGORYWEIGHTAGE .' as TEMPLATECATEGORYWEIGHTAGE');
+			  $this->db->JOIN(QUESTIONCATEGORY.' as QUESTIONCATEGORY','TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id = QUESTIONCATEGORY.question_category_id');
 			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATECATEGORYWEIGHTAGE.fk_createdby = USERPROFILE.userid','LEFT');
 			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATECATEGORYWEIGHTAGE.fk_updatedby = USERPROFILE1.userid','LEFT');
+			  $this->db->WHERE('TEMPLATECATEGORYWEIGHTAGE.fk_template_id',$template_id);
 			  $categories = $this->db->GET()->result_array();
 	
 		if(count($categories))
@@ -114,11 +115,11 @@ class Template_Management_Model extends SPARQ_Model {
 				 
 				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive');
 				//$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
-				$this->db->FROM(QUESTIONS.' as QUESTIONS');
-				$this->db->JOIN(TEMPLATEQUESTION.' as TEMPLATEQUESTION','QUESTIONS.question_id = TEMPLATEQUESTION.fk_question_id','LEFT');
+				$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
+				$this->db->JOIN(QUESTIONS.' as QUESTIONS','TEMPLATEQUESTION.fk_question_id = QUESTIONS.question_id','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
-				$this->db->WHERE('QUESTIONS.fk_question_category',$category['fk_question_category_id']);
+				$this->db->WHERE('TEMPLATEQUESTION.fk_template_question_category_id',$category['fk_question_category_id']);
 				$questions = $this->db->GET()->result_array();
 				
 
@@ -128,8 +129,8 @@ class Template_Management_Model extends SPARQ_Model {
 						foreach($questions as $answer_key => $question)
 						{
 						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage, TEMPLATEANSWERWEIGHTAGE.isactive');
-						  $this->db->FROM(QUESTIONANSWERS.' as QUESTIONANSWERS');
-						  $this->db->JOIN(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id AND QUESTIONANSWERS.question_answer_id = TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id','LEFT');
+						  $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
+						  $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id','LEFT');
 						  $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
 						  $answers = $this->db->GET()->result_array();
 						  $questions[$answer_key]['answers'] = $answers;

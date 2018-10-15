@@ -324,10 +324,10 @@ class PD_Controller extends REST_Controller {
 		}
 		
 		// update into pd officer details 
-		if($pd_details['fk_pd_allocated_to'] != null || $pd_details['fk_pd_allocated_to'] != '')
-		{
-			$this->PD_Model->updatePDofficersDetail($pd_details['fk_pd_allocated_to']);
-		}
+		// if($pd_details['fk_pd_allocated_to'] != null || $pd_details['fk_pd_allocated_to'] != '')
+		// {
+			// $this->PD_Model->updatePDofficersDetail($pd_details['fk_pd_allocated_to']);
+		// }
 		if($pd_id != null || $pd_id != '' && $count != 0)
 		{
 			// CALL pdnotification Helper function to send pd alerts @ params pdid,pdstatus
@@ -816,7 +816,20 @@ class PD_Controller extends REST_Controller {
 		if($this->get('template_id')) { $template_id = $this->get('template_id'); }
 		if($template_id != "" || $template_id != null)
 		{
-		     
+		     $template_details = $this->PD_Model->getTemplateForPD($template_id);
+			 if(count($template_details))
+			 {
+				 $data['dataStatus'] = true;
+				 $data['status'] = REST_Controller::HTTP_OK;
+				 $data['records'] = $template_details;
+				 $this->response($data,REST_Controller::HTTP_OK);
+			 }
+			 else
+			 {
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$this->response($data,REST_Controller::HTTP_OK); 
+			 }
 		}
 	}
 	

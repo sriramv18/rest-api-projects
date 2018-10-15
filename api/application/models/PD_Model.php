@@ -13,9 +13,10 @@ class PD_Model extends SPARQ_Model {
 	
 		public function listLessPDDetails($page,$limit,$sort,$pdofficerid,$datetype,$fdate,$tdate)// $page represents mysql offset
 		{
-			$this->db->SELECT('PDTRIGGER.pd_id, PDTRIGGER.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name, PDTRIGGER.lender_applicant_id, DATE_FORMAT(PDTRIGGER.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDTRIGGER.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDTRIGGER.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDTRIGGER.fk_pd_type,PDTYPE.type_name as pd_type_name, PDTRIGGER.pd_status,PDSTATUS.pd_status_name, PDTRIGGER.pd_specific_clarification, DATE_FORMAT(PDTRIGGER.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDTRIGGER.fk_createdby, DATE_FORMAT(PDTRIGGER.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDTRIGGER.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDTRIGGER.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDTRIGGER.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDTRIGGER.fk_pd_template_id,TEMPLATE.template_name, PDTRIGGER.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDTRIGGER.pd_officier_final_judgement, PDTRIGGER.pd_agency_id,AGENCY.full_name as agency_name, PDTRIGGER.loan_amount,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode');
+			$this->db->SELECT('PDTRIGGER.pd_id, PDTRIGGER.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name,ENTITYBILLING.entity_billing_id,ENTITYBILLING.billing_name, PDTRIGGER.lender_applicant_id, DATE_FORMAT(PDTRIGGER.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDTRIGGER.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDTRIGGER.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDTRIGGER.fk_pd_type,PDTYPE.type_name as pd_type_name, PDTRIGGER.pd_status,PDSTATUS.pd_status_name, PDTRIGGER.pd_specific_clarification, DATE_FORMAT(PDTRIGGER.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDTRIGGER.fk_createdby, DATE_FORMAT(PDTRIGGER.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDTRIGGER.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDTRIGGER.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDTRIGGER.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDTRIGGER.fk_pd_template_id,TEMPLATE.template_name, PDTRIGGER.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDTRIGGER.pd_officier_final_judgement, PDTRIGGER.pd_agency_id,AGENCY.full_name as agency_name, PDTRIGGER.loan_amount,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode,PDTRIGGER.pd_contact_person,PDTRIGGER.pd_contact_mobileno');
 			$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 			$this->db->JOIN(ENTITY.' as ENTITY','PDTRIGGER.fk_lender_id = ENTITY.entity_id','LEFT');
+			$this->db->JOIN(ENTITYBILLING.' as ENTITYBILLING','PDTRIGGER.fk_entity_billing_id = ENTITYBILLING.entity_billing_id','LEFT');
 			$this->db->JOIN(PRODUCTS.' as PRODUCTS','PDTRIGGER.fk_product_id = PRODUCTS.product_id','LEFT');
 			$this->db->JOIN(SUBPRODUCTS.' as SUBPRODUCTS','PDTRIGGER.fk_subproduct_id = SUBPRODUCTS.subproduct_id','LEFT');
 			$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id','LEFT');
@@ -254,4 +255,58 @@ class PD_Model extends SPARQ_Model {
 			
 			return $result_array;
 	}
+	
+	
+	
+	public function getTemplateForPD($template_id)
+	{
+		
+			 
+			  $this->db->SELECT('TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weightage, DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.createdon,"%d/%m/%Y") as createdon, TEMPLATECATEGORYWEIGHTAGE.fk_createdby,  DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.updatedon, "%d/%m/%Y") as updatedon, TEMPLATECATEGORYWEIGHTAGE.isactive, TEMPLATECATEGORYWEIGHTAGE.fk_updatedby');
+			  $this->db->FROM(TEMPLATECATEGORYWEIGHTAGE .' as TEMPLATECATEGORYWEIGHTAGE');
+			  $this->db->JOIN(QUESTIONCATEGORY.' as QUESTIONCATEGORY','TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id = QUESTIONCATEGORY.question_category_id');
+			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATECATEGORYWEIGHTAGE.fk_createdby = USERPROFILE.userid','LEFT');
+			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATECATEGORYWEIGHTAGE.fk_updatedby = USERPROFILE1.userid','LEFT');
+			  $this->db->WHERE('TEMPLATECATEGORYWEIGHTAGE.fk_template_id',$template_id);
+			  $categories = $this->db->GET()->result_array();
+	
+		if(count($categories))
+		{
+				/*
+				DATE_FORMAT(TEMPLATEQUESTION.createdon,"%d/%m/%Y") as createdon, TEMPLATEQUESTION.fk_createdby,  DATE_FORMAT(TEMPLATEQUESTION.updatedon,"%d/%m/%Y") as updatedon, TEMPLATEQUESTION.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby
+				*/
+			  foreach($categories as $category_key => $category)
+			  {
+				 
+				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive');
+				//$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
+				$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
+				$this->db->JOIN(QUESTIONS.' as QUESTIONS','TEMPLATEQUESTION.fk_question_id = QUESTIONS.question_id','LEFT');
+				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
+				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
+				$this->db->WHERE('TEMPLATEQUESTION.fk_template_question_category_id',$category['fk_question_category_id']);
+				$questions = $this->db->GET()->result_array();
+				
+
+					if(count($questions))
+					{
+						
+						foreach($questions as $answer_key => $question)
+						{
+						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage, TEMPLATEANSWERWEIGHTAGE.isactive');
+						  $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
+						  $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id','LEFT');
+						  $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
+						  $answers = $this->db->GET()->result_array();
+						  $questions[$answer_key]['answers'] = $answers;
+						}
+					}
+				$categories[$category_key]['questions'] = $questions;
+			  }
+			  
+	}
+
+	return  $categories;   
+   }
+	
 }
