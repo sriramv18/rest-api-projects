@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getQuestionsForTemplateCreation'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'schdulePD'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -308,6 +308,9 @@ defined('ENTITYPDPRICEINFOID') OR define('ENTITYPDPRICEINFOID','entity_pdprice_i
 
 defined('VENDORCITYMAP') OR define('VENDORCITYMAP','m_vendor_city_map');
 defined('VENDORCITYMAPID') OR define('VENDORCITYMAPID','vendor_city_map_id');
+
+defined('PDCATEGORYWEIGHTAGE') OR define('PDCATEGORYWEIGHTAGE','t_pd_category_weightage');
+defined('PDCATEGORYWEIGHTAGEID') OR define('PDCATEGORYWEIGHTAGEID','pd_category_weightage_id');
 
 
 

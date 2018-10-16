@@ -593,6 +593,28 @@ class PD_Controller extends REST_Controller {
 	*/
 	public function schdulePD_post()
 	{
+		
+				$records['fk_pd_id'] = 40;
+				$fields = array('fk_pd_template_id');
+				$where_condition_array = array('pd_id'=>$records['fk_pd_id']);
+				$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
+				//print_r($res_array);
+				if(count($res_array))
+				{
+					$template_id = $res_array[0]['fk_pd_template_id'];
+					echo $template_id;
+					$fields = array('fk_question_category_id','weightage');
+					$where_condition_array = array('fk_template_id'=>$template_id);
+					$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,TEMPLATECATEGORYWEIGHTAGE);
+					print_r($res_array);
+					
+					foreach($res_array as $key => $category)
+					{
+						$temp_data = array('fk_pd_id'=>$records['fk_pd_id'],'fk_category_id'=>$category['fk_question_category_id'],'pd_category_weightage'=>$category['weightage']);
+						$this->PD_Model->saveRecords($temp_data,PDCATEGORYWEIGHTAGE);
+					}
+				}
+				die();
 		$records = $this->post('records');
 		if($records['schedule_time'] != "" || $records['schedule_time'] != null)
 		{
@@ -601,6 +623,35 @@ class PD_Controller extends REST_Controller {
 				$where_condition_array = array('pd_id' => $records['fk_pd_id']);
 				$temp_array = array('pd_status' => SCHEDULED,'fk_updatedby'=>$records['fk_scheduled_by'],'updatedon'=>$records['createdon'],'scheduled_on'=>$records['schedule_time']);
 				$pd_id_modified = $this->PD_Model->updateRecords($temp_array,PDTRIGGER,$where_condition_array);
+				
+				/******* Code Snippt for Save Template Category Weightage info to PD category Info*/
+				$fields = array('fk_pd_template_id');
+				$where_condition_array = array('pd_id'=>$records['fk_pd_id']);
+				$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
+				
+				if(count($res_array))
+				{
+							$fields = array('fk_pd_template_id');
+							$where_condition_array = array('pd_id'=>$records['fk_pd_id']);
+							$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
+						
+						if(count($res_array))
+						{
+							$template_id = $res_array[0]['fk_pd_template_id'];
+							
+							$fields = array('fk_question_category_id','weightage');
+							$where_condition_array = array('fk_template_id'=>$template_id);
+							$template_categories = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,TEMPLATECATEGORYWEIGHTAGE);
+							
+							foreach($template_categories as $key => $category)
+							{
+								$temp_data = array('fk_pd_id'=>$records['fk_pd_id'],'fk_category_id'=>$category['fk_question_category_id'],'pd_category_weightage'=>$category['weightage']);
+								$this->PD_Model->saveRecords($temp_data,PDCATEGORYWEIGHTAGE);
+							}
+						}
+				}
+				/******* End of Code Snippt  Save Template Category Weightage info to PD category Info*/
+				
 				
 				if($pd_id_modified != "" || $pd_id_modified != null)
 				{

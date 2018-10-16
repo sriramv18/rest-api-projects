@@ -352,6 +352,7 @@ class Common_Masters_Controller extends REST_Controller {
 		{
 			$records = $this->post('records');
 			// print_r($records);die;
+			$result = array();
 			if(!empty($records))
 			{
 				foreach($records['teamDetails'] as $users)
@@ -364,6 +365,8 @@ class Common_Masters_Controller extends REST_Controller {
 				$result = $this->Common_Masters_Model->updateRecords($record,PDOFFICIERSDETAILS,$where_condition_array);
 				}
 			}
+			
+			
 			if(count($result) > 0)
 			{
 				$data['dataStatus'] = true;
