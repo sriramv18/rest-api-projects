@@ -376,5 +376,27 @@ class Template_Management_Controller extends REST_Controller {
 		}
 	}
 	
-	
+	public function getQuestionsForTemplateCreation_post()
+	{
+		$template_id = "";$category_id = "";
+		
+		if($this->post('template_id')){ $template_id = $this->post('template_id'); }
+		if($this->post('category_id')){ $category_id = $this->post('category_id'); }
+		
+		$questions = $this->Template_Management_Model->getListOfQuestions($template_id,$category_id);
+		if(count($questions))
+		{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $questions;
+						$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$this->response($data,REST_Controller::HTTP_OK);
+			
+		}
+	}
 }

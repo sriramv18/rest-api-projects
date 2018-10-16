@@ -102,6 +102,7 @@ $route['getTemplateLenders'] = 'Template_Management_Controller/getTemplateLender
 $route['getTemplateCategories'] = 'Template_Management_Controller/getTemplateCategories'; 
 $route['getTemplateQuestionAnswers'] = 'Template_Management_Controller/getTemplateQuestionAnswers'; 
 $route['getListOfCategories'] = 'Template_Management_Controller/getListOfCategories'; 
+$route['getQuestionsForTemplateCreation'] = 'Template_Management_Controller/getQuestionsForTemplateCreation'; 
 
 //QUESTION MANAGEMENT
 $route['(listAllQuestions/:any)'] = 'Question_Management_Controller/listAllQuestions/'; 

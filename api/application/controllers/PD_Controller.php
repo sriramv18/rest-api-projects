@@ -22,7 +22,8 @@ class PD_Controller extends REST_Controller {
 		$this->load->library('AWS_SNS');
         
     }
-    /***********************Get get List Of Lenders  Details for PD Trigger Page************************/
+    
+/***********************Get get List Of Lenders  Details for PD Trigger Page************************/
 	
 	public function getListOfLenders_get()
 	{
@@ -724,15 +725,17 @@ class PD_Controller extends REST_Controller {
 	public function listLessPDDetails_get()
 	{
 			$page = 0;$limit = 50;$sort = 'DESC';$pdofficerid = "";$datetype = "";$fdate ="";$tdate ="";
+			$lenderid = "";
 			if($this->get('page')) { $page  = $this->get('page'); }
 			if($this->get('limit')){ $limit = $this->get('limit'); }
 			if($this->get('sort')) { $sort  = $this->get('sort'); }
 			if($this->get('pdofficerid')) { $pdofficerid  = $this->get('pdofficerid'); }
+			if($this->get('lenderid')) { $lenderid  = $this->get('lenderid'); }
 			if($this->get('datetype')) { $datetype = $this->get('datetype'); }
 			if($this->get('fdate')) { $fdate = $this->get('fdate'); }
 			if($this->get('tdate')) { $tdate = $this->get('tdate'); }
 			
-			$result_data = $this->PD_Model->listLessPDDetails($page,$limit,$sort,$pdofficerid,$datetype,$fdate,$tdate);
+			$result_data = $this->PD_Model->listLessPDDetails($page,$limit,$sort,$pdofficerid,$datetype,$fdate,$tdate,$lenderid);
 			
 			if($result_data['data_status'] == true)
 			{

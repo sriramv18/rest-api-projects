@@ -20,6 +20,12 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
+		// require_once APPPATH . '/controllers/PD_Controller.php';
+		// require_once APPPATH . '/libraries/REST_Controller.php';
 		$this->load->view('welcome_message');
+		//$this->load->library('../controllers/PD_Controller');
+		// $PD_Controller = new PD_Controller();
+		//echo $PD_Controller->index();
+		
 	}
 }
