@@ -351,7 +351,7 @@ class Common_Masters_Controller extends REST_Controller {
 		public function savePdTeamManage_post()
 		{
 			$records = $this->post('records');
-			// print_r($records);die;
+			// print_r($records);
 			$result = array();
 			if(!empty($records))
 			{
@@ -363,11 +363,12 @@ class Common_Masters_Controller extends REST_Controller {
 					$record['fk_updatedby'] = $records['fk_updatedby'];
 					$where_condition_array = array('fk_user_id' => $record['fk_user_id']);	
 				$result = $this->Common_Masters_Model->updateRecords($record,PDOFFICIERSDETAILS,$where_condition_array);
+				//print_r($result);
 				}
 			}
 			
 			
-			if(count($result) > 0)
+			if(count($result))
 			{
 				$data['dataStatus'] = true;
 				$data['status'] = REST_Controller::HTTP_OK;
