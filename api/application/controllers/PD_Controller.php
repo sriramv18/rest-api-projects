@@ -699,7 +699,7 @@ class PD_Controller extends REST_Controller {
 					$fields = array('fk_question_category_id','weightage');
 					$where_condition_array = array('fk_template_id'=>$template_id);
 					$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,TEMPLATECATEGORYWEIGHTAGE);
-					print_r($res_array);
+					//print_r($res_array);
 					
 					foreach($res_array as $key => $category)
 					{
@@ -707,7 +707,7 @@ class PD_Controller extends REST_Controller {
 						$this->PD_Model->saveRecords($temp_data,PDCATEGORYWEIGHTAGE);
 					}
 				}
-				die();
+				//die();
 		$records = $this->post('records');
 		if($records['schedule_time'] != "" || $records['schedule_time'] != null)
 		{
