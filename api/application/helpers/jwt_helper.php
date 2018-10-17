@@ -41,6 +41,7 @@ class JWT
 	{
 		
 		
+		
 		$tks = explode('.', $jwt);
 		
 		if (count($tks) != 3) {
@@ -149,17 +150,38 @@ class JWT
 	 */
 	public static function aws_sign($head_body, $signature, $alg)
 	{
-		
+		$headers['From'] = 1;
+		$headers = getallheaders();
 		$CI =& get_instance();
+		$jwtkey = '';
 		if (empty(static::$supported_algs[$alg])) {
             throw new DomainException('Algorithm not supported');
-        }
+		}
 		
+		if(array_key_exists("From",$headers)){
+		if($headers['From'] ==2)
+		{
+			$jwtkey = $CI->config->item('jwt_public_key_lender_dev');
+		}else if($headers['From'] !='' && $headers['From'] ==3)
+		{
+			$jwtkey = $CI->config->item('jwt_public_key_vendor_dev');
+		}else if($headers['From']!='' && $headers['From'] == 1)
+		{
+			$jwtkey = $CI->config->item('jwt_public_key_sineedge_dev');
+		}else{
+			$jwtkey = '';
+		}
+	}else
+	{
+		$jwtkey = $CI->config->item('jwt_public_key_sineedge_dev');
+		
+	}
+		 
 		
 		list($function, $algorithm) = static::$supported_algs[$alg];
 		switch($function) {
             case 'openssl':
-                $success = openssl_verify($head_body, $signature, $CI->config->item('jwt_public_key'), $algorithm);
+                $success = openssl_verify($head_body, $signature, $jwtkey , $algorithm);
                 if ($success === 1) {
                     return true;
                 } elseif ($success === 0) {

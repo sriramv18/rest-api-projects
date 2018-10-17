@@ -6,6 +6,7 @@ class AUTHORIZATION
     {
         $CI =& get_instance();
         $headersData = getallheaders();
+        
         if (!array_key_exists("Token",$headersData))
         {
             set_status_header(REST_CONTROLLER::HTTP_OK,"OK");

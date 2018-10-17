@@ -4,7 +4,7 @@
 
 /* public key for encrypt AWS JWT SINE_EDGE_USER_POOL_ID_TOKEN
 */
-$config['jwt_public_key'] = '-----BEGIN PUBLIC KEY-----
+$config['jwt_public_key_sineedge_dev'] = '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqTsyy4r3nrjumED4To7w
 r1rfjMEzL+hcF8OwGm89aHoEzKLZqr12uQw3eK7tVV97QV8aYOi0zUinHlOVx1PM
 Dgik5jW8aCBvGM5S6PAZXn3fj59HYtKL0HIQ1cxaoIUVXjRHD/QkcCEZuG5dIxij
