@@ -64,23 +64,23 @@ class PDALERTS
 				}					
 				else //sent sms to all lender contacts associated to lender id
 				{
-					if($pd_notification_configs[0]['sms_lender'] == 1)
-					{
+					// if($pd_notification_configs[0]['sms_lender'] == 1)
+					// {
 						
-						$CI->db->SELECT("contact_mobile_no");
-						$CI->db->FROM(ENTITYCHILD);
-						$CI->db->WHERE("fk_entity_id",$core_details[0]['fk_lender_id']);
-						$lender_mobile_nos = $CI->db->GET()->result_array();
-						//print_r($lender_mobile_nos);
-						//print_r($lender_mobile_nos);
-						if(count($lender_mobile_nos))
-						{
-							foreach($lender_mobile_nos as $mobile)
-							{
-								array_push($mobile_nos_to_send_notification,$mobile['contact_mobile_no']);
-							}
-						}
-					}
+						// $CI->db->SELECT("contact_mobile_no");
+						// $CI->db->FROM(ENTITYBILLINGCONTACTINFO);
+						// $CI->db->WHERE("fk_entity_id",$core_details[0]['fk_lender_id']);
+						// $lender_mobile_nos = $CI->db->GET()->result_array();
+						// //print_r($lender_mobile_nos);
+						// //print_r($lender_mobile_nos);
+						// if(count($lender_mobile_nos))
+						// {
+							// foreach($lender_mobile_nos as $mobile)
+							// {
+								// array_push($mobile_nos_to_send_notification,$mobile['contact_mobile_no']);
+							// }
+						// }
+					// }
 				}
 				
 				//add pd officer no
