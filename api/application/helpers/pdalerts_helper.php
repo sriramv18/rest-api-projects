@@ -33,11 +33,11 @@ class PDALERTS
 			*/
 			
 			//1.Get Current Status and createdby , lenders info by pdid
-			$CI->db->SELECT("PDTRIGGER.fk_lender_id,PDTRIGGER.lender_applicant_id,PDTRIGGER.fk_pd_status,PDSTATUS.pd_status_name,PDTRIGGER.fk_createdby,USERPROFILE.fk_entity_id as created_entity_type,USERPROFILE.email as created_mail,USERPROFILE.mobile_no as created_mobile_no,PDTRIGGER.fk_pd_allocated_to,ALLOCATED.email as allocated_email,ALLOCATED.mobile_no as allocated_mobile_no,ALLOCATED.fk_entity_id as allocated_entity_type,PDTRIGGER.pd_agency_id");
+			$CI->db->SELECT("PDTRIGGER.fk_lender_id,PDTRIGGER.lender_applicant_id,PDTRIGGER.pd_status,PDSTATUS.pd_status_name,PDTRIGGER.fk_createdby,USERPROFILE.fk_entity_id as created_entity_type,USERPROFILE.email as created_mail,USERPROFILE.mobile_no as created_mobile_no,PDTRIGGER.fk_pd_allocated_to,ALLOCATED.email as allocated_email,ALLOCATED.mobile_no as allocated_mobile_no,ALLOCATED.fk_entity_id as allocated_entity_type,PDTRIGGER.pd_agency_id");
 			$CI->db->FROM(PDTRIGGER." as PDTRIGGER");
 			$CI->db->JOIN(USERPROFILE." as USERPROFILE","PDTRIGGER.fk_createdby = USERPROFILE.userid");
 			$CI->db->JOIN(USERPROFILE." as ALLOCATED","PDTRIGGER.fk_pd_allocated_to = ALLOCATED.userid");
-			$CI->db->JOIN(PDSTATUS." as PDSTATUS","PDTRIGGER.fk_pd_status = PDSTATUS.pd_status_id");
+			$CI->db->JOIN(PDSTATUS." as PDSTATUS","PDTRIGGER.pd_status = PDSTATUS.pd_status_id");
 			$CI->db->WHERE("PDTRIGGER.pd_id",$pdid);
 			$core_details = $CI->db->GET()->result_array();
 			//print_r($core_details);
@@ -50,7 +50,7 @@ class PDALERTS
 				$CI->db->SELECT("PDNOTIFICATION.pdnotification_id, PDNOTIFICATION.fk_pd_status_id, PDSTATUS.pd_status_name,PDNOTIFICATION.sms_lender, PDNOTIFICATION.sms_pdofficer, PDNOTIFICATION.sms_pdincharge, PDNOTIFICATION.mail_lender, PDNOTIFICATION.mail_pdincharge, PDNOTIFICATION.mail_pdofficer");
 				$CI->db->FROM(PDNOTIFICATION." as PDNOTIFICATION");
 				$CI->db->JOIN(PDSTATUS." as PDSTATUS","PDNOTIFICATION.fk_pd_status_id = PDSTATUS.pd_status_id AND PDSTATUS.isactive = 1");
-				$CI->db->WHERE("PDNOTIFICATION.fk_pd_status_id",$core_details[0]['fk_pd_status']);
+				$CI->db->WHERE("PDNOTIFICATION.fk_pd_status_id",$core_details[0]['pd_status']);
 				$pd_notification_configs = $CI->db->GET()->result_array();
 				//print_r($pd_notification_configs);
 				
@@ -107,7 +107,7 @@ class PDALERTS
 						}
 				}
 				
-				$msg = "PD for Lender Applicant ID -:". $core_details[0]['lender_applicant_id'] ."  has been   ".   $core_details[0]['pd_status_name']; // status base configurable
+				$msg = "PD for Lender Applicant ID -:". $core_details[0]['lender_applicant_id'] ."  has been  ". $core_details[0]['pd_status_name']; // status base configurable
 				//print_r($mobile_nos_to_send_notification);
 				foreach($mobile_nos_to_send_notification as $no)
 				{

@@ -41,6 +41,8 @@ class Template_Management_Controller extends REST_Controller {
 		}
 	}
 
+	
+	/******** Save and Update  Template Name  ********/
 	public function saveNewTemplateName_post()
 	{
 		$records = $this->post('records');
@@ -87,7 +89,7 @@ class Template_Management_Controller extends REST_Controller {
 		
 	}
 	
-	
+	/******** save and Edit Template Lender,Product, and Customer Segments  ********/
 	public function saveTemplateLenderDetails_post()
 	{
 		
@@ -104,6 +106,7 @@ class Template_Management_Controller extends REST_Controller {
 				}
 				else
 				{
+					
 					
 					$id = $this->Template_Management_Model->saveRecords($template_lender_detail,LENDERTEMPLATE);
 					if($id != "" || $id != null){ $count++; }
@@ -129,6 +132,8 @@ class Template_Management_Controller extends REST_Controller {
 		
 	}
 	
+	
+	/******** Save and Update Template Categories  ********/
 	public function saveTemplateCategoryDetails_post()
 	{
 	
@@ -137,16 +142,16 @@ class Template_Management_Controller extends REST_Controller {
 		//print_r($template_category_details);die();
 		foreach($template_category_details as $template_category_detail)
 		{
-			if($template_category_detail['template_catagory_weightage_id'] != null || $template_category_detail['template_catagory_weightage_id'] != "")
+			if($template_category_detail['template_category_weightage_id'] != null || $template_category_detail['template_category_weightage_id'] != "")
 			{
-				$where_condition_array = array('template_catagory_weightage_id'=>$template_category_detail['template_catagory_weightage_id']);
-				$modified = $this->Template_Management_Model->updateRecords($template_category_detail,TEMPLATECATAGORYWEIGHTAGE,$where_condition_array);
+				$where_condition_array = array('template_category_weightage_id'=>$template_category_detail['template_category_weightage_id']);
+				$modified = $this->Template_Management_Model->updateRecords($template_category_detail,TEMPLATECATEGORYWEIGHTAGE,$where_condition_array);
 				if($modified != "" || $modified != null){ $count++; } 
 			}
 			else
 			{
 					
-					$id = $this->Template_Management_Model->saveRecords($template_category_detail,TEMPLATECATAGORYWEIGHTAGE);
+					$id = $this->Template_Management_Model->saveRecords($template_category_detail,TEMPLATECATEGORYWEIGHTAGE);
 					if($id != "" || $id != null){ $count++; }
 			}
 		}
@@ -169,14 +174,16 @@ class Template_Management_Controller extends REST_Controller {
 		
 	}
 	
-	
+	/******** Save/update Template Question and Answers  ********/
 	public function saveTemplateQuestionAnswers_post()
 	{
-		$count = 0;	
+		$question_count = 0;
+		
 		$template_question_answers_details = $this->post('records');
-		print_r($template_question_answers_details);
+		//print_r($template_question_answers_details);
 		foreach($template_question_answers_details as $key => $template_question_answers_detail)
 		{
+			//echo "FOr".$key;
 			$answers_array = array();
 			if($template_question_answers_detail['template_question_id'] != null || $template_question_answers_detail['template_question_id'] != "")
 			{
@@ -187,8 +194,10 @@ class Template_Management_Controller extends REST_Controller {
 					}
 					
 					$where_condition_array = array('template_question_id' => $template_question_answers_detail['template_question_id']);
+					unset($template_question_answers_detail['question_id']);
+					unset($template_question_answers_detail['question']);
 					$question_modified = $this->Template_Management_Model->updateRecords($template_question_answers_detail,TEMPLATEQUESTION,$where_condition_array);
-					
+					if($question_modified){$question_count++;}
 					if(count($answers_array))
 					{
 						foreach($answers_array as $key => $answer)
@@ -196,6 +205,8 @@ class Template_Management_Controller extends REST_Controller {
 							if($answer['template_answer_weightage_id'] != "" || $answer['template_answer_weightage_id'] != null)
 							{
 								$where_condition_array = array('template_answer_weightage_id' => $answer['template_answer_weightage_id']);
+								unset($answer['answer']);
+					
 								$answer_modified = $this->Template_Management_Model->updateRecords($answer,TEMPLATEANSWERWEIGHTAGE,$where_condition_array);
 								
 								if($answer_modified != "" || $answer_modified != null) {$count++;}
@@ -204,12 +215,39 @@ class Template_Management_Controller extends REST_Controller {
 							{
 								$answer_inserted = $this->Template_Management_Model->saveRecords($answer,TEMPLATEANSWERWEIGHTAGE);
 								
-								if($answer_inserted != "" || $answer_inserted != null) {$count++;}
+								//if($answer_inserted != "" || $answer_inserted != null) {$count++;}
 							}
 						}
 					}
 					
-					if(($question_modified != "" || $question_modified != null) && count($answers_array) == $count)
+									
+			}
+			else
+			{
+				if(isset($template_question_answers_detail['answers']))
+					{
+						$answers_array = $template_question_answers_detail['answers'];
+						unset($template_question_answers_detail['answers']);
+					}
+					
+					unset($template_question_answers_detail['question_id']);
+					unset($template_question_answers_detail['question']);
+					$question_id = $this->Template_Management_Model->saveRecords($template_question_answers_detail,TEMPLATEQUESTION);
+					if($question_id){$question_count++;}
+					if(count($answers_array))
+					{
+						foreach($answers_array as $key => $answer)
+						{
+							$answer['fk_template_question_id'] = $question_id;
+							unset($answer['answer']);
+							$answer_inserted = $this->Template_Management_Model->saveRecords($answer,TEMPLATEANSWERWEIGHTAGE);
+							//if($answer_inserted != "" || $answer_inserted != null) {$count++;}
+						}
+					}		
+			}
+		}
+		
+		if(($question_count != "" || $question_id != null) )
 					{
 						$data['dataStatus'] = true;
 						$data['status'] = REST_Controller::HTTP_OK;
@@ -222,48 +260,12 @@ class Template_Management_Controller extends REST_Controller {
 						$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
 						$this->response($data,REST_Controller::HTTP_OK);
 					}
-					
-			}
-			else
-			{
-				if(isset($template_question_answers_detail['answers']))
-					{
-						$answers_array = $template_question_answers_detail['answers'];
-						unset($template_question_answers_detail['answers']);
-					}
-					
-					$question_id = $this->Template_Management_Model->saveRecords($template_question_answers_detail,TEMPLATEQUESTION);
-					
-					if(count($answers_array))
-					{
-						foreach($answers_array as $key => $answer)
-						{
-							$answer['fk_template_question_id'] = $question_id;
-							$answer_inserted = $this->Template_Management_Model->saveRecords($answer,TEMPLATEANSWERWEIGHTAGE);
-							if($answer_inserted != "" || $answer_inserted != null) {$count++;}
-						}
-					}
-					
-					
-					if(($question_id != "" || $question_id != null) && count($answers_array) == $count)
-					{
-						$data['dataStatus'] = true;
-						$data['status'] = REST_Controller::HTTP_OK;
-						$data['records'] = $question_id;
-						$this->response($data,REST_Controller::HTTP_OK);
-					}
-					else
-					{
-						$data['dataStatus'] = false;
-						$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-						$this->response($data,REST_Controller::HTTP_OK);
-					}
-					
-					
-			}
-		}
 	}
 	
+	
+	
+	
+	/******** Load Existed Template Master Details for Edit page @param template id ********/
 	public function getTemplateMaster_post()
 	{
 		$template_id = $this->post('template_id');
@@ -284,7 +286,7 @@ class Template_Management_Controller extends REST_Controller {
 	}
 	
 	
-	
+	/******** Load Existed Template Lender Mapping for Edit page @param template id ********/
 	public function getTemplateLenders_post()
 	{
 		$template_id = $this->post('template_id');
@@ -305,7 +307,7 @@ class Template_Management_Controller extends REST_Controller {
 	}
 	
 	
-	
+	/******** Load Existed Template Categories for Edit page @param template id ********/
 	public function getTemplateCategories_post()
 	{
 		$template_id = $this->post('template_id');
@@ -325,6 +327,8 @@ class Template_Management_Controller extends REST_Controller {
 		}
 	}
 	
+	
+	/******** Load Existed Template Question and Answers for Edit page @param template id ********/
 	public function getTemplateQuestionAnswers_post()
 	{
 		$template_id = $this->post('template_id');
@@ -344,5 +348,51 @@ class Template_Management_Controller extends REST_Controller {
 		}
 	}
 	
+	/************** Get List of Categories to Template Add/Edit Page DropDown ***************/
+	public function getListOfCategories_get()
+	{
+		$fields = array('question_category_id','category_name');
+		$where_condition_array = array('isactive' => 1);
+		$result_data = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,QUESTIONCATEGORY);
+		if(count($result_data))
+		{
+						
+						
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $result_data;
+						$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$this->response($data,REST_Controller::HTTP_OK);
+			
+		}
+	}
 	
+	public function getQuestionsForTemplateCreation_post()
+	{
+		$template_id = "";$category_id = "";
+		
+		if($this->post('template_id')){ $template_id = $this->post('template_id'); }
+		if($this->post('category_id')){ $category_id = $this->post('category_id'); }
+		
+		$questions = $this->Template_Management_Model->getListOfQuestions($template_id,$category_id);
+		if(count($questions))
+		{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $questions;
+						$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$this->response($data,REST_Controller::HTTP_OK);
+			
+		}
+	}
 }

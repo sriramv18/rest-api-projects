@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListOfLenders'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getQuestionsForTemplateCreation'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -116,6 +116,9 @@ defined('DRAFT') OR define('DRAFT','17');
 
 /*******************End Of Constants PD status**************************/
 
+
+/*******************Define Constants for Table Names and Primarykeys**************************/
+defined('PDTEAM_CTY_PRODUCT_CS_COMBINATIONS') OR define('PDTEAM_CTY_PRODUCT_CS_COMBINATIONS','PDTEAM_CTY_PRODUCT_CS_COMBINATIONS');
 
 /*******************Define Constants for Table Names and Primarykeys**************************/
 
@@ -220,7 +223,7 @@ defined('QUESTIONANSWERS') OR define('QUESTIONANSWERS','m_question_answers');
 defined('QUESTIONANSWERSID') OR define('QUESTIONANSWERSID','question_answer_id');
 
 defined('QUESTIONCATEGORY') OR define('QUESTIONCATEGORY','m_question_category');
-defined('QUESTIONCATEGORYID') OR define('QUESTIONCATEGORYID','question_categroy_id');
+defined('QUESTIONCATEGORYID') OR define('QUESTIONCATEGORYID','question_category_id');
 
 defined('TEMPLATE') OR define('TEMPLATE','m_template');
 defined('TEMPLATEID') OR define('TEMPLATEID','template_id');
@@ -228,8 +231,8 @@ defined('TEMPLATEID') OR define('TEMPLATEID','template_id');
 defined('LENDERTEMPLATE') OR define('LENDERTEMPLATE','m_template_lender_map');
 defined('LENDERTEMPLATEID') OR define('LENDERTEMPLATEID','template_lender_map_id');
 
-defined('TEMPLATECATAGORYWEIGHTAGE') OR define('TEMPLATECATAGORYWEIGHTAGE','m_template_catagory_weightage');
-defined('TEMPLATECATAGORYWEIGHTAGEID') OR define('TEMPLATECATAGORYWEIGHTAGEID','template_catagory_weightage_id');
+defined('TEMPLATECATEGORYWEIGHTAGE') OR define('TEMPLATECATEGORYWEIGHTAGE','m_template_category_weightage');
+defined('TEMPLATECATEGORYWEIGHTAGEID') OR define('TEMPLATECATEGORYWEIGHTAGEID','template_category_weightage_id');
 
 defined('TEMPLATEQUESTION') OR define('TEMPLATEQUESTION','m_template_question');
 defined('TEMPLATEQUESTIONID') OR define('TEMPLATEQUESTIONID','template_question_id');
@@ -305,6 +308,9 @@ defined('ENTITYPDPRICEINFOID') OR define('ENTITYPDPRICEINFOID','entity_pdprice_i
 
 defined('VENDORCITYMAP') OR define('VENDORCITYMAP','m_vendor_city_map');
 defined('VENDORCITYMAPID') OR define('VENDORCITYMAPID','vendor_city_map_id');
+
+defined('PDCATEGORYWEIGHTAGE') OR define('PDCATEGORYWEIGHTAGE','t_pd_category_weightage');
+defined('PDCATEGORYWEIGHTAGEID') OR define('PDCATEGORYWEIGHTAGEID','pd_category_weightage_id');
 
 
 

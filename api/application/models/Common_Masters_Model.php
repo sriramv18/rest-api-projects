@@ -33,6 +33,20 @@ class Common_Masters_Model extends SPARQ_Model {
 
 		// 	return $result;
 		//  }
+		public function pdteamlist(){
+		 
+			$result = $this->db->get(PDTEAM)->result_array();
+		
+			if(count($result) !=0){
+				foreach($result as $key=> $r){
+					
+					$cities = $this->db->get_where(PDTEAMCITY,array('fk_pdteam_id'=>$r['pdteam_id']))->result_array();
+					array_push($result[$key],$cities);
+				}
+			}
+
+			return $result;
+		 }
 
 		 /**
 		 * This Function is used to Delete The Datas 

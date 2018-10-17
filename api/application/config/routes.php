@@ -70,8 +70,8 @@ $route['getPDNotificationsList'] = 'Common_Masters_Controller/getPDNotifications
 $route['getListOfPDTeam'] = 'Common_Masters_Controller/getListOfPDTeam';
 $route['getPdManage'] = 'Common_Masters_Controller/getPdManage';
 $route['savePdTeamManage'] = 'Common_Masters_Controller/savePdTeamManage';
-
-$route['getListOfPDTeamMap'] = 'Common_Masters_Controller/getListOfPDTeamMap';
+$route['getListOfPDTeamCityMapping'] =  'Common_Masters_Controller/getListOfPDTeamCityMapping';
+//$route['getListOfPDTeamMap'] = 'Common_Masters_Controller/getListOfPDTeamMap';
 $route['getListOfMaster'] = 'Common_Masters_Controller/getListOfMaster'; 
 $route['saveMaster'] = 'Common_Masters_Controller/saveMaster';
 $route['saveBranch'] = 'Common_Masters_Controller/saveBranch'; 
@@ -102,6 +102,8 @@ $route['getTemplateMaster'] = 'Template_Management_Controller/getTemplateMaster'
 $route['getTemplateLenders'] = 'Template_Management_Controller/getTemplateLenders'; 
 $route['getTemplateCategories'] = 'Template_Management_Controller/getTemplateCategories'; 
 $route['getTemplateQuestionAnswers'] = 'Template_Management_Controller/getTemplateQuestionAnswers'; 
+$route['getListOfCategories'] = 'Template_Management_Controller/getListOfCategories'; 
+$route['getQuestionsForTemplateCreation'] = 'Template_Management_Controller/getQuestionsForTemplateCreation'; 
 
 //QUESTION MANAGEMENT
 $route['(listAllQuestions/:any)'] = 'Question_Management_Controller/listAllQuestions/'; 
@@ -130,4 +132,6 @@ $route['updatePDApplicants'] = 'PD_Controller/updatePDApplicants';
 $route['allocatePD'] = 'PD_Controller/allocatePD'; 
 $route['schdulePD'] = 'PD_Controller/schdulePD'; 
 $route['getListPDOfficers'] = 'PD_Controller/getListPDOfficers'; 
+$route['loadFullTemplate'] = 'PD_Controller/loadFullTemplate'; 
+$route['allbase'] = 'PD_Controller/base'; 
 
