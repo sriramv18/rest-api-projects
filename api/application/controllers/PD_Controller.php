@@ -383,7 +383,7 @@ class PD_Controller extends REST_Controller {
 				{
 					$temp_base64_string = $doc['image'];
 					$title = $doc['Name'];
-					$output_file = 'temp_base64_image.png';
+					$output_file = APPPATH."/docs/temp_base64_image.png";
 					
 					//Generate Random File Name
 						$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -396,8 +396,8 @@ class PD_Controller extends REST_Controller {
 						
 						
 					$ifp = fopen( $output_file, 'wb' ); 
-     				$data = explode( ',', $base64_img );
-					fwrite( $ifp, base64_decode( $data[ 1 ] ) );
+     				$temp_data = explode( ',', $temp_base64_string );
+					fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
      				fclose( $ifp ); 
 				    $tempdoc = $output_file;
 					$tempdocname = $temp_file_name;
