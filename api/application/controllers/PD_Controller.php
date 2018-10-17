@@ -762,8 +762,7 @@ class PD_Controller extends REST_Controller {
 		//2.Get Team ID based on Lender ID
 		if(count($res_array))
 		{
-				//$where_condition_array = array('lender_id' => $res_array[0]['fk_lender_id'],'city_id' =>$res_array[0]['fk_city'] ,'cs_id' =>$res_array[0]['fk_customer_segment'] ,'product_id' =>$res_array[0]['fk_product_id']);
-				$where_condition_array = array('lender_id' => 2,'city_id' => 17 ,'cs_id' => 1 ,'product_id' => 1);
+				$where_condition_array = array('lender_id' => $res_array[0]['fk_lender_id'],'city_id' =>$res_array[0]['fk_city'] ,'cs_id' =>$res_array[0]['fk_customer_segment'] ,'product_id' =>$res_array[0]['fk_product_id']);
 				$temp_city_id = $this->PD_Model->selectRecords(PDTEAM_CTY_PRODUCT_CS_COMBINATIONS,$where_condition_array,$limit=0,$offset=0);
 				//print_r($temp_city_id);die();
 				if(count($temp_city_id))
