@@ -53,7 +53,7 @@ class User_Management_Model extends SPARQ_Model {
 
    public function getUserDetails($userid){
 
-	$this->db->select('USERPROFILE.userid, USERPROFILE.aws_name, USERPROFILE.first_name as user_first_name, USERPROFILE.last_name as user_last_name, USERPROFILE.email, USERPROFILE.mobile_no,  USERPROFILE.profilepic, USERPROFILE.createdon, USERPROFILE.fk_createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as created_full_name, USERPROFILE.updatedon, USERPROFILE.fk_updatedby,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name)as update_full_name, USERPROFILE.fk_entity_id,ENTITY.full_name, USERPROFILE.isactive, USERPROFILE.fk_city,CITY.name as city_name, USERPROFILE.fk_state,STATE.name as state_name, PDOFFICIERSDETAILS.fk_pd_type_id,PDOFFICIERSDETAILS.fk_team_id,USERPROFILE.fk_entity_type_id,USERPROFILEROLES.user_role,ENTITYTYPE.name as entitytypename,ROLES.role_name');
+	$this->db->select('USERPROFILE.userid, USERPROFILE.aws_name, USERPROFILE.first_name as user_first_name, USERPROFILE.last_name as user_last_name, USERPROFILE.email, USERPROFILE.mobile_no,  USERPROFILE.profilepic, USERPROFILE.createdon, USERPROFILE.fk_createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as created_full_name, USERPROFILE.updatedon, USERPROFILE.fk_updatedby,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name)as update_full_name, USERPROFILE.fk_entity_id,ENTITY.full_name, USERPROFILE.isactive, USERPROFILE.fk_city,CITY.name as city_name, USERPROFILE.fk_state,STATE.name as state_name, PDOFFICIERSDETAILS.fk_pd_type_id,PDOFFICIERSDETAILS.fk_team_id,USERPROFILE.fk_entity_type_id,USERPROFILEROLES.user_role,ENTITYTYPE.name as entitytypename,ROLES.role_name,USERPROFILE.mpin');
 	   $this->db->from(USERPROFILE.' as USERPROFILE');
 	   $this->db->join(ENTITY.' as ENTITY','USERPROFILE.fk_entity_id = ENTITY.entity_id and ENTITY.isactive = 1','LEFT');
 	   $this->db->join(STATE.' as STATE','USERPROFILE.fk_state = STATE.state_id and STATE.isactive = 1','LEFT');
@@ -84,5 +84,24 @@ class User_Management_Model extends SPARQ_Model {
 		  return $result_data;
 	   }
 
+   }
+
+  public function pinDetails($records)
+   {
+		$this->db->select('*');
+		$this->db->where('USERPROFILE.userid',$records['userid']);
+		$this->db->where('USERPROFILE.mpin',$records['mpin']);
+		$result = $this->db->get(USERPROFILE.' as USERPROFILE')->first_row();
+		if(count($result) !=0)
+		{
+			$result_data['data_status'] = true;
+			$result_data['data'] = true;
+		   return $result_data;
+		}else
+		{
+			$result_data['data_status'] = false;
+			$result_data['data'] = false;
+			return $result_data;
+		}
    }
 }

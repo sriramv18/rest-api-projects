@@ -90,6 +90,7 @@ $route['saveNewUser'] = 'User_Management_Controller/saveNewUser';
 $route['updateExistUser'] = 'User_Management_Controller/updateExistUser'; 
 $route['getUsersDetails'] = 'User_Management_Controller/getUsersDetails'; 
 $route['getSingedProfilePicURL'] = 'User_Management_Controller/getSingedProfilePicURL'; 
+$route['checkpin'] = 'User_Management_Controller/checkpin'; 
 
 // TEMPLATE MANAGEMENT
 $route['(listAllTemplates/:any)'] = 'Template_Management_Controller/listAllTemplates/'; 

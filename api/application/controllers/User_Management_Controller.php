@@ -294,7 +294,7 @@ class User_Management_Controller extends REST_Controller {
 	* sriram get roles function
    */
 	public function getUsersDetails_post(){
-		
+			
 			$userid = $this->post('userid');
 
 			$result = $this->User_Management_Model->getUserDetails($userid);
@@ -357,5 +357,31 @@ class User_Management_Controller extends REST_Controller {
 							
 							
 	}
+	/**
+	 * Check pin for mobile app
+	 * @params userid and pin
+	 * return data true or false;
+	 */
 	
+	public function checkpin_post()
+	{
+			$records = $this->post('records');
+
+			$pin_details = $this->User_Management_Model->pinDetails($records);	
+			if($pin_details != null || $singed_uri != '')
+		{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $pin_details['data'];
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{		
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$data['msg'] = 'No Profile URL Available';
+				$this->response($data,REST_Controller::HTTP_OK);
+			
+		} 
+	}
 }
