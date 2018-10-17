@@ -284,10 +284,11 @@ class PD_Model extends SPARQ_Model {
 			  foreach($categories as $category_key => $category)
 			  {
 				 
-				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive');
+				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive,QUESTIONANSWERTYPE.answer_type_name');
 				//$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
 				$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
 				$this->db->JOIN(QUESTIONS.' as QUESTIONS','TEMPLATEQUESTION.fk_question_id = QUESTIONS.question_id','LEFT');
+				$this->db->JOIN(QUESTIONANSWERTYPE.' as QUESTIONANSWERTYPE','QUESTIONS.fk_question_answertype = QUESTIONANSWERTYPE.question_answer_type_id','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
 				$this->db->WHERE('TEMPLATEQUESTION.fk_template_question_category_id',$category['fk_question_category_id']);

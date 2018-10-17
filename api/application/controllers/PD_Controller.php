@@ -449,18 +449,19 @@ class PD_Controller extends REST_Controller {
 	*/
 	public function updatePDMaster_post()
 	{
-		$pd_details = $this->post('pd_details');
+		$pd_details = $this->post('records');
+		//print_r($pd_details);
 		$where_condition_array = array('pd_id' => $pd_details['pd_id']);
 		$pd_id_modified = $this->PD_Model->updateRecords($pd_details,PDTRIGGER,$where_condition_array);
 		
-		if($records['pd_status'] == TRIGGERED)
+		if($pd_details['pd_status'] == TRIGGERED)
 		{
 			// Create entries on `t_pd_category_weightage` table from Template Category weightage 
 		}
 		
 		if($pd_id_modified != null || $pd_id_modified != '' && $count != 0)
 		{
-						PDALERTS::pdnotification($pd_id);
+						PDALERTS::pdnotification($pd_details['pd_id']);
 						$data['dataStatus'] = true;
 						$data['status'] = REST_Controller::HTTP_OK;
 						$data['records'] = true;
@@ -686,28 +687,6 @@ class PD_Controller extends REST_Controller {
 	*/
 	public function schdulePD_post()
 	{
-		
-				$records['fk_pd_id'] = 40;
-				$fields = array('fk_pd_template_id');
-				$where_condition_array = array('pd_id'=>$records['fk_pd_id']);
-				$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
-				//print_r($res_array);
-				if(count($res_array))
-				{
-					$template_id = $res_array[0]['fk_pd_template_id'];
-					echo $template_id;
-					$fields = array('fk_question_category_id','weightage');
-					$where_condition_array = array('fk_template_id'=>$template_id);
-					$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,TEMPLATECATEGORYWEIGHTAGE);
-					//print_r($res_array);
-					
-					foreach($res_array as $key => $category)
-					{
-						$temp_data = array('fk_pd_id'=>$records['fk_pd_id'],'fk_category_id'=>$category['fk_question_category_id'],'pd_category_weightage'=>$category['weightage']);
-						$this->PD_Model->saveRecords($temp_data,PDCATEGORYWEIGHTAGE);
-					}
-				}
-				//die();
 		$records = $this->post('records');
 		if($records['schedule_time'] != "" || $records['schedule_time'] != null)
 		{
