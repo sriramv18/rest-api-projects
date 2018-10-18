@@ -156,7 +156,7 @@ class Template_Management_Model extends SPARQ_Model {
 		$fields  = array('fk_question_id');
 		$where_condition_array = array('fk_template_question_category_id' => $category_id,'fk_template_id' => $template_id);
 		$result_data = $this->selectCustomRecords($fields,$where_condition_array,TEMPLATEQUESTION);
-		
+	//	print_r($result_data);
 		if(count($result_data))
 		{
 			$temp_array = array();
@@ -207,7 +207,7 @@ class Template_Management_Model extends SPARQ_Model {
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
 				$this->db->WHERE('QUESTIONS.fk_question_category',$category_id);
-				$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
+				//$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
 				$questions = $this->db->GET()->result_array();
 				if(count($questions))
 					{
