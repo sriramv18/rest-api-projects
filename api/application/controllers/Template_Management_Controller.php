@@ -213,6 +213,7 @@ class Template_Management_Controller extends REST_Controller {
 							}
 							else
 							{
+								unset($answer['answer']);
 								$answer_inserted = $this->Template_Management_Model->saveRecords($answer,TEMPLATEANSWERWEIGHTAGE);
 								
 								//if($answer_inserted != "" || $answer_inserted != null) {$count++;}
