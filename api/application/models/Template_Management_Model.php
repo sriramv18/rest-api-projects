@@ -103,6 +103,7 @@ class Template_Management_Model extends SPARQ_Model {
 			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATECATEGORYWEIGHTAGE.fk_createdby = USERPROFILE.userid','LEFT');
 			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATECATEGORYWEIGHTAGE.fk_updatedby = USERPROFILE1.userid','LEFT');
 			  $this->db->WHERE('TEMPLATECATEGORYWEIGHTAGE.fk_template_id',$template_id);
+			  
 			  $categories = $this->db->GET()->result_array();
 			   
 		if(count($categories))
@@ -120,6 +121,7 @@ class Template_Management_Model extends SPARQ_Model {
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
 				$this->db->WHERE('TEMPLATEQUESTION.fk_template_question_category_id',$category['fk_question_category_id']);
+				$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
 				$questions = $this->db->GET()->result_array();
 				
 
@@ -131,7 +133,8 @@ class Template_Management_Model extends SPARQ_Model {
 						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage, TEMPLATEANSWERWEIGHTAGE.isactive');
 						  $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
 						  $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id','LEFT');
-						  $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
+						  $this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_question_id',$question['template_question_id']);
+						  
 						  $answers = $this->db->GET()->result_array();
 						  $questions[$answer_key]['answers'] = $answers;
 						}
