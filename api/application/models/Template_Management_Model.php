@@ -204,6 +204,7 @@ class Template_Management_Model extends SPARQ_Model {
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
 				$this->db->WHERE('QUESTIONS.fk_question_category',$category_id);
+				$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
 				$questions = $this->db->GET()->result_array();
 				if(count($questions))
 					{

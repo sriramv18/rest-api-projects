@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getTemplateLenders'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'loadFullTemplate'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -95,23 +95,23 @@ defined('LENDER_BUCKET_NAME_PREFIX') OR define('LENDER_BUCKET_NAME_PREFIX','lend
 /*********************END of AWS resources Constants*************************************************/
 
 /*******************Constants PD status*********************************/
-defined('TRIGGERED') OR define('TRIGGERED','1'); //First time PD Trigger.
-defined('ALLOCATED') OR define('ALLOCATED','2'); //PD Allocated to PD officer
-defined('ACCEPTED') OR define('ACCEPTED','3'); // PD Accepted PD officer after Allocation
-defined('BOUNCED') OR define('BOUNCED','4'); // PD Not accepted by PD Officer
-defined('SCHEDULED') OR define('SCHEDULED','5'); //PD Scheduled by PD Officer
-defined('INITIATED') OR define('INITIATED','6'); // PD Initiated or Ready to go a PD
-defined('STARTED') OR define('STARTED','7'); // PD started by PD officer
-defined('INPROGRESS') OR define('INPROGRESS','8'); // PD inprogress 
-defined('COMPLETED') OR define('COMPLETED','9'); // PD Completed
-defined('QC_INPROGRESS') OR define('QC_INPROGRESS','10'); // QC_INPROGRESS
-defined('QC_COMPLETED') OR define('QC_COMPLETED','11'); // QC_COMPLETED
-defined('PD_REPORT_GENERATED') OR define('PD_REPORT_GENERATED','12'); //PD_REPORT_ACCEPTED by Lender
-defined('PD_CHNAGE_REQUEST') OR define('PD_CHNAGE_REQUEST','13'); // From Lender side requesting change of PD report
-defined('ALLOCATED_TO_PARTNER') OR define('ALLOCATED_TO_PARTNER','14'); // PD Allocated to PD agency not for PD officer
-defined('ARCHIVED') OR define('ARCHIVED','15');
-defined('CANCELLED') OR define('CANCELLED','16');
-defined('DRAFT') OR define('DRAFT','17');
+defined('TRIGGERED') OR define('TRIGGERED','TRIGGERED'); //First time PD Trigger.
+defined('ALLOCATED') OR define('ALLOCATED','ALLOCATED'); //PD Allocated to PD officer
+defined('ACCEPTED') OR define('ACCEPTED','ACCEPTED'); // PD Accepted PD officer after Allocation
+defined('BOUNCED') OR define('BOUNCED','BOUNCED'); // PD Not accepted by PD Officer
+defined('SCHEDULED') OR define('SCHEDULED','SCHEDULED'); //PD Scheduled by PD Officer
+defined('INITIATED') OR define('INITIATED','INITIATED'); // PD Initiated or Ready to go a PD
+defined('STARTED') OR define('STARTED','STARTED'); // PD started by PD officer
+defined('INPROGRESS') OR define('INPROGRESS','INPROGRESS'); // PD inprogress 
+defined('COMPLETED') OR define('COMPLETED','COMPLETED'); // PD Completed
+defined('QC_INPROGRESS') OR define('QC_INPROGRESS','QC_INPROGRESS'); // QC_INPROGRESS
+defined('QC_COMPLETED') OR define('QC_COMPLETED','QC_COMPLETED'); // QC_COMPLETED
+defined('PD_REPORT_GENERATED') OR define('PD_REPORT_GENERATED','PD_REPORT_GENERATED'); //PD_REPORT_ACCEPTED by Lender
+defined('PD_CHNAGE_REQUEST') OR define('PD_CHNAGE_REQUEST','PD_CHNAGE_REQUEST'); // From Lender side requesting change of PD report
+defined('ALLOCATED_TO_PARTNER') OR define('ALLOCATED_TO_PARTNER','ALLOCATED_TO_PARTNER'); // PD Allocated to PD agency not for PD officer
+defined('ARCHIVED') OR define('ARCHIVED','ARCHIVED');
+defined('CANCELLED') OR define('CANCELLED','CANCELLED');
+defined('DRAFT') OR define('DRAFT','DRAFT');
 
 
 /*******************End Of Constants PD status**************************/
