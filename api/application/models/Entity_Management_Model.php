@@ -10,7 +10,7 @@ class Entity_Management_Model extends SPARQ_Model {
         }
 		
 		
-   public function listAllEntities($page,$limit,$sort,$entity_type_id)
+   public function listAllEntities($page,$limit,$sort,$entity_type_id,$entity_id)
    {
 	   $result_data = array();
 	   
@@ -22,6 +22,11 @@ class Entity_Management_Model extends SPARQ_Model {
 	  if($entity_type_id != null || $entity_type_id != '')
 	   {
 		    $this->db->WHERE('ENTITY.fk_entity_type_id',$entity_type_id);
+	   }
+	   
+	   if($entity_id != null || $entity_id != '')
+	   {
+		    $this->db->WHERE('ENTITY.entity_id',$entity_id);
 	   }
 	   $this->db->ORDER_BY('ENTITY.fk_entity_type_id',$sort);
 	   $this->db->LIMIT($page,$limit);

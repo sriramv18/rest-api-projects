@@ -274,6 +274,37 @@ class Entity_Management_Controller extends REST_Controller {
 	   
 	   
    }
+   
+   public function getEntityMasterInfo_get()
+   {
+	   $entity_id = "";
+	   if($this->get('eid')) { $entity_id  = $this->get('eid'); }
+	   
+	   if( $entity_id != "" || $entity_id != null)
+	   {
+		
+		 // $columns = array('ENTITY.entity_id, ENTITY.full_name, ENTITY.short_name');
+		 // $table = array('');
+		 // $joins = array();
+		 // $where_condition_array = array();
+		 $result = $this->Entity_Management_Model->listAllEntities(0,0,0,0,$entity_id);
+		if(count($result))
+		{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$this->response($data,REST_Controller::HTTP_OK);
+		} 
+	   }
+	   
+	   
+   }
 	
 	
 	

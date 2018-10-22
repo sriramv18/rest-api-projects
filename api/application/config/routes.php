@@ -117,6 +117,7 @@ $route['saveNewEntity'] = 'Entity_Management_Controller/saveNewEntity';
 $route['saveExistEntity'] = 'Entity_Management_Controller/saveExistEntity'; 
 $route['getEntityBillingInfo'] = 'Entity_Management_Controller/getEntityBillingInfo'; 
 $route['getLocationHierarchy'] = 'Entity_Management_Controller/getLocationHierarchy'; 
+$route['getEntityMasterInfo'] = 'Entity_Management_Controller/getEntityMasterInfo'; 
 
 //PD RELATED
 $route['triggerNewPD'] = 'PD_Controller/triggerNewPD'; 
@@ -136,4 +137,5 @@ $route['getListPDOfficers'] = 'PD_Controller/getListPDOfficers';
 $route['loadFullTemplate'] = 'PD_Controller/loadFullTemplate'; 
 $route['allbase'] = 'PD_Controller/base'; 
 $route['savePDQuestions'] = 'PD_Controller/saveActualPDQuestions'; 
+$route['getAnswersForPD'] = 'PD_Controller/getAnswersForPD'; 
 
