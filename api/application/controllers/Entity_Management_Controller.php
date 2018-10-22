@@ -24,7 +24,7 @@ class Entity_Management_Controller extends REST_Controller {
    
 	public function listAllEntites_get()
 	{
-		$page = 0;$limit = 0;$sort = 'ASC';$entity_type_id = '';
+		$page = 0;$limit = 0;$sort = 'ASC';$entity_type_id = '';$entity_id = '';
 		
 		if($this->get('page')) { $page  = $this->get('page'); }
 		if($this->get('limit')){ $limit = $this->get('limit'); }

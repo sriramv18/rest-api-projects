@@ -1177,7 +1177,7 @@ class PD_Controller extends REST_Controller {
 						
 							$data['dataStatus'] = true;
 							$data['status'] = REST_Controller::HTTP_OK;
-							$data['records'] = $pd_detail_id;
+							$data['records'] = $answers;
 							$this->response($data,REST_Controller::HTTP_OK);
 					}
 					else
