@@ -295,7 +295,7 @@ class PD_Model extends SPARQ_Model {
 			  foreach($categories as $category_key => $category)
 			  {
 				 
-				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive,QUESTIONANSWERTYPE.answer_type_name,PDDETAIL.pd_detail_id');
+				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive,QUESTIONS.fk_question_answertype,QUESTIONANSWERTYPE.answer_type_name,PDDETAIL.pd_detail_id');
 				//$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
 				$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
 				$this->db->JOIN(QUESTIONS.' as QUESTIONS','TEMPLATEQUESTION.fk_question_id = QUESTIONS.question_id','LEFT');
@@ -336,6 +336,20 @@ class PD_Model extends SPARQ_Model {
 	$result_data['pdapplicants_detials'] = $pd_applicants_detials;   
 	$result_data['assessed_income'] = "";   
 	return $result_data;
+   }
+   
+   
+   public function getAnswersForPD($question_id,$pd_id,$template_id,$category_id)
+   {
+						  // $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDDETAIL.pd_detail_id');
+						  // $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
+						  // $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id','LEFT');
+						  // $this->db->JOIN(PDDETAIL.' as PDDETAIL',"QUESTIONANSWERS.question_answer_id = PDDETAIL.pd_answer_id AND PDDETAIL.fk_pd_id = $pdid",'LEFT');
+						 // // $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
+						  // $this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_question_id',$question['template_question_id']);
+						 // // $this->db->WHERE('PDDETAIL.fk_pd_id',$pdid);
+						  // $answers = $this->db->GET()->result_array();
+						  // $questions[$answer_key]['answers'] = $answers;
    }
 	
 }
