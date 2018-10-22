@@ -1162,6 +1162,34 @@ class PD_Controller extends REST_Controller {
 		
 	}
 	
+	/************** Get Answers for PD @params question_id, pd_id, template_id, category_id**************/
+	public function getAnswersForPD_post()
+	{
+			$question_id = $this->post('question_id');
+			$pd_id = $this->post('pd_id');
+			$template_id = $this->post('template_id');
+			$category_id = $this->post('category_id');
+			
+			$answers = $this->PD_Model->getAnswersForPD($question_id,$pd_id,$template_id,$category_id);
+			
+			if(count($answers))
+					{
+						
+							$data['dataStatus'] = true;
+							$data['status'] = REST_Controller::HTTP_OK;
+							$data['records'] = $pd_detail_id;
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+					else
+					{
+							$data['dataStatus'] = false;
+							$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+							$data['msg'] = "Something Went Wrong..!Try Later";
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+			
+	}
+	
 	
 	
 }

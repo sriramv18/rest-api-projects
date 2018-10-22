@@ -271,7 +271,8 @@ class PD_Model extends SPARQ_Model {
 			 $categories = "";
 			 //Get PD Master Details including Template id @param $pd_id
 			 $pd_master_detials = $this->getPDMasterDetails($pdid);
-			// print_r($pd_master_detials);
+			 $pd_applicants_detials = $this->getApplicantsDetails($pdid);
+			//sprint_r($pd_master_detials);
 			 $template_id = $pd_master_detials[0]['fk_pd_template_id'];
 			 
 			 if($template_id != "" || $template_id != null)
@@ -294,18 +295,19 @@ class PD_Model extends SPARQ_Model {
 			  foreach($categories as $category_key => $category)
 			  {
 				 
-				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive,QUESTIONANSWERTYPE.answer_type_name');
+				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive,QUESTIONS.fk_question_answertype,QUESTIONANSWERTYPE.answer_type_name,PDDETAIL.pd_detail_id');
 				//$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
 				$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
 				$this->db->JOIN(QUESTIONS.' as QUESTIONS','TEMPLATEQUESTION.fk_question_id = QUESTIONS.question_id','LEFT');
 				$this->db->JOIN(QUESTIONANSWERTYPE.' as QUESTIONANSWERTYPE','QUESTIONS.fk_question_answertype = QUESTIONANSWERTYPE.question_answer_type_id','LEFT');
+				$this->db->JOIN(PDDETAIL.' as PDDETAIL',"QUESTIONS.question_id = PDDETAIL.fk_question_id AND PDDETAIL.fk_pd_id = $pdid",'LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
 				$this->db->WHERE('TEMPLATEQUESTION.fk_template_question_category_id',$category['fk_question_category_id']);
-				$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
+				//$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
 				
 				$questions = $this->db->GET()->result_array();
-				
+				$categories[$category_key]['questions_count'] = count($questions);
 
 					if(count($questions))
 					{
@@ -318,6 +320,7 @@ class PD_Model extends SPARQ_Model {
 						  $this->db->JOIN(PDDETAIL.' as PDDETAIL',"QUESTIONANSWERS.question_answer_id = PDDETAIL.pd_answer_id AND PDDETAIL.fk_pd_id = $pdid",'LEFT');
 						 // $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
 						  $this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_question_id',$question['template_question_id']);
+						 // $this->db->WHERE('PDDETAIL.fk_pd_id',$pdid);
 						  $answers = $this->db->GET()->result_array();
 						  $questions[$answer_key]['answers'] = $answers;
 						}
@@ -325,10 +328,28 @@ class PD_Model extends SPARQ_Model {
 				$categories[$category_key]['questions'] = $questions;
 			  }
 			  
-	}
+		}
 	}
 
-	return  $categories;   
+	$result_data['question_answers'] = $categories;   
+	$result_data['pdmaster_details'] = $pd_master_detials[0];   
+	$result_data['pdapplicants_detials'] = $pd_applicants_detials;   
+	$result_data['assessed_income'] = "";   
+	return $result_data;
+   }
+   
+   
+   public function getAnswersForPD($question_id,$pd_id,$template_id,$category_id)
+   {
+						  // $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDDETAIL.pd_detail_id');
+						  // $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
+						  // $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id','LEFT');
+						  // $this->db->JOIN(PDDETAIL.' as PDDETAIL',"QUESTIONANSWERS.question_answer_id = PDDETAIL.pd_answer_id AND PDDETAIL.fk_pd_id = $pdid",'LEFT');
+						 // // $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
+						  // $this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_question_id',$question['template_question_id']);
+						 // // $this->db->WHERE('PDDETAIL.fk_pd_id',$pdid);
+						  // $answers = $this->db->GET()->result_array();
+						  // $questions[$answer_key]['answers'] = $answers;
    }
 
    /**

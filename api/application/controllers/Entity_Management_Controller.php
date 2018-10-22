@@ -247,5 +247,34 @@ class Entity_Management_Controller extends REST_Controller {
 	}
 	
 	
+	/******   Get All Entity Billing Info and it's contact info @param entity id******/
+	public function getEntityBillingInfo_get()
+   {
+	   $entity_id = "";
+	   if($this->get('eid')) { $entity_id  = $this->get('eid'); }
+	   
+	   if( $entity_id != "" || $entity_id != null)
+	   {
+		
+		 $result = $this->Entity_Management_Model->getEntityBillingInfo($entity_id);
+		if(count($result))
+		{
+				$data['dataStatus'] = true;
+				$data['status'] = REST_Controller::HTTP_OK;
+				$data['records'] = $result;
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$this->response($data,REST_Controller::HTTP_OK);
+		} 
+	   }
+	   
+	   
+   }
+	
+	
 	
 }
