@@ -271,7 +271,7 @@ class PD_Model extends SPARQ_Model {
 			 $categories = "";
 			 //Get PD Master Details including Template id @param $pd_id
 			 $pd_master_detials = $this->getPDMasterDetails($pdid);
-			// print_r($pd_master_detials);
+			//sprint_r($pd_master_detials);
 			 $template_id = $pd_master_detials[0]['fk_pd_template_id'];
 			 
 			 if($template_id != "" || $template_id != null)
@@ -302,10 +302,10 @@ class PD_Model extends SPARQ_Model {
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
 				$this->db->WHERE('TEMPLATEQUESTION.fk_template_question_category_id',$category['fk_question_category_id']);
-				$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
+				//$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
 				
 				$questions = $this->db->GET()->result_array();
-				
+				$categories[$category_key]['questions_count'] = count($questions);
 
 					if(count($questions))
 					{
@@ -318,6 +318,7 @@ class PD_Model extends SPARQ_Model {
 						  $this->db->JOIN(PDDETAIL.' as PDDETAIL',"QUESTIONANSWERS.question_answer_id = PDDETAIL.pd_answer_id AND PDDETAIL.fk_pd_id = $pdid",'LEFT');
 						 // $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
 						  $this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_question_id',$question['template_question_id']);
+						 // $this->db->WHERE('PDDETAIL.fk_pd_id',$pdid);
 						  $answers = $this->db->GET()->result_array();
 						  $questions[$answer_key]['answers'] = $answers;
 						}
@@ -325,10 +326,13 @@ class PD_Model extends SPARQ_Model {
 				$categories[$category_key]['questions'] = $questions;
 			  }
 			  
-	}
+		}
 	}
 
-	return  $categories;   
+	$result_data['question_answers'] = $categories;   
+	$result_data['pdmaster_details'] = $pd_master_detials;   
+	$result_data['assessed_income'] = "";   
+	return $result_data;
    }
 	
 }
