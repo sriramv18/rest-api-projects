@@ -937,11 +937,12 @@ class PD_Controller extends REST_Controller {
 	/********  for Load Whole PD Template for PD Screen @param template_id***************/
 	public function loadFullTemplate_get()
 	{
-		$template_id = "";
-		if($this->get('template_id')) { $template_id = $this->get('template_id'); }
-		if($template_id != "" || $template_id != null)
+		$pd_id = "";
+		if($this->get('pd_id')) { $pd_id = $this->get('pd_id'); }
+		if($pd_id != "" || $pd_id != null)
 		{
-		     $template_details = $this->PD_Model->getTemplateForPD($template_id);
+			
+			$template_details = $this->PD_Model->getTemplateForPD($pd_id);
 			 if(count($template_details))
 			 {
 				 $data['dataStatus'] = true;
@@ -953,15 +954,171 @@ class PD_Controller extends REST_Controller {
 			 {
 				$data['dataStatus'] = false;
 				$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+				$data['msg'] = 'Template Not for PD ID'.$pd_id;
 				$this->response($data,REST_Controller::HTTP_OK); 
 			 }
 		}
+		else
+		{
+				$data['dataStatus'] = false;
+				$data['status'] = REST_Controller::HTTP_BAD_REQUEST;
+				$data['msg'] = 'No Param Available';
+				$this->response($data,REST_Controller::HTTP_OK);
+		}
 	}
 	
-	/******** Save Single PD qustions ********/
+	/******** Save Multiple/Single PD qustions ********/
 	public function saveActualPDQuestions_post()
 	{
+		//$records = json_decode($this->post('records'),true);
 		$records = $this->post('records');
+		$pd_detail_id = "";
+		//print_r($records);
+		foreach($records as $record_key => $record)
+		{
+			if($record['pd_detail_id'] != "" || $record['pd_detail_id'] != null)
+			 {
+				
+				 if(isset($record['pd_answer_image']))
+				{
+					
+					//Get Lender ID 
+					$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
+					$lender_id = $this->db->query($sql)->result_array();
+					
+					//Get Old File name Delete Old FIle From S3
+					$sql = 'SELECT pd_answer_image FROM '. PDDETAIL .' WHERE pd_detail_id ='.$record["pd_detail_id"];
+					$old_image = $this->db->query($sql)->result_array();
+					
+					if(count($old_image))
+								{
+									 $bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
+									 $key = 'pd'.$record['fk_pd_id'].'/'.$old_image[0]['pd_answer_image'];
+									 $this->aws_s3->deleteSingleObjFromBucket($bucketname,$key);
+								}
+					
+					
+					$temp_base64_string = $record['pd_answer_image'];
+					$title = $record['pd_anwer_image_title'];
+					$output_file = APPPATH."/docs/temp_base64_image.png";
+					
+					//Generate Random File Name
+						$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+						$charactersLength = strlen($characters);
+						$randomString = '';
+							for ($i = 0; $i < 5; $i++) {
+								$randomString .= $characters[rand(0, $charactersLength - 1)];
+							}
+						$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
+						
+						
+					$ifp = fopen( $output_file, 'wb' ); 
+     				$temp_data = explode( ',', $temp_base64_string );
+					fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
+     				fclose( $ifp ); 
+				    $tempdoc = $output_file;
+					$tempdocname = $temp_file_name;
+					$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
+					$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
+					$sourcefile = $tempdoc;
+					
+					$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+					$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
+					
+					if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+					{
+						$record['pd_answer_image'] = $tempdocname;
+					}
+				}
+				
+				$where_condition_array = array('pd_detail_id' => $record['pd_detail_id']);
+				$pd_detail_id = $this->PD_Model->updateRecords($record,PDDETAIL,$where_condition_array);
+				if($pd_detail_id != "" || $pd_detail_id != null)
+					{
+						
+							$data['dataStatus'] = true;
+							$data['status'] = REST_Controller::HTTP_OK;
+							$data['records'] = true;
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+					else
+					{
+							$data['dataStatus'] = false;
+							$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+							$data['msg'] = "Something Went Wrong..!Try Later";
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+				
+				
+			 }
+			 else
+			 {
+				 
+				  if(isset($record['pd_answer_image']))
+				{
+					
+					//Get Lender ID 
+					$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
+					$lender_id = $this->db->query($sql)->result_array();
+					
+					$temp_base64_string = $record['pd_answer_image'];
+					$title = $record['pd_anwer_image_title'];
+					$output_file = APPPATH."/docs/temp_base64_image.png";
+					
+					//Generate Random File Name
+						$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+						$charactersLength = strlen($characters);
+						$randomString = '';
+							for ($i = 0; $i < 5; $i++) {
+								$randomString .= $characters[rand(0, $charactersLength - 1)];
+							}
+						$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
+						
+						
+					$ifp = fopen( $output_file, 'wb' ); 
+     				$temp_data = explode( ',', $temp_base64_string );
+					fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
+     				fclose( $ifp ); 
+				    $tempdoc = $output_file;
+					$tempdocname = $temp_file_name;
+					$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
+					$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
+					$sourcefile = $tempdoc;
+					
+					$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+					$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
+					
+					if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+					{
+						$record['pd_answer_image'] = $tempdocname;
+					}
+				}
+				
+				$pd_detail_id = $this->PD_Model->saveRecords($record,PDDETAIL);
+				if($pd_detail_id != "" || $pd_detail_id != null)
+					{
+						
+							$data['dataStatus'] = true;
+							$data['status'] = REST_Controller::HTTP_OK;
+							$data['records'] = $pd_detail_id;
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+					else
+					{
+							$data['dataStatus'] = false;
+							$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+							$data['msg'] = "Something Went Wrong..!Try Later";
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+			 }
+			 
+			 
+						 
+		}
+	
+		
+		
+		
 		
 	}
 	

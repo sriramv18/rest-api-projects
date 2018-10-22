@@ -134,4 +134,5 @@ $route['schdulePD'] = 'PD_Controller/schdulePD';
 $route['getListPDOfficers'] = 'PD_Controller/getListPDOfficers'; 
 $route['loadFullTemplate'] = 'PD_Controller/loadFullTemplate'; 
 $route['allbase'] = 'PD_Controller/base'; 
+$route['savePDQuestions'] = 'PD_Controller/saveActualPDQuestions'; 
 
