@@ -31,7 +31,7 @@ class Entity_Management_Controller extends REST_Controller {
 		if($this->get('sort')) { $sort  = $this->get('sort'); }
 		if($this->get('etid')) { $entity_type_id  = $this->get('etid'); }
 		
-		$result = $this->Entity_Management_Model->listAllEntities($page,$limit,$sort,$entity_type_id);
+		$result = $this->Entity_Management_Model->listAllEntities($page,$limit,$sort,$entity_type_id,$entity_id);
 		if($result['data_status'])
 		{
 				$data['dataStatus'] = true;
