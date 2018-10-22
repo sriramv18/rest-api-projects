@@ -450,7 +450,21 @@ class PD_Controller extends REST_Controller {
 	public function updatePDMaster_post()
 	{
 		$pd_details = $this->post('records');
+		// print_r($pd_details);die;
 		//print_r($pd_details);
+
+		// OTP Generate Condition
+		if($pd_details['pd_status'] == STARTED)
+		{
+			$string2 = str_shuffle('1234567890');   
+			$OTP = substr($string2,0,6);
+			 $msg = "Code for starting your personal discussions with the verification officer is ".$OTP .". Pls share this only when the officer has reached your place in person";
+			 $no = (string)$pd_details['mobile_no'];
+			unset($pd_details['mobile_no']);
+			$pd_details['OTP'] = $OTP; 
+			 $this->aws_sns->sendSMS($msg,$no);
+
+		}
 		$where_condition_array = array('pd_id' => $pd_details['pd_id']);
 		$pd_id_modified = $this->PD_Model->updateRecords($pd_details,PDTRIGGER,$where_condition_array);
 		
@@ -459,6 +473,7 @@ class PD_Controller extends REST_Controller {
 			// Create entries on `t_pd_category_weightage` table from Template Category weightage 
 		}
 		
+
 		if($pd_id_modified != null || $pd_id_modified != '' && $count != 0)
 		{
 						PDALERTS::pdnotification($pd_details['pd_id']);
@@ -476,6 +491,31 @@ class PD_Controller extends REST_Controller {
 		
 	}
 	
+	/**
+	 * Pd Discussion OTP Checking function 
+	 * sriram
+	 */
+
+	 public function checkOTP_post()
+	 {
+		 $pdotp = $this->post('records');
+
+		 $pdotpStatus = $this->PD_Model->checkotp($pdotp);
+		 if($pdotpStatus != 0 || $pdotpStatus != '' &&  count($pdotpStatus) != 0)
+		 {
+						 
+						 $data['dataStatus'] = true;
+						 $data['status'] = REST_Controller::HTTP_OK;
+						 $data['records'] = true;
+						 $this->response($data,REST_Controller::HTTP_OK);
+		 }
+		 else
+		 {
+						 $data['dataStatus'] = false;
+						 $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+						 $this->response($data,REST_Controller::HTTP_OK);
+		 }
+	 }
 	
 	/*
 	*

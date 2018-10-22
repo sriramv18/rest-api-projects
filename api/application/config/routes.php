@@ -138,4 +138,6 @@ $route['loadFullTemplate'] = 'PD_Controller/loadFullTemplate';
 $route['allbase'] = 'PD_Controller/base'; 
 $route['savePDQuestions'] = 'PD_Controller/saveActualPDQuestions'; 
 $route['getAnswersForPD'] = 'PD_Controller/getAnswersForPD'; 
+$route['checkOTP'] = 'PD_Controller/checkOTP'; 
+
 
