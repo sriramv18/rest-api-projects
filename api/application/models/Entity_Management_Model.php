@@ -14,13 +14,9 @@ class Entity_Management_Model extends SPARQ_Model {
    {
 	   $result_data = array();
 	   
-	  $this->db->SELECT('ENTITY.entity_id, ENTITY.full_name, ENTITY.short_name, ENTITY.fk_region,REGIONS.name as region_name, ENTITY.fk_state,STATE.name as state_name, ENTITY.fk_city,CITY.name as city_name, ENTITY.fk_branch,BRANCH.name as branch_name, ENTITY.addressline1, ENTITY.pincode, ENTITY.official_email, ENTITY.alt_email, ENTITY.phone_number, ENTITY.mobile_no, ENTITY.remarks, ENTITY.createdon, ENTITY.fk_createdby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby, ENTITY.updatedon, ENTITY.fk_updatedby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, ENTITY.isactive, ENTITY.pan, ENTITY.gst_no, ENTITY.gst_state_code,ENTITY.tat, ENTITY.fk_entity_type_id,ENTITYTYPE.name as entity_name');
-	  $this->db->FROM(ENTITY.' as ENTITY');
-	  $this->db->JOIN(REGIONS.' as REGIONS','ENTITY.fk_region = REGIONS.region_id');
-	  $this->db->JOIN(STATE.' as STATE','ENTITY.fk_state = STATE.state_id');
-	  $this->db->JOIN(CITY.' as CITY','ENTITY.fk_city = CITY.city_id');
-	  $this->db->JOIN(BRANCH.' as BRANCH','ENTITY.fk_branch = BRANCH.branch_id ');
-	  $this->db->JOIN(USERPROFILE.' as USERPROFILE','ENTITY.fk_createdby = USERPROFILE.userid');
+	  $this->db->SELECT('ENTITY.entity_id, ENTITY.full_name, ENTITY.short_name,ENTITY.createdon, ENTITY.fk_createdby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby, ENTITY.updatedon, ENTITY.fk_updatedby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, ENTITY.isactive,ENTITY.fk_entity_type_id,ENTITYTYPE.name as entity_name');
+	  $this->db->FROM(ENTITY.' as ENTITY');	
+	  $this->db->JOIN(USERPROFILE.' as USERPROFILE','ENTITY.fk_createdby = USERPROFILE.userid','LEFT');
 	  $this->db->JOIN(USERPROFILE.' as USERPROFILE1','ENTITY.fk_updatedby = USERPROFILE1.userid','LEFT');
 	  $this->db->JOIN(ENTITYTYPE.' as ENTITYTYPE','ENTITY.fk_entity_type_id = ENTITYTYPE.entity_type_id');
 	  if($entity_type_id != null || $entity_type_id != '')
@@ -33,20 +29,20 @@ class Entity_Management_Model extends SPARQ_Model {
 	    
 	   $result = $this->db->get()->result_array();
 	   
-	   foreach($result as $key => $r)
-	   {
-		   $this->db->SELECT('ENTITYCHILD.entity_child_id,ENTITYCHILD.contact_person,ENTITYCHILD.contact_email,ENTITYCHILD.contact_mobile_no,ENTITYCHILD.contact_person,ENTITYCHILD.isactive,ENTITYCHILD.createdon,ENTITYCHILD.fk_createdby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,ENTITYCHILD.updatedon,ENTITYCHILD.fk_updatedby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby');
-		   $this->db->FROM(ENTITYCHILD.' as ENTITYCHILD');
-		   $this->db->JOIN(ENTITY.' as ENTITY','ENTITYCHILD.fk_entity_id = ENTITY.entity_id');
-		   $this->db->JOIN(USERPROFILE.' as USERPROFILE','ENTITYCHILD.fk_createdby = USERPROFILE.userid ');
-		   $this->db->JOIN(USERPROFILE.' as USERPROFILE1','ENTITYCHILD.fk_updatedby = USERPROFILE1.userid','LEFT');
-		   $this->db->where('ENTITY.entity_id',$r['entity_id']);
+	   // foreach($result as $key => $r)
+	   // {
+		   // $this->db->SELECT('ENTITYCHILD.entity_child_id,ENTITYCHILD.contact_person,ENTITYCHILD.contact_email,ENTITYCHILD.contact_mobile_no,ENTITYCHILD.contact_person,ENTITYCHILD.isactive,ENTITYCHILD.createdon,ENTITYCHILD.fk_createdby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,ENTITYCHILD.updatedon,ENTITYCHILD.fk_updatedby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby');
+		   // $this->db->FROM(ENTITYCHILD.' as ENTITYCHILD');
+		   // $this->db->JOIN(ENTITY.' as ENTITY','ENTITYCHILD.fk_entity_id = ENTITY.entity_id');
+		   // $this->db->JOIN(USERPROFILE.' as USERPROFILE','ENTITYCHILD.fk_createdby = USERPROFILE.userid ');
+		   // $this->db->JOIN(USERPROFILE.' as USERPROFILE1','ENTITYCHILD.fk_updatedby = USERPROFILE1.userid','LEFT');
+		   // $this->db->where('ENTITY.entity_id',$r['entity_id']);
 		   
-		   $entity_child_data = $this->db->get()->result_array();
+		   // $entity_child_data = $this->db->get()->result_array();
 		   
-		   array_push($result[$key],$entity_child_data);
+		   // array_push($result[$key],$entity_child_data);
 		  
-	   }
+	   // }
 	   
 	   if(count($result) > 0 )
 	   {
@@ -63,5 +59,32 @@ class Entity_Management_Model extends SPARQ_Model {
 	   }
 	   
    }
+   
+   /******   Get All Entity Billing Info and it's contact info******/
+  
+   public function getEntityBillingInfo($entity_id)
+   {
+	    
+	   
+	  $this->db->SELECT('ENTITYBILLING.entity_billing_id,ENTITYBILLING.fk_entity_id, ENTITYBILLING.billing_name,ENTITYBILLING.isactive,ENTITYBILLING.addressline1,ENTITYBILLING.addressline2,ENTITYBILLING.addressline3,ENTITYBILLING.pincode,ENTITYBILLING.email,ENTITYBILLING.mobileno,ENTITYBILLING.gstno,ENTITYBILLING.gststatecode,ENTITYBILLING.pan');
+	  $this->db->FROM(ENTITYBILLING.' as ENTITYBILLING');	
+	  $this->db->WHERE('ENTITYBILLING.fk_entity_id',$entity_id); 
+	  $result = $this->db->get()->result_array();
+	  
+	  if(count($result)) 	
+	  {
+		  foreach($result as $key => $res)
+		  {
+			$this->db->SELECT('ENTITYBILLINGCONTACTINFO.entity_billing_contact_id,ENTITYBILLINGCONTACTINFO.fk_entity_billing_id, ENTITYBILLINGCONTACTINFO.contact_person, ENTITYBILLINGCONTACTINFO.contact_email, ENTITYBILLINGCONTACTINFO.contact_mobile_no, ENTITYBILLINGCONTACTINFO.isactive') ;
+			$this->db->FROM(ENTITYBILLINGCONTACTINFO.' as ENTITYBILLINGCONTACTINFO');
+		    $this->db->WHERE('ENTITYBILLINGCONTACTINFO.fk_entity_billing_id',$res['entity_billing_id']);
+			$contacts = $this->db->get()->result_array();
+			$result[$key]['contacts'] = $contacts;
+		  }
+	  }
+	  return $result;
+   }
+   
+   
 
 }

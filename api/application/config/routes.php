@@ -115,6 +115,7 @@ $route['updateAnswerStatus'] = 'Question_Management_Controller/updateAnswerStatu
 $route['(listAllEntites/:any)'] = 'Entity_Management_Controller/listAllEntites/'; 
 $route['saveNewEntity'] = 'Entity_Management_Controller/saveNewEntity'; 
 $route['saveExistEntity'] = 'Entity_Management_Controller/saveExistEntity'; 
+$route['getEntityBillingInfo'] = 'Entity_Management_Controller/getEntityBillingInfo'; 
 $route['getLocationHierarchy'] = 'Entity_Management_Controller/getLocationHierarchy'; 
 
 //PD RELATED
