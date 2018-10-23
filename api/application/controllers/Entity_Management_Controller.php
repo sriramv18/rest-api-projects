@@ -239,20 +239,20 @@ class Entity_Management_Controller extends REST_Controller {
 		$child_records = "";
 		$count = "";
 		if($this->post('records')){ $records = $this->post('records'); }
-		
+		//print_r($records);
 		if($records != "" || $records != null)
 		{
-			if(isset($records['entity_billing_id']))
+			if($records['entity_billing_id'] != "" || $records['entity_billing_id'] != null)
 			{
 				//UPDATE
-				if(isset($records['billing_contacts']))
+				if(isset($records['contacts']))
 				{
-					$child_records = $records['billing_contacts'];
-					unset($records['billing_contacts']);
+					$child_records = $records['contacts'];
+					unset($records['contacts']);
 				}
 				
 				$where_condition_array = array('entity_billing_id' => $records['entity_billing_id']);
-				$entity_id = $this->Entity_Management_Model->updateRecords($records,ENTITYBILLING,$where_condition_array);
+				$entity_billing_id = $this->Entity_Management_Model->updateRecords($records,ENTITYBILLING,$where_condition_array);
 				
 				if($entity_billing_id != "" || $entity_billing_id != null)
 				{
@@ -260,16 +260,18 @@ class Entity_Management_Controller extends REST_Controller {
 					{
 						foreach($child_records as $key => $child)
 						{
-							
-							if(isset($child['entity_billing_contact_id']))
+							//print_r($child['entity_billing_contact_id']);
+							if($child['entity_billing_contact_id'] != "" ||$child['entity_billing_contact_id'] != null)
 							{
+								//echo "UPDATE";
 								$where_condition_array = array('entity_billing_contact_id' => $child['entity_billing_contact_id']);
 								$entity_billing_contact_id = $this->Entity_Management_Model->updateRecords($child,ENTITYBILLINGCONTACTINFO,$where_condition_array);
 								if($entity_billing_contact_id != "" || $entity_billing_contact_id != null){$count++;}
 							}
 							else
 							{
-							
+								//echo "INSERT";
+								$child['fk_entity_billing_id'] = $records['entity_billing_id'];
 								$entity_billing_contact_id = $this->Entity_Management_Model->saveRecords($child,ENTITYBILLINGCONTACTINFO);
 								if($entity_billing_contact_id != "" || $entity_billing_contact_id != null){$count++;}
 							}
@@ -299,10 +301,10 @@ class Entity_Management_Controller extends REST_Controller {
 			else
 			{
 				//INSERT
-				if(isset($records['billing_contacts']))
+				if(isset($records['contacts']))
 				{
-					$child_records = $records['billing_contacts'];
-					unset($records['billing_contacts']);
+					$child_records = $records['contacts'];
+					unset($records['contacts']);
 				}
 				$entity_billing_id = $this->Entity_Management_Model->saveRecords($records,ENTITYBILLING);
 				if($entity_billing_id != "" || $entity_billing_id != null)

@@ -192,10 +192,27 @@ class PD_Model extends SPARQ_Model {
 	{
 			// $pdid = 61;
 			
-			// $arrayForText = array("fk_lender_id", fk_entity_billing_id, lender_applicant_id, pd_date_of_initiation, fk_product_id, fk_subproduct_id, fk_pd_type, pd_status, pd_specific_clarification, createdon, fk_createdby, updatedon, fk_updatedby, fk_pd_allocation_type, fk_pd_allocated_to, fk_pd_template_id, fk_customer_segment, pd_officier_final_judgement, pd_agency_id, loan_amount, addressline1, addressline2, addressline3, fk_city, fk_state, pincode, bounce_reason, executive_id, pd_contact_person, pd_contact_mobileno, scheduled_on, completed_on, OTP);
+			// $arrayForText = array("fk_lender_id" => "Lender", "fk_entity_billing_id" => "Billing ID", "lender_applicant_id" => "Applicant Ref ID", "pd_date_of_initiation" => "PD Date of Initiation", "fk_product_id" => "Product", "fk_subproduct_id" => "Sub Product","fk_pd_type" => "PD Type", "pd_status" => "PD Status", "pd_specific_clarification"=> "PD Specific Clarification","fk_pd_allocation_type" => "Allocation Type", "fk_pd_allocated_to" => "Allocated Person", "fk_pd_template_id" => "PD Tempale", "fk_customer_segment" => "Customer Segment", "pd_officier_final_judgement" => "PD Officer Finale Judgement", "pd_agency_id" => "PD Agency", "loan_amount" => "Loan Amount", "addressline1" => "Addressline1", "addressline2" => "Addressline1", "addressline3" => "Addressline1", "fk_city" => "City", "fk_state" => "State", "pincode" => "Pincode", "bounce_reason" => "Bounce Reason", "executive_id" => "PD Executive", "pd_contact_person" => "Lender Contact Person", "pd_contact_mobileno" => "Lender Contact Mobile Number", "scheduled_on" => "Scheduled On", "completed_on" => "Completed On");
+			
 			// $sql = 'SELECT * FROM '.COMMONMASTER.' WHERE table_name = "'.PDTRIGGER.'" AND primary_key = '.$pdid;
 			// $logs = $this->db->query($sql)->result_array();
-			// print_r($logs);die();	
+			// if(count($logs))
+			// {
+				// foreach($logs as $log_key => $log)
+				// {
+					// //print_r($log);
+					// echo $arrayForText[$log['field_name']].' Changed From "'. $log['old_value'] .'" To "'. $log['new_value'].'"';
+					// $field_name = $log['field_name'];
+					// switch($field_name){
+						// case 'fk_entity_billing_id':
+							 // $sql = 'SELECT billing_name FROM '.ENTITYBILLING.' WHERE entity_billing_id IN'.($log['old_value'],$log['new_value']);
+							 // $r = $this->db->query($sql)->result_array();
+						// break;
+					// }
+				// }
+			// }
+			//print_r($logs);
+			//die();	
 	}
 	
 	
