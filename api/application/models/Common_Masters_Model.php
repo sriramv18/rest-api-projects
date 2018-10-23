@@ -19,21 +19,17 @@ class Common_Masters_Model extends SPARQ_Model {
 		/**
 		 * This Function is used to Get The PD Team Related Datas for Listing
 		 */
-		// public function pdteamlist(){
-		 
-		// 	$result = $this->db->get(PDTEAM)->result_array();
-		
-		// 	if(count($result) !=0){
-		// 		foreach($result as $key=> $r){
-					
-		// 			$cities = $this->db->get_where(PDTEAMMAP,array('fk_team_id'=>$r['pdteam_id']))->result_array();
-		// 			array_push($result[$key],$cities);
-		// 		}
-		// 	}
-
-		// 	return $result;
-		//  }
-		public function pdteamlist(){
+			// public function pdteamlist(){
+			// 	$result = $this->db->get(PDTEAM)->result_array();
+			// 	if(count($result) !=0){
+			// 		foreach($result as $key=> $r){
+			// 			$cities = $this->db->get_where(PDTEAMMAP,array('fk_team_id'=>$r['pdteam_id']))->result_array();
+			// 			array_push($result[$key],$cities);
+			// 		}
+			// 	}
+			// 	return $result;
+			//  }
+		 public function pdteamlist(){
 		 
 			$result = $this->db->get(PDTEAM)->result_array();
 		
@@ -47,6 +43,63 @@ class Common_Masters_Model extends SPARQ_Model {
 
 			return $result;
 		 }
+
+		/**
+		 * This Function is used to inserting new Data 
+		 * argument 1 '$city'    = Which is get from Controller (cityid),
+		 * argument 2 '$teamid'  = Which is get From COntroller (teamid), 
+		 */
+		 public function checkCityData($city,$teamid)
+		 {
+			$this->db->select('PDTEAMCITY.fk_city_id');
+			$this->db->where('PDTEAMCITY.fk_pdteam_id',$teamid);
+			$this->db->where('PDTEAMCITY.fk_city_id',$city);
+			$result = $this->db->get(PDTEAMCITY.' as PDTEAMCITY')->result();
+			if(!empty($result)){}
+			else
+			{
+				$this->db->insert(PDTEAMCITY, array('fk_city_id'=>$city,'fk_pdteam_id'=>$teamid));		
+			}
+		}
+
+		/**
+		 * This Function is used to inserting new Data 
+		 * argument 1 '$product'    = Which is get from Controller (productid),
+		 * argument 2 '$teamid'  = Which is get From COntroller (teamid), 
+		 */
+		public function checkProductData($product,$teamid)
+		 {
+			$this->db->select('PDTEAMPRODUCT.fk_product_id');
+			$this->db->where('PDTEAMPRODUCT.fk_pdteam_id',$teamid);
+			$this->db->where('PDTEAMPRODUCT.fk_product_id',$product);
+			$this->db->where('PDTEAMPRODUCT.isactive',1);
+			$result = $this->db->get(PDTEAMPRODUCT.' as PDTEAMPRODUCT')->result();
+			if(!empty($result)){}
+			else
+			{
+				$this->db->insert(PDTEAMPRODUCT, array('fk_product_id'=>$product,'fk_pdteam_id'=>$teamid));		
+			}
+		}
+
+		/**
+		 * This Function is used to inserting new Data 
+		 * argument 1 '$cs'    = Which is get from Controller (Customersegmentid),
+		 * argument 2 '$teamid'  = Which is get From COntroller (teamid), 
+		 */
+		public function checkCustomerSegmentData($cs,$teamid)
+		 {
+			$this->db->select('PDTEAMCUSTOMERSEGMENT.fk_cs_id');
+			$this->db->where('PDTEAMCUSTOMERSEGMENT.fk_pdteam_id',$teamid);
+			$this->db->where('PDTEAMCUSTOMERSEGMENT.fk_cs_id',$cs);
+			$this->db->where('PDTEAMCUSTOMERSEGMENT.isactive',1);
+			$result = $this->db->get(PDTEAMCUSTOMERSEGMENT.' as PDTEAMCUSTOMERSEGMENT')->result();
+			if(!empty($result))
+			{}
+			else
+			{
+				$this->db->insert(PDTEAMCUSTOMERSEGMENT, array('fk_cs_id'=>$cs,'fk_pdteam_id'=>$teamid));	
+			}
+		}
 
 		 /**
 		 * This Function is used to Delete The Datas 
