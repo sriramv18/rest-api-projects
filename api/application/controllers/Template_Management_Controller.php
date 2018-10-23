@@ -150,7 +150,7 @@ class Template_Management_Controller extends REST_Controller {
 			}
 			else
 			{
-					
+					unset($template_category_detail['template_category_weightage_id']);
 					$id = $this->Template_Management_Model->saveRecords($template_category_detail,TEMPLATECATEGORYWEIGHTAGE);
 					if($id != "" || $id != null){ $count++; }
 			}

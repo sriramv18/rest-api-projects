@@ -190,29 +190,153 @@ class PD_Model extends SPARQ_Model {
 	*/
 	public function getPDLogs($pdid)
 	{
-			// $pdid = 61;
+			$pdid = 63;
 			
-			// $arrayForText = array("fk_lender_id" => "Lender", "fk_entity_billing_id" => "Billing ID", "lender_applicant_id" => "Applicant Ref ID", "pd_date_of_initiation" => "PD Date of Initiation", "fk_product_id" => "Product", "fk_subproduct_id" => "Sub Product","fk_pd_type" => "PD Type", "pd_status" => "PD Status", "pd_specific_clarification"=> "PD Specific Clarification","fk_pd_allocation_type" => "Allocation Type", "fk_pd_allocated_to" => "Allocated Person", "fk_pd_template_id" => "PD Tempale", "fk_customer_segment" => "Customer Segment", "pd_officier_final_judgement" => "PD Officer Finale Judgement", "pd_agency_id" => "PD Agency", "loan_amount" => "Loan Amount", "addressline1" => "Addressline1", "addressline2" => "Addressline1", "addressline3" => "Addressline1", "fk_city" => "City", "fk_state" => "State", "pincode" => "Pincode", "bounce_reason" => "Bounce Reason", "executive_id" => "PD Executive", "pd_contact_person" => "Lender Contact Person", "pd_contact_mobileno" => "Lender Contact Mobile Number", "scheduled_on" => "Scheduled On", "completed_on" => "Completed On");
+			$arrayForText = array("fk_lender_id" => "Lender", "fk_entity_billing_id" => "Billing ID", "lender_applicant_id" => "Applicant Ref ID", "pd_date_of_initiation" => "PD Date of Initiation", "fk_product_id" => "Product", "fk_subproduct_id" => "Sub Product","fk_pd_type" => "PD Type", "pd_status" => "PD Status", "pd_specific_clarification"=> "PD Specific Clarification","fk_pd_allocation_type" => "Allocation Type", "fk_pd_allocated_to" => "Allocated Person", "fk_pd_template_id" => "PD Tempale", "fk_customer_segment" => "Customer Segment", "pd_officier_final_judgement" => "PD Officer Finale Judgement", "pd_agency_id" => "PD Agency", "loan_amount" => "Loan Amount", "addressline1" => "Addressline1", "addressline2" => "Addressline1", "addressline3" => "Addressline1", "fk_city" => "City", "fk_state" => "State", "pincode" => "Pincode", "bounce_reason" => "Bounce Reason", "executive_id" => "PD Executive", "pd_contact_person" => "Lender Contact Person", "pd_contact_mobileno" => "Lender Contact Mobile Number", "scheduled_on" => "Scheduled On", "completed_on" => "Completed On");
 			
-			// $sql = 'SELECT * FROM '.COMMONMASTER.' WHERE table_name = "'.PDTRIGGER.'" AND primary_key = '.$pdid;
-			// $logs = $this->db->query($sql)->result_array();
-			// if(count($logs))
-			// {
-				// foreach($logs as $log_key => $log)
-				// {
-					// //print_r($log);
-					// echo $arrayForText[$log['field_name']].' Changed From "'. $log['old_value'] .'" To "'. $log['new_value'].'"';
-					// $field_name = $log['field_name'];
-					// switch($field_name){
-						// case 'fk_entity_billing_id':
-							 // $sql = 'SELECT billing_name FROM '.ENTITYBILLING.' WHERE entity_billing_id IN'.($log['old_value'],$log['new_value']);
-							 // $r = $this->db->query($sql)->result_array();
-						// break;
-					// }
-				// }
-			// }
+			$this->db->SELECT('COMMONMASTER.log_id, COMMONMASTER.primary_key, COMMONMASTER.table_name, COMMONMASTER.field_name, COMMONMASTER.old_value, COMMONMASTER.new_value, COMMONMASTER.fk_createdby, DATE_FORMAT(COMMONMASTER.createdon,"%d/%m/%Y %h:%i:%s %p") as createdon,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,ENTITYBILLINGOLD.billing_name as old_billing_name,ENTITYBILLINGNEW.billing_name as new_billing_name,ENTITYOLD.full_name as old_entity_name,ENTITYNEW.full_name as new_entity_name,PRODUCTSOLD.abbr as old_product,PRODUCTSNEW.abbr as new_product,SUBPRODUCTSOLD.abbr as old_sub_product,SUBPRODUCTSNEW.abbr as new_sub_product,PDTYPEOLD.type_name as old_type_name,PDTYPENEW.type_name as new_type_name,concat(ALLOCATEDOLD.first_name," ",ALLOCATEDOLD.last_name) as old_allocated_to,concat(ALLOCATEDNEW.first_name," ",ALLOCATEDNEW.last_name) as new_allocated_to,TEMPLATEOLD.template_name as old_template_name,TEMPLATENEW.template_name as new_template_name,CUSTOMERSEGMENTOLD.name as old_cs_name,CUSTOMERSEGMENTNEW.name as new_cs_name,AGENCYOLD.full_name as old_agencyname,AGENCYNEW.full_name as new_agencyname,CITYOLD.name as old_city,CITYNEW.name as new_city,STATEOLD.name as old_state,STATENEW.name as new_state,concat(EXECUTIVEOLD.first_name," ",EXECUTIVEOLD.last_name) as old_executive,concat(EXECUTIVENEW.first_name," ",EXECUTIVENEW.last_name) as new_executive,ALLOCATIONOLD.pd_allocation_type_name as old_allocation_type,ALLOCATIONNEW.pd_allocation_type_name as new_allocation_type');
+			$this->db->FROM(COMMONMASTER.' as COMMONMASTER');
+			$this->db->JOIN(USERPROFILE.' as USERPROFILE','COMMONMASTER.fk_createdby = USERPROFILE.userid','LEFT');
+			$this->db->JOIN(ENTITYBILLING.' as ENTITYBILLINGOLD','COMMONMASTER.old_value = ENTITYBILLINGOLD.entity_billing_id','LEFT');
+			$this->db->JOIN(ENTITYBILLING.' as ENTITYBILLINGNEW','COMMONMASTER.new_value = ENTITYBILLINGNEW.entity_billing_id','LEFT');
+			$this->db->JOIN(ENTITY.' as ENTITYOLD','COMMONMASTER.old_value = ENTITYOLD.entity_id','LEFT');
+			$this->db->JOIN(ENTITY.' as ENTITYNEW','COMMONMASTER.new_value = ENTITYNEW.entity_id','LEFT');
+			$this->db->JOIN(PRODUCTS.' as PRODUCTSOLD','COMMONMASTER.old_value = PRODUCTSOLD.product_id','LEFT');
+			$this->db->JOIN(PRODUCTS.' as PRODUCTSNEW','COMMONMASTER.new_value = PRODUCTSNEW.product_id','LEFT');
+			$this->db->JOIN(SUBPRODUCTS.' as SUBPRODUCTSOLD','COMMONMASTER.old_value = SUBPRODUCTSOLD.subproduct_id','LEFT');
+			$this->db->JOIN(SUBPRODUCTS.' as SUBPRODUCTSNEW','COMMONMASTER.new_value = SUBPRODUCTSNEW.subproduct_id','LEFT');
+			$this->db->JOIN(PDTYPE.' as PDTYPEOLD','COMMONMASTER.old_value = PDTYPEOLD.pd_type_id','LEFT');
+			$this->db->JOIN(PDTYPE.' as PDTYPENEW','COMMONMASTER.new_value = PDTYPENEW.pd_type_id','LEFT');
+			$this->db->JOIN(USERPROFILE.' as ALLOCATEDOLD','COMMONMASTER.old_value = ALLOCATEDOLD.userid','LEFT');
+			$this->db->JOIN(USERPROFILE.' as ALLOCATEDNEW','COMMONMASTER.new_value = ALLOCATEDNEW.userid','LEFT');
+			$this->db->JOIN(TEMPLATE.' as TEMPLATEOLD','COMMONMASTER.old_value = TEMPLATEOLD.template_id','LEFT');
+			$this->db->JOIN(TEMPLATE.' as TEMPLATENEW','COMMONMASTER.new_value = TEMPLATENEW.template_id','LEFT');
+			$this->db->JOIN(CUSTOMERSEGMENT.' as CUSTOMERSEGMENTOLD','COMMONMASTER.old_value = CUSTOMERSEGMENTOLD.customer_segment_id','LEFT');
+			$this->db->JOIN(CUSTOMERSEGMENT.' as CUSTOMERSEGMENTNEW','COMMONMASTER.new_value = CUSTOMERSEGMENTNEW.customer_segment_id','LEFT');
+			$this->db->JOIN(ENTITY.' as AGENCYOLD','COMMONMASTER.old_value = AGENCYOLD.entity_id','LEFT');
+			$this->db->JOIN(ENTITY.' as AGENCYNEW','COMMONMASTER.new_value = AGENCYNEW.entity_id','LEFT');
+			$this->db->JOIN(CITY.' as CITYOLD','COMMONMASTER.old_value = CITYOLD.city_id','LEFT');
+			$this->db->JOIN(CITY.' as CITYNEW','COMMONMASTER.new_value = CITYNEW.city_id','LEFT');
+			$this->db->JOIN(STATE.' as STATEOLD','COMMONMASTER.old_value = STATEOLD.state_id','LEFT');
+			$this->db->JOIN(STATE.' as STATENEW','COMMONMASTER.new_value = STATENEW.state_id','LEFT');
+			$this->db->JOIN(USERPROFILE.' as EXECUTIVEOLD','COMMONMASTER.old_value = EXECUTIVEOLD.userid','LEFT');
+			$this->db->JOIN(USERPROFILE.' as EXECUTIVENEW','COMMONMASTER.new_value = EXECUTIVENEW.userid','LEFT');
+			$this->db->JOIN(PDALLOCATIONTYPE.' as ALLOCATIONOLD','COMMONMASTER.old_value = ALLOCATIONOLD.pd_allocation_type_id','LEFT');
+			$this->db->JOIN(PDALLOCATIONTYPE.' as ALLOCATIONNEW','COMMONMASTER.new_value = ALLOCATIONNEW.pd_allocation_type_id','LEFT');
+			$this->db->WHERE('COMMONMASTER.table_name="'.PDTRIGGER.'" AND COMMONMASTER.primary_key=',$pdid);
+			$logs = $this->db->GET()->result_array();
 			//print_r($logs);
-			//die();	
+			
+			//$sql = 'SELECT * FROM '.COMMONMASTER.' WHERE table_name = "'.PDTRIGGER.'" AND primary_key = '.$pdid;
+			//$logs = $this->db->query($sql)->result_array();
+			$actual_logs = array();
+			if(count($logs))
+			{
+				foreach($logs as $log_key => $log)
+				{
+					//print_r($log);
+					//echo $arrayForText[$log['field_name']].' Changed From "'. $log['old_value'] .'" To "'. $log['new_value'].'"';
+					$field_name = $log['field_name'];
+					//print_r($field_name);
+					switch($field_name){
+						case 'fk_entity_billing_id':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_billing_name'].'" to "'.$log['new_billing_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'fk_lender_id':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_entity_name'].'" to "'.$log['new_entity_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'fk_product_id':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_product'].'" to "'.$log['new_product'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'fk_subproduct_id':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_sub_product'].'" to "'.$log['new_sub_product'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'fk_pd_type':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_type_name'].'" to "'.$log['new_type_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'fk_pd_allocated_to':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_allocated_to'].'" to "'.$log['new_allocated_to'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'fk_pd_template_id':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_template_name'].'" to "'.$log['new_template_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'fk_customer_segment':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_cs_name'].'" to "'.$log['new_cs_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'pd_agency_id':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_agencyname'].'" to "'.$log['new_agencyname'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'fk_city':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_city'].'" to "'.$log['new_city'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$logs[$log_key]['log']  = $log_string;
+							
+						break;
+						case 'fk_state':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_state'].'" to "'.$log['new_state'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'fk_pd_allocation_type':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_state'].'" to "'.$log['new_state'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						case 'executive_id':
+							
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_allocation_type'].'" to "'.$log['new_allocation_type'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+							
+						break;
+						default:
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_value'].'" to "'.$log['new_value'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$actual_logs[]  = $log_string;
+						
+					}
+				}
+			}
+			
+			$result_data['child'] = array('Hi'=>'Welcome');
+			$result_data['master'] = $actual_logs;
+			
+			// Child History Start
+			// $this->db->SELECT('PDAPPLICANTSDETAILS.pd_co_applicant_id, PDAPPLICANTSDETAILS.fk_pd_id, PDAPPLICANTSDETAILS.applicant_name, PDAPPLICANTSDETAILS.applicant_type, PDAPPLICANTSDETAILS.mobile_no, PDAPPLICANTSDETAILS.email, PDAPPLICANTSDETAILS.isactive, PDAPPLICANTSDETAILS.relation');
+			// $this->db->FROM(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS');
+			// $this->db->JOIN(PDTRIGGER.' as PDTRIGGER');
+			// $this->db->WHERE('PDAPPLICANTSDETAILS.table_name="'.PDAPPLICANTSDETAILS.'" AND COMMONMASTER.primary_key=',$pd_co_applicant_id);
+			// $this->db->GET('')->result_array();
+			
+			return $result_data;
+			
 	}
 	
 	

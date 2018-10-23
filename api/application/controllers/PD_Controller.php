@@ -938,7 +938,7 @@ class PD_Controller extends REST_Controller {
 		
 		//Get All PD Logs
 		$result_data['pd_logs'] = $this->PD_Model->getPDLogs($pdid);
-		
+		//print_r($result_data['pd_logs']);die();
 		$applicant_msg = '';
 		$pd_docs_msg = '';
 		$pd_question_answer_msg = '';
@@ -959,7 +959,7 @@ class PD_Controller extends REST_Controller {
 			$pd_question_answer_msg = 'PD Details Not Found';
 		}
 		
-		if(!count($result_data['pd_logs']['pd_master_logs']) && !count($result_data['pd_logs']['pd_applicants_logs']))
+		if(!count($result_data['pd_logs']['master']) || !count($result_data['pd_logs']['child']))
 		{
 			$pd_logs_msg = 'PD Logs Not Found';
 		}
