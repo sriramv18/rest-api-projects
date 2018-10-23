@@ -190,47 +190,22 @@ class PD_Model extends SPARQ_Model {
 	*/
 	public function getPDLogs($pdid)
 	{
-		$this->db->SELECT('PDLOGS.pd_id, PDLOGS.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name, PDLOGS.lender_applicant_id, DATE_FORMAT(PDLOGS.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDLOGS.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDLOGS.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDLOGS.fk_pd_type,PDTYPE.type_name as pd_type_name, PDLOGS.pd_status,PDSTATUS.pd_status_name, PDLOGS.pd_specific_clarification, DATE_FORMAT(PDLOGS.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDLOGS.fk_createdby, DATE_FORMAT(PDLOGS.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDLOGS.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDLOGS.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDLOGS.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDLOGS.fk_pd_template_id,TEMPLATE.template_name, PDLOGS.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDLOGS.pd_officier_final_judgement, PDLOGS.pd_agency_id,AGENCY.full_name as agency_name, PDLOGS.loan_amount,PDLOGS.addressline1,PDLOGS.addressline2,PDLOGS.addressline3,PDLOGS.fk_city,CITY.name as city_name,PDLOGS.fk_state,STATE.name as state_name,PDLOGS.pincode');
-			$this->db->FROM(PDLOGS.' as PDLOGS');
-			$this->db->JOIN(ENTITY.' as ENTITY','PDLOGS.fk_lender_id = ENTITY.entity_id ');
-			$this->db->JOIN(PRODUCTS.' as PRODUCTS','PDLOGS.fk_product_id = PRODUCTS.product_id');
-			$this->db->JOIN(SUBPRODUCTS.' as SUBPRODUCTS','PDLOGS.fk_subproduct_id = SUBPRODUCTS.subproduct_id');
-			$this->db->JOIN(PDTYPE.' as PDTYPE','PDLOGS.fk_pd_type = PDTYPE.pd_type_id');
-			$this->db->JOIN(PDSTATUS.' as PDSTATUS','PDLOGS.pd_status = PDSTATUS.pd_status_id');
-			$this->db->JOIN(USERPROFILE.' as USERPROFILE','PDLOGS.fk_createdby = USERPROFILE.userid');
-			$this->db->JOIN(USERPROFILE.' as USERPROFILE1','PDLOGS.fk_updatedby = USERPROFILE1.userid','LEFT');
-			$this->db->JOIN(PDALLOCATIONTYPE.' as PDALLOCATIONTYPE','PDLOGS.fk_pd_allocation_type = PDALLOCATIONTYPE.pd_allocation_type_id');
-			$this->db->JOIN(USERPROFILE.' as USERPROFILE2','PDLOGS.fk_pd_allocated_to = USERPROFILE2.userid');
-			$this->db->JOIN(TEMPLATE.' as TEMPLATE','PDLOGS.fk_pd_template_id = TEMPLATE.template_id');
-			$this->db->JOIN(CUSTOMERSEGMENT.' as CUSTOMERSEGMENT','PDLOGS.fk_customer_segment = CUSTOMERSEGMENT.customer_segment_id');
-			$this->db->JOIN(ENTITY.' as AGENCY','PDLOGS.pd_agency_id = AGENCY.entity_id','LEFT');
-			$this->db->JOIN(STATE.' as STATE','PDLOGS.fk_state = STATE.state_id ');
-			$this->db->JOIN(CITY.' as CITY','PDLOGS.fk_city = CITY.city_id');
-			$this->db->WHERE('PDLOGS.pd_id ',$pdid);
-			//$this->db->ORDER_BY('PDLOGS.pd_id',$sort);
-			//$this->db->LIMIT($limit,$page);
-			$result_array['pd_master_logs'] = $this->db->GET()->result_array();
+			// $pdid = 61;
 			
-			
-			$this->db->SELECT('PDAPPLICANTSLOGS.pd_co_applicant_id, PDAPPLICANTSLOGS.fk_pd_id, PDAPPLICANTSLOGS.applicant_name, PDAPPLICANTSLOGS.applicant_type, PDAPPLICANTSLOGS.mobile_no, PDAPPLICANTSLOGS.email, PDAPPLICANTSLOGS.addressline1, PDAPPLICANTSLOGS.addressline2, PDAPPLICANTSLOGS.addressline3, PDAPPLICANTSLOGS.fk_city, PDAPPLICANTSLOGS.fk_state, PDAPPLICANTSLOGS.pincode,PDAPPLICANTSLOGS.relation');
-			$this->db->FROM(PDAPPLICANTSLOGS.' as PDAPPLICANTSLOGS');
-			$this->db->JOIN(STATE.' as STATE','PDAPPLICANTSLOGS.fk_state = STATE.state_id');
-			$this->db->JOIN(CITY.' as CITY','PDAPPLICANTSLOGS.fk_city = CITY.city_id');
-			$this->db->WHERE('PDAPPLICANTSLOGS.fk_pd_id ',$pdid);
-			$result_array['pd_applicants_logs'] = $this->db->GET()->result_array();
-			
-			return $result_array;
+			// $arrayForText = array("fk_lender_id", fk_entity_billing_id, lender_applicant_id, pd_date_of_initiation, fk_product_id, fk_subproduct_id, fk_pd_type, pd_status, pd_specific_clarification, createdon, fk_createdby, updatedon, fk_updatedby, fk_pd_allocation_type, fk_pd_allocated_to, fk_pd_template_id, fk_customer_segment, pd_officier_final_judgement, pd_agency_id, loan_amount, addressline1, addressline2, addressline3, fk_city, fk_state, pincode, bounce_reason, executive_id, pd_contact_person, pd_contact_mobileno, scheduled_on, completed_on, OTP);
+			// $sql = 'SELECT * FROM '.COMMONMASTER.' WHERE table_name = "'.PDTRIGGER.'" AND primary_key = '.$pdid;
+			// $logs = $this->db->query($sql)->result_array();
+			// print_r($logs);die();	
 	}
 	
+	
 	/*
-	*Get Completed PD Questions and Answers.
+	* GET PD Question Answers Details by pdid
 	*/
 	public function getPDQuestionAnswers($pdid)
 	{
-		return array();
+		
 	}
-	
-	
 	
 	/*
 	*Get  PD Master Details.

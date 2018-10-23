@@ -233,7 +233,7 @@ class Entity_Management_Controller extends REST_Controller {
    
    
    //entity_billing_id, fk_entity_id, billing_name, addressline1, addressline2, addressline3, pincode, email, mobileno, gstno, pan, gststatecode, isactive
-   public function saveBillingInfo_post()
+   public function saveEntityBillingInfo_post()
    {
 		$records = "";
 		$child_records = "";
@@ -311,6 +311,7 @@ class Entity_Management_Controller extends REST_Controller {
 					{
 						foreach($child_records as $key => $child)
 						{
+							$child['fk_entity_billing_id'] = $entity_billing_id;
 							$entity_billing_contact_id = $this->Entity_Management_Model->saveRecords($child,ENTITYBILLINGCONTACTINFO);
 							if($entity_billing_contact_id != "" || $entity_billing_contact_id != null){$count++;}
 						}
