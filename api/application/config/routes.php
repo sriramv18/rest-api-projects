@@ -118,6 +118,7 @@ $route['saveExistEntity'] = 'Entity_Management_Controller/saveExistEntity';
 $route['getEntityBillingInfo'] = 'Entity_Management_Controller/getEntityBillingInfo'; 
 $route['getLocationHierarchy'] = 'Entity_Management_Controller/getLocationHierarchy'; 
 $route['getEntityMasterInfo'] = 'Entity_Management_Controller/getEntityMasterInfo'; 
+$route['saveBillingInfo'] = 'Entity_Management_Controller/saveBillingInfo'; 
 
 //PD RELATED
 $route['triggerNewPD'] = 'PD_Controller/triggerNewPD'; 
