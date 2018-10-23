@@ -80,6 +80,10 @@ $route['savePDNotification'] = 'Common_Masters_Controller/savePDNotification';
 $route['saveCompany'] = 'Common_Masters_Controller/saveCompany'; 
 $route['savePDTeam'] = 'Common_Masters_Controller/savePdTeam';
 $route['deletePdTeamMapping'] = 'Common_Masters_Controller/deletePdTeamMapping';
+$route['getLender'] = 'Common_Masters_Controller/getLender';
+$route['getProduct'] = 'Common_Masters_Controller/getProduct';
+$route['getCustomerSegment'] = 'Common_Masters_Controller/getCustomerSegment';
+
 
 
 
