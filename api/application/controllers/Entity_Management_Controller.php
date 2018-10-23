@@ -49,36 +49,16 @@ class Entity_Management_Controller extends REST_Controller {
 
 	public function saveNewEntity_post()
 	{
-		
-		//print_r($this->post());
 		$records = "";
-		$entity_child = "";
 		$entity_id = "";
 		
 		if($this->post('records')){ $records = $this->post('records'); }
-		//print_r();
-		if(array_key_exists('entity_child',$records))
+	
+		if(!isset($records['entity_id']))
 			{
-				$entity_child = $records['entity_child'];
-				unset($records['entity_child']);
-			}
-			
-		
-		if($records != "")
-		{
-			$entity_id = $this->Entity_Management_Model->saveRecords($records,ENTITY);//insert user records and get userid
-		}
-				
-				if($entity_child != "")
-				{
-					foreach($entity_child as $child)
-					{
-						$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$entity_id,'createdon'=>$records['createdon'],'fk_createdby'=>$records['fk_createdby']);
-						$this->Entity_Management_Model->saveRecords($entity_child_array,ENTITYCHILD);
-					}
-				}
-				
-				if($entity_id != '' || $entity_id != null)
+				$entity_id = $this->Entity_Management_Model->saveRecords($records,ENTITY);//insert user records and get userid
+
+				 if($entity_id != '' || $entity_id != null)
 				{
 					 
 					 // If New Entity is Lender(2) type, then create a S3 bucket for corresponding lender. 
@@ -105,67 +85,18 @@ class Entity_Management_Controller extends REST_Controller {
 					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
 					$this->response($data,REST_Controller::HTTP_OK);
 				}
-		
-		
-		
-		
-		
-		
-			
-	
-
-		
-	}
-	
-	
-	
-	public function saveExistEntity_post()
-	{
-		$records = "";
-		$entity_child = "";
-		$entity_id = "";
-		
-		if($this->post('records')){ $records = $this->post('records'); }
-		
-		if(array_key_exists('entity_child',$records))
-			{
-				$entity_child = $records['entity_child'];
-				unset($records['entity_child']);
+				
+				
 			}
-		
-		if($records != "")
-		{
-			$where_condition_array = array('entity_id' => $records['entity_id']);
-			$entity_id = $this->Entity_Management_Model->updateRecords($records,ENTITY,$where_condition_array);
-		}
-				
-				if($entity_child != "")
-				{
-					foreach($entity_child as $child)
-					{
-						if($child['entity_child_id'] != "" || $child['entity_child_id'] != null)
-						{
-							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'updatedon'=>$records['updatedon'],'fk_updatedby'=>$records['fk_updatedby'],'isactive'=>$child['isactive']);
-							
-							$where_condition_array = array('entity_child_id'=>$child['entity_child_id']);
-							
-							$this->Entity_Management_Model->updateRecords($entity_child_array,ENTITYCHILD,$where_condition_array);
-						}
-						else
-						{
-							$entity_child_array = array('contact_person'=>$child['contact_person'],'contact_email'=>$child['contact_email'],'contact_mobile_no'=>$child['contact_mobile_no'],'fk_entity_id'=>$records['entity_id'],'createdon'=>$records['updatedon'],'fk_createdby'=>$records['fk_updatedby']);
-							$this->Entity_Management_Model->saveRecords($entity_child_array,ENTITYCHILD);
-						}
-					}
-				}
-				
-				
-				
+			else
+			{
+				$where_condition_array = array('entity_id' => $records['entity_id']);
+				$entity_id = $this->Entity_Management_Model->updateRecords($records,ENTITY,$where_condition_array);
 				if($entity_id != '' || $entity_id != null)
 				{
 					$data['dataStatus'] = true;
 					$data['status'] = REST_Controller::HTTP_OK;
-					$data['record'] = $entity_id;
+					$data['record'] = true;
 					$this->response($data,REST_Controller::HTTP_OK);
 				}
 				else
@@ -174,17 +105,11 @@ class Entity_Management_Controller extends REST_Controller {
 					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
 					$this->response($data,REST_Controller::HTTP_OK);
 				}
-		
-		
-		
-		
-		
-		
+			}
 			
+}
 	
-
-		
-	}
+	
 	
 	/*
 	* Get Location Hierarchy as Region,state,city, and branch - wrapped as one array 
@@ -304,6 +229,112 @@ class Entity_Management_Controller extends REST_Controller {
 	   }
 	   
 	   
+   }
+   
+   
+   //entity_billing_id, fk_entity_id, billing_name, addressline1, addressline2, addressline3, pincode, email, mobileno, gstno, pan, gststatecode, isactive
+   public function saveEntityBillingInfo_post()
+   {
+		$records = "";
+		$child_records = "";
+		$count = "";
+		if($this->post('records')){ $records = $this->post('records'); }
+		
+		if($records != "" || $records != null)
+		{
+			if(isset($records['entity_billing_id']))
+			{
+				//UPDATE
+				if(isset($records['billing_contacts']))
+				{
+					$child_records = $records['billing_contacts'];
+					unset($records['billing_contacts']);
+				}
+				
+				$where_condition_array = array('entity_billing_id' => $records['entity_billing_id']);
+				$entity_id = $this->Entity_Management_Model->updateRecords($records,ENTITYBILLING,$where_condition_array);
+				
+				if($entity_billing_id != "" || $entity_billing_id != null)
+				{
+					if($child_records != "" || $child_records != null)
+					{
+						foreach($child_records as $key => $child)
+						{
+							
+							if(isset($child['entity_billing_contact_id']))
+							{
+								$where_condition_array = array('entity_billing_contact_id' => $child['entity_billing_contact_id']);
+								$entity_billing_contact_id = $this->Entity_Management_Model->updateRecords($child,ENTITYBILLINGCONTACTINFO,$where_condition_array);
+								if($entity_billing_contact_id != "" || $entity_billing_contact_id != null){$count++;}
+							}
+							else
+							{
+							
+								$entity_billing_contact_id = $this->Entity_Management_Model->saveRecords($child,ENTITYBILLINGCONTACTINFO);
+								if($entity_billing_contact_id != "" || $entity_billing_contact_id != null){$count++;}
+							}
+						}
+					}
+				}
+				
+				
+				if(($entity_billing_id != "" || $entity_billing_id != null) && $count == count($child_records))
+					{
+							$data['dataStatus'] = true;
+							$data['status'] = REST_Controller::HTTP_OK;
+							$data['records'] = true;
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+					else
+					{
+							$data['dataStatus'] = false;
+							$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+							$data['msg'] = "Some Thing Went Wrong! Try Later";
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+				
+				
+				
+			}
+			else
+			{
+				//INSERT
+				if(isset($records['billing_contacts']))
+				{
+					$child_records = $records['billing_contacts'];
+					unset($records['billing_contacts']);
+				}
+				$entity_billing_id = $this->Entity_Management_Model->saveRecords($records,ENTITYBILLING);
+				if($entity_billing_id != "" || $entity_billing_id != null)
+				{
+					if($child_records != "" || $child_records != null)
+					{
+						foreach($child_records as $key => $child)
+						{
+							$child['fk_entity_billing_id'] = $entity_billing_id;
+							$entity_billing_contact_id = $this->Entity_Management_Model->saveRecords($child,ENTITYBILLINGCONTACTINFO);
+							if($entity_billing_contact_id != "" || $entity_billing_contact_id != null){$count++;}
+						}
+					}
+				}
+				
+					if(($entity_billing_id != "" || $entity_billing_id != null) && $count == count($child_records))
+					{
+							$data['dataStatus'] = true;
+							$data['status'] = REST_Controller::HTTP_OK;
+							$data['records'] = $entity_billing_id;
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+					else
+					{
+							$data['dataStatus'] = false;
+							$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+							$data['msg'] = "Some Thing Went Wrong! Try Later";
+							$this->response($data,REST_Controller::HTTP_OK);
+					}
+				
+			}
+		}
    }
 	
 	
