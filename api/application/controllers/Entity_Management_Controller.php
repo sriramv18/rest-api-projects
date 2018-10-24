@@ -338,6 +338,42 @@ class Entity_Management_Controller extends REST_Controller {
 			}
 		}
    }
+   
+   
+   
+   
+   /*
+	* Get Location Hierarchy as city and state - wrapped as one array for Lender Regions Mapping
+	*/
+	public function getCityHierarchy_get()
+	{
+		
+		$cities = $this->Entity_Management_Model->getCityHierarchy();
+		
+				if(count($cities))
+				{
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = $cities;
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$data['msg'] = 'Records Not Found';
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+	}
+	
+	
+   /*
+	* Save Entity Regions Mapping
+	*/
+	public function getCityHierarchy_get()
+	{
+		
+	}
 	
 	
 	

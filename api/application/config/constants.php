@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getFullPDDetails'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getCityHierarchy'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -282,8 +282,8 @@ defined('PDTEAMPRODUCTID') OR define('PDTEAMPRODUCTID','pdteam_product_id');
 defined('PDTEAMCUSTOMERSEGMENT') OR define('PDTEAMCUSTOMERSEGMENT','m_pdteam_customer_segment');
 defined('PDTEAMCUSTOMERSEGMENTID') OR define('PDTEAMCUSTOMERSEGMENTID','pdteam_customer_segment_id');
 
-defined('ENTITYREGION') OR define('ENTITYREGION','m_entity_region');
-defined('ENTITYREGIONID') OR define('ENTITYREGIONID','entity_region_id');
+defined('ENTITYREGION') OR define('ENTITYREGION','m_entity_region_mapping');
+defined('ENTITYREGIONID') OR define('ENTITYREGIONID','entity_region_map_id');
 
 defined('ENTITYSTATE') OR define('ENTITYSTATE','m_entity_state');
 defined('ENTITYSTATEID') OR define('ENTITYSTATEID','entity_state_id');

@@ -90,6 +90,18 @@ class Entity_Management_Model extends SPARQ_Model {
 	  return $result;
    }
    
+   public function getCityHierarchy()
+   {
+		$this->db->SELECT('CITY.city_id,CITY.fk_state_id,CITY.name as city_name,STATE.name as state_name,CITY.isactive');
+		$this->db->FROM(CITY.' as CITY');	
+		$this->db->JOIN(STATE.' as STATE','CITY.fk_state_id = STATE.state_id');
+		 $this->db->WHERE('CITY.isactive',1);
+		$data = $this->db->get()->result_array();
+		return $data;
+	  
+   }
+   
+   
    
 
 }
