@@ -424,7 +424,7 @@ class PD_Model extends SPARQ_Model {
 				//$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
 				
 				$questions = $this->db->GET()->result_array();
-				//print_r($questions);
+				//print_r($questions);die();
 				$categories[$category_key]['questions_count'] = count($questions);
 
 					if(count($questions))
@@ -432,10 +432,11 @@ class PD_Model extends SPARQ_Model {
 						//image S3 url attach is pending
 						foreach($questions as $answer_key => $question)
 						{
-						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDDETAIL.pd_detail_id');
+							
+						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDANSWER.pd_detail_answer_id');
 						  $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
 						  $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id','LEFT');
-						  $this->db->JOIN(PDDETAIL.' as PDDETAIL',"QUESTIONANSWERS.question_answer_id = PDDETAIL.pd_answer_id AND PDDETAIL.fk_pd_id = $pdid",'LEFT');
+						  $this->db->JOIN(PDANSWER." as PDANSWER","QUESTIONANSWERS.question_answer_id = PDANSWER.pd_answer_id AND TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = PDANSWER.pd_answer_id AND PDANSWER.fk_pd_id = $pdid",'LEFT');
 						 // $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
 						  $this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_question_id',$question['template_question_id']);
 						 // $this->db->WHERE('PDDETAIL.fk_pd_id',$pdid);
@@ -460,32 +461,34 @@ class PD_Model extends SPARQ_Model {
    public function getAnswersForPD($question_id,$pd_id,$template_id,$category_id)
    {
 				$pd_master_detials = $this->getPDMasterDetails($pd_id);
-						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDDETAIL.pd_detail_id,PDDETAIL.pd_anwer_image_title,PDDETAIL.pd_answer_image');
+						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDANSWER.pd_detail_answer_id');
 						  $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
 						  $this->db->JOIN(TEMPLATEQUESTION." as TEMPLATEQUESTION","TEMPLATEANSWERWEIGHTAGE.fk_template_question_id = TEMPLATEQUESTION.template_question_id AND TEMPLATEQUESTION.fk_template_question_category_id = $category_id AND TEMPLATEQUESTION.fk_template_id = $template_id AND TEMPLATEQUESTION.fk_question_id = $question_id");
 						  $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id');
-						  $this->db->JOIN(PDDETAIL.' as PDDETAIL',"QUESTIONANSWERS.question_answer_id = PDDETAIL.pd_answer_id AND PDDETAIL.fk_pd_id = $pd_id",'LEFT');
-						 // $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
+						  
+						  $this->db->JOIN(PDANSWER.' as PDANSWER',"QUESTIONANSWERS.question_answer_id = PDANSWER.pd_answer_id AND TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = PDANSWER.pd_answer_id AND PDANSWER.fk_pd_id = $pd_id",'LEFT');
+						
+						// $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
 						 // $this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_question_id',$question_id);
 						 //$this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_question_category_id',$category_id);
 						  //$this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_id',$template_id);
 						 // $this->db->WHERE('PDDETAIL.fk_pd_id',$pdid);
 						  $answers = $this->db->GET()->result_array();
 						 
-						 if(count($answers))
-						 {
-							 	$bucket_name = LENDER_BUCKET_NAME_PREFIX.$pd_master_detials[0]['fk_lender_id'];
-							 foreach($answers as $answer_key => $answer)
-							 {
-								 if($answer['pd_answer_image'] != "" || $answer['pd_answer_image'] != null)
-								 {
-									 $profilepics3path = 'pd'.$pd_master_detials[0]['pd_id'].'/'.$answer['pd_answer_image'];
-									 $singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+30 minutes');
-									 $answers[$answer_key]['doc_url'] = $singed_uri;
-								 }
-							 }
+						 // if(count($answers))
+						 // {
+							 	// $bucket_name = LENDER_BUCKET_NAME_PREFIX.$pd_master_detials[0]['fk_lender_id'];
+							 // foreach($answers as $answer_key => $answer)
+							 // {
+								 // if($answer['pd_answer_image'] != "" || $answer['pd_answer_image'] != null)
+								 // {
+									 // $profilepics3path = 'pd'.$pd_master_detials[0]['pd_id'].'/'.$answer['pd_answer_image'];
+									 // $singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+30 minutes');
+									 // $answers[$answer_key]['doc_url'] = $singed_uri;
+								 // }
+							 // }
 							 
-						 }
+						 // }
 						 return $answers;
 						 
    }
