@@ -1013,67 +1013,96 @@ class PD_Controller extends REST_Controller {
 		//$records = json_decode($this->post('records'),true);
 		$records = $this->post('records');
 		$pd_detail_id = "";
+		$pd_detail_answer_id = "";
+		$image_count = "";
+		$answer_count = "";
+		$image_array = array();
+		$answers_array = array();
 		//print_r($records);
 		foreach($records as $record_key => $record)
 		{
 			if($record['pd_detail_id'] != "" || $record['pd_detail_id'] != null)
 			 {
-				
-				 if(isset($record['pd_answer_image']))
-				{
-					
-					//Get Lender ID 
-					$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
-					$lender_id = $this->db->query($sql)->result_array();
-					
-					//Get Old File name Delete Old FIle From S3
-					$sql = 'SELECT pd_answer_image FROM '. PDDETAIL .' WHERE pd_detail_id ='.$record["pd_detail_id"];
-					$old_image = $this->db->query($sql)->result_array();
-					
-					if(count($old_image))
-								{
-									 $bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
-									 $key = 'pd'.$record['fk_pd_id'].'/'.$old_image[0]['pd_answer_image'];
-									 $this->aws_s3->deleteSingleObjFromBucket($bucketname,$key);
-								}
-					
-					
-					$temp_base64_string = $record['pd_answer_image'];
-					$title = $record['pd_anwer_image_title'];
-					$output_file = APPPATH."/docs/temp_base64_image.png";
-					
-					//Generate Random File Name
-						$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-						$charactersLength = strlen($characters);
-						$randomString = '';
-							for ($i = 0; $i < 5; $i++) {
-								$randomString .= $characters[rand(0, $charactersLength - 1)];
-							}
-						$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
-						
-						
-					$ifp = fopen( $output_file, 'wb' ); 
-     				$temp_data = explode( ',', $temp_base64_string );
-					fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
-     				fclose( $ifp ); 
-				    $tempdoc = $output_file;
-					$tempdocname = $temp_file_name;
-					$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
-					$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
-					$sourcefile = $tempdoc;
-					
-					$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
-					$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
-					
-					if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
-					{
-						$record['pd_answer_image'] = $tempdocname;
-					}
-				}
-				
+				 if($record['answers'] != "" || $record['answers'] != null)
+				 {
+					$answers_array = $record['answers'];
+					unset($record['answers']);
+				 }
+				 
+				 if($record['images'] != "" || $record['images'] != null)
+				 {
+					$images_array = $record['images'];
+					unset($record['images']);
+				 }
+				 
 				$where_condition_array = array('pd_detail_id' => $record['pd_detail_id']);
 				$pd_detail_id = $this->PD_Model->updateRecords($record,PDDETAIL,$where_condition_array);
-				if($pd_detail_id != "" || $pd_detail_id != null)
+				
+				// ANSWERS SAVE - pd_detail_answer_id, fk_pd_id, fk_pd_detail_id, pd_answer_id, pd_answer, pd_answer_weightage, pd_answer_remark
+				foreach($answers_array as $answer_key => $answer)
+				{
+					if($answer['pd_detail_answer_id'] != "" || $answer['pd_detail_answer_id'] != null)
+					{
+						$where_condition_array = array('pd_detail_answer_id'=>$answer['pd_detail_answer_id']);
+						$pd_detail_answer_id = $this->PD_Model->updateRecords($answer,PDDETAIL,$where_condition_array);
+						if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
+					}
+					else
+					{
+						$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDDETAIL);
+						if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
+					}
+					
+				}
+				
+				
+				//IMAGES SAVE - pd_document_id, fk_pd_id, fk_pd_detail_id, pd_document_title, pd_document_name, createdon, fk_createdby, updatedon, fk_updatedby
+				foreach($images_array as $image_key => $image)
+				{
+							
+							
+							//Get Lender ID 
+							$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
+							$lender_id = $this->db->query($sql)->result_array();
+							
+							$temp_base64_string = $image['pd_document_name'];
+							$title = $image['pd_document_title'];
+							$output_file = APPPATH."/docs/temp_base64_image.png";
+							
+							//Generate Random File Name
+								$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+								$charactersLength = strlen($characters);
+								$randomString = '';
+									for ($i = 0; $i < 5; $i++) {
+										$randomString .= $characters[rand(0, $charactersLength - 1)];
+									}
+								$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
+								
+								
+							$ifp = fopen( $output_file, 'wb' ); 
+							$temp_data = explode( ',', $temp_base64_string );
+							fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
+							fclose( $ifp ); 
+							$tempdoc = $output_file;
+							$tempdocname = $temp_file_name;
+							$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
+							$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
+							$sourcefile = $tempdoc;
+							
+							$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+							$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
+							
+							if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+							{
+								$image['pd_document_name'] = $tempdocname;
+								$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
+								if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
+								
+							}
+						
+				}
+				
+				if(($pd_detail_id != "" || $pd_detail_id != null) && count($images_array) == $image_count && count($answers) == $answer_count)
 					{
 						
 							$data['dataStatus'] = true;
@@ -1094,48 +1123,75 @@ class PD_Controller extends REST_Controller {
 			 else
 			 {
 				 
-				  if(isset($record['pd_answer_image']))
+				 
+				 if($record['answers'] != "" || $record['answers'] != null)
+				 {
+					$answers_array = $record['answers'];
+					unset($record['answers']);
+				 }
+				 
+				 if($record['images'] != "" || $record['images'] != null)
+				 {
+					$images_array = $record['images'];
+					unset($record['images']);
+				 }
+				 
+				$pd_detail_id = $this->PD_Model->saveRecords($record,PDDETAIL);
+				
+				// ANSWERS SAVE - pd_detail_answer_id, fk_pd_id, fk_pd_detail_id, pd_answer_id, pd_answer, pd_answer_weightage, pd_answer_remark
+				foreach($answers_array as $answer_key => $answer)
 				{
-					
-					//Get Lender ID 
-					$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
-					$lender_id = $this->db->query($sql)->result_array();
-					
-					$temp_base64_string = $record['pd_answer_image'];
-					$title = $record['pd_anwer_image_title'];
-					$output_file = APPPATH."/docs/temp_base64_image.png";
-					
-					//Generate Random File Name
-						$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-						$charactersLength = strlen($characters);
-						$randomString = '';
-							for ($i = 0; $i < 5; $i++) {
-								$randomString .= $characters[rand(0, $charactersLength - 1)];
-							}
-						$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
-						
-						
-					$ifp = fopen( $output_file, 'wb' ); 
-     				$temp_data = explode( ',', $temp_base64_string );
-					fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
-     				fclose( $ifp ); 
-				    $tempdoc = $output_file;
-					$tempdocname = $temp_file_name;
-					$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
-					$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
-					$sourcefile = $tempdoc;
-					
-					$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
-					$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
-					
-					if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
-					{
-						$record['pd_answer_image'] = $tempdocname;
-					}
+					$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDDETAIL);
+					if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
 				}
 				
-				$pd_detail_id = $this->PD_Model->saveRecords($record,PDDETAIL);
-				if($pd_detail_id != "" || $pd_detail_id != null)
+				//IMAGES SAVE - pd_document_id, fk_pd_id, fk_pd_detail_id, pd_document_title, pd_document_name, createdon, fk_createdby, updatedon, fk_updatedby
+				foreach($images_array as $image_key => $image)
+				{
+							
+							
+							//Get Lender ID 
+							$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
+							$lender_id = $this->db->query($sql)->result_array();
+							
+							$temp_base64_string = $image['pd_document_name'];
+							$title = $image['pd_document_title'];
+							$output_file = APPPATH."/docs/temp_base64_image.png";
+							
+							//Generate Random File Name
+								$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+								$charactersLength = strlen($characters);
+								$randomString = '';
+									for ($i = 0; $i < 5; $i++) {
+										$randomString .= $characters[rand(0, $charactersLength - 1)];
+									}
+								$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
+								
+								
+							$ifp = fopen( $output_file, 'wb' ); 
+							$temp_data = explode( ',', $temp_base64_string );
+							fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
+							fclose( $ifp ); 
+							$tempdoc = $output_file;
+							$tempdocname = $temp_file_name;
+							$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
+							$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
+							$sourcefile = $tempdoc;
+							
+							$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+							$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
+							
+							if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+							{
+								$image['pd_document_name'] = $tempdocname;
+								$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
+								if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
+								
+							}
+						
+				}
+				
+				if(($pd_detail_id != "" || $pd_detail_id != null) && count($images_array) == $image_count && count($answers) == $answer_count)
 					{
 						
 							$data['dataStatus'] = true;
