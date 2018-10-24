@@ -501,20 +501,29 @@ class PD_Controller extends REST_Controller {
 		 $pdotp = $this->post('records');
 
 		 $pdotpStatus = $this->PD_Model->checkotp($pdotp);
-		 if($pdotpStatus != 0 || $pdotpStatus != '' &&  count($pdotpStatus) != 0)
-		 {
+		 
+			$pdotpStatus = $this->PD_Model->checkotp($pdotp);
+			$updatePd['pd_id'] = $pdotp['pd_id'];
+			$updatePd['pd_status'] = INPROGRESS;
+			$updatePd['fk_updatedby'] = $pdotp['pd_id'];
+			$updatePd['updatedon'] = date('Y-m-d h:m:00');
+			
+			if($pdotpStatus != 0 || $pdotpStatus != '' &&  count($pdotpStatus) != 0)
+			{	
+			$where_condition_array = array('pd_id' => $pdotp['pd_id']);
+			$pd_id_modified = $this->PD_Model->updateRecords($updatePd,PDTRIGGER,$where_condition_array);
 						 
 						 $data['dataStatus'] = true;
 						 $data['status'] = REST_Controller::HTTP_OK;
 						 $data['records'] = true;
 						 $this->response($data,REST_Controller::HTTP_OK);
-		 }
-		 else
-		 {
-						 $data['dataStatus'] = false;
-						 $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
-						 $this->response($data,REST_Controller::HTTP_OK);
-		 }
+			 }
+			 else
+			 {
+							 $data['dataStatus'] = false;
+							 $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+							 $this->response($data,REST_Controller::HTTP_OK);
+			 }
 	 }
 	
 	/*
