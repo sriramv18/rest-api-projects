@@ -857,12 +857,58 @@ class PD_Controller extends REST_Controller {
 								
 						}
 					}
-					else
+					else // Find Officers in General Team 
 					{
-						$data['dataStatus'] = false;
-						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-						$data['msg'] = 'Team Records Not Found!';
-					    $this->response($data,REST_Controller::HTTP_OK);
+						
+						
+										
+										//Find General Team ID
+										$fields = array('pdteam_id');
+										$where_condition_array = array('team_name' => "General");
+										$general_team_id = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTEAM);
+										
+										if(count($general_team_id))
+										{
+											
+										
+										$fields = array('fk_user_id','fk_pd_type_id','allocated','scheduled','inprogress');
+										$where_condition_array = array('fk_team_id' => $general_team_id[0]['pdteam_id']),'isactive' => 1);
+										$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
+												
+										if(count($list_of_pd_officers))
+										{
+											foreach($list_of_pd_officers as $key => $pdofficer)
+											{
+												$this->db->SELECT('USERPROFILE.first_name,USERPROFILE.last_name');
+												$this->db->FROM(USERPROFILE.' as USERPROFILE');
+												$this->db->WHERE('USERPROFILE.userid',$pdofficer['fk_user_id']);
+												$names = $this->db->GET()->result_array();
+												if(count($names)){
+												$list_of_pd_officers[$key]['first_name'] = $names[0]['first_name'];
+												$list_of_pd_officers[$key]['last_name'] = $names[0]['last_name'];
+												}
+											}
+											
+											$data['dataStatus'] = true;
+											$data['status'] = REST_Controller::HTTP_OK;
+											$data['records'] = $list_of_pd_officers;
+											$this->response($data,REST_Controller::HTTP_OK);
+										}
+										else
+										{
+											$data['dataStatus'] = false;
+											$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+											$data['msg'] = 'Officers Records Not Found in General Team!';
+											$this->response($data,REST_Controller::HTTP_OK);
+										}
+						}
+						else
+						{
+											$data['dataStatus'] = false;
+											$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+											$data['msg'] = 'General Team Not Found';
+											$this->response($data,REST_Controller::HTTP_OK);
+						}
 					}
 				
 			
@@ -873,7 +919,7 @@ class PD_Controller extends REST_Controller {
 			{
 						$data['dataStatus'] = false;
 						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
-						$data['msg'] = 'Master Records Not Found!';
+						$data['msg'] = 'PD Master Records Not Found!';
 					    $this->response($data,REST_Controller::HTTP_OK);
 			}
 	}
@@ -1049,6 +1095,7 @@ class PD_Controller extends REST_Controller {
 					}
 					else
 					{
+						$answer['fk_pd_detail_id'] = $record['pd_detail_id'];
 						$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDDETAIL);
 						if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
 					}
@@ -1141,6 +1188,7 @@ class PD_Controller extends REST_Controller {
 				// ANSWERS SAVE - pd_detail_answer_id, fk_pd_id, fk_pd_detail_id, pd_answer_id, pd_answer, pd_answer_weightage, pd_answer_remark
 				foreach($answers_array as $answer_key => $answer)
 				{
+					$answer['fk_pd_detail_id'] = $pd_detail_id;
 					$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDDETAIL);
 					if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
 				}
@@ -1184,6 +1232,7 @@ class PD_Controller extends REST_Controller {
 							if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
 							{
 								$image['pd_document_name'] = $tempdocname;
+								$answer['fk_pd_detail_id'] = $pd_detail_id;
 								$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
 								if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
 								
