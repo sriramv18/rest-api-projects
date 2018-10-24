@@ -371,24 +371,44 @@ class Entity_Management_Controller extends REST_Controller {
 	* Save Entity Regions Mapping
 	, //fk_region_id, fk_city_id, fk_entity_id, createdon, fk_createdby, updatedon, fk_updatedby
 	*/ 
-	public function SaveEntityRegionMapping_post()
+	public function saveEntityRegionMapping_post()
 	{
-		// $records = $this->post('records');
+		$count = 0;
+		$records = $this->post('records');
 		
-		// foreach($records as $key => $record)
-		// {
-			// if($record['entity_region_map_id'] != "" || $record['entity_region_map_id'] != null)
-			// {
-				// $where_condition_array = array('entity_region_map_id' => $record['entity_region_map_id']);
-				// $entity_region_map_id = $this->Entity_Management_Model->updateRecords($record,ENTITYREGION,$where_condition_array);
-				// if($entity_region_map_id != "" || $entity_region_map_id != null){ $count++; }
-			// }
-			// else
-			// {
-				 // $entity_region_map_id = $this->Entity_Management_Model->saveRecords($record,ENTITYREGION,$where_condition_array);
-				// if($entity_region_map_id != "" || $entity_region_map_id != null){ $count++; }	
-			// }
-		// }
+		foreach($records as $key => $record)
+		{
+		
+			if($record['entity_region_map_id'] != null || $record['entity_region_map_id'] != "")
+			{
+				
+				$where_condition_array = array('entity_region_map_id' => $record['entity_region_map_id']);
+				$entity_region_map_id = $this->Entity_Management_Model->updateRecords($record,ENTITYREGION,$where_condition_array);
+				if($entity_region_map_id != "" || $entity_region_map_id != null){ $count++; }
+			}
+			else
+			{
+				
+			    $entity_region_map_id = $this->Entity_Management_Model->saveRecords($record,ENTITYREGION);
+				if($entity_region_map_id != "" || $entity_region_map_id != null){ $count++; }	
+			}
+		}
+		
+		if(count($records) == $count)
+				{
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = true;
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$data['msg'] = 'Records Not Found';
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+		
 		
 	}
 	

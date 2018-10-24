@@ -325,7 +325,7 @@ class PD_Model extends SPARQ_Model {
 				}
 			}
 			
-			//$result_data['child'] = array('Hi'=>'Welcome');
+			$result_data['child'] = array('testkey'=>'testvalue');
 			$result_data['master'] = $actual_logs;
 			
 			// Child History Start

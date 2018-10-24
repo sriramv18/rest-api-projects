@@ -124,6 +124,7 @@ $route['getLocationHierarchy'] = 'Entity_Management_Controller/getLocationHierar
 $route['getEntityMasterInfo'] = 'Entity_Management_Controller/getEntityMasterInfo'; 
 $route['saveEntityBillingInfo'] = 'Entity_Management_Controller/saveEntityBillingInfo'; 
 $route['getCityHierarchy'] = 'Entity_Management_Controller/getCityHierarchy'; 
+$route['saveEntityRegionMapping'] = 'Entity_Management_Controller/saveEntityRegionMapping'; 
 
 //PD RELATED
 $route['triggerNewPD'] = 'PD_Controller/triggerNewPD'; 
