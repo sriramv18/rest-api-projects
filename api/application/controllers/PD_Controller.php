@@ -1099,13 +1099,13 @@ class PD_Controller extends REST_Controller {
 					if($answer['pd_detail_answer_id'] != "" || $answer['pd_detail_answer_id'] != null)
 					{
 						$where_condition_array = array('pd_detail_answer_id'=>$answer['pd_detail_answer_id']);
-						$pd_detail_answer_id = $this->PD_Model->updateRecords($answer,PDDETAIL,$where_condition_array);
+						$pd_detail_answer_id = $this->PD_Model->updateRecords($answer,PDANSWER,$where_condition_array);
 						if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
 					}
 					else
 					{
 						$answer['fk_pd_detail_id'] = $record['pd_detail_id'];
-						$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDDETAIL);
+						$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDANSWER);
 						if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
 					}
 					
@@ -1198,7 +1198,7 @@ class PD_Controller extends REST_Controller {
 				foreach($answers_array as $answer_key => $answer)
 				{
 					$answer['fk_pd_detail_id'] = $pd_detail_id;
-					$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDDETAIL);
+					$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDANSWER);
 					if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
 				}
 				
