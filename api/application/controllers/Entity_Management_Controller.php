@@ -369,7 +369,6 @@ class Entity_Management_Controller extends REST_Controller {
 	
    /*
 	* Save Entity Regions Mapping
-	, //fk_region_id, fk_city_id, fk_entity_id, createdon, fk_createdby, updatedon, fk_updatedby
 	*/ 
 	public function saveEntityRegionMapping_post()
 	{
@@ -409,6 +408,106 @@ class Entity_Management_Controller extends REST_Controller {
 					$this->response($data,REST_Controller::HTTP_OK);
 				}
 		
+		
+	}
+	
+	
+	/*Get Exist Mapped Region and City For Entity Edit Page*/
+	public function getEntityRegionCityMap_get()
+	{
+		$entity_id = $this->get('entityid');
+		$fields = array('fk_region_id','fk_city_id','fk_entity_id','entity_region_map_id');
+		$where_condition_array = array('fk_entity_id' => $entity_id);
+		$records = $this->Entity_Management_Model->selectCustomRecords($fields,$where_condition_array,ENTITYREGION);
+		if($records != null || $records != "")
+			{
+				
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = $records;
+					$this->response($data,REST_Controller::HTTP_OK);
+				
+			}
+			else
+			{
+				
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$data['msg'] = 'Records Not Found';
+					$this->response($data,REST_Controller::HTTP_OK);
+			}
+		
+	}
+	
+	/*
+	* Save Vendor City  Mapping
+	*/ 
+	public function saveVendorCityMapping_post()
+	{
+		$count = 0;
+		$records = $this->post('records');
+		
+		foreach($records as $key => $record)
+		{
+		
+			if($record['vendor_city_map_id'] != null || $record['vendor_city_map_id'] != "")
+			{
+				
+				$where_condition_array = array('vendor_city_map_id' => $record['vendor_city_map_id']);
+				$vendor_city_map_id = $this->Entity_Management_Model->updateRecords($record,VENDORCITYMAP,$where_condition_array);
+				if($vendor_city_map_id != "" || $vendor_city_map_id != null){ $count++; }
+			}
+			else
+			{
+				
+			    $vendor_city_map_id = $this->Entity_Management_Model->saveRecords($record,VENDORCITYMAP);
+				if($vendor_city_map_id != "" || $vendor_city_map_id != null){ $count++; }	
+			}
+		}
+		
+		if(count($records) == $count)
+				{
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = true;
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+				else
+				{
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$data['msg'] = 'Records Not Found';
+					$this->response($data,REST_Controller::HTTP_OK);
+				}
+		
+		
+	}
+	
+	
+	/*Get Exist Mapped Vendor and City For Entity Edit Page*/
+	public function getVendorCityMap_get()
+	{
+		$entity_id = $this->get('entityid');
+		$fields = array('vendor_city_map_id', 'fk_vendor_id', 'fk_city_id', 'isactive');
+		$where_condition_array = array('fk_vendor_id' => $entity_id);
+		$records = $this->Entity_Management_Model->selectCustomRecords($fields,$where_condition_array,VENDORCITYMAP);
+		if($records != null || $records != "")
+			{
+				
+					$data['dataStatus'] = true;
+					$data['status'] = REST_Controller::HTTP_OK;
+					$data['records'] = $records;
+					$this->response($data,REST_Controller::HTTP_OK);
+				
+			}
+			else
+			{
+				
+					$data['dataStatus'] = false;
+					$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+					$data['msg'] = 'Records Not Found';
+					$this->response($data,REST_Controller::HTTP_OK);
+			}
 		
 	}
 	
