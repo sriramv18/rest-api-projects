@@ -345,7 +345,7 @@ class PD_Model extends SPARQ_Model {
 	*/
 	public function getPDQuestionAnswers($pdid)
 	{
-		
+		return array();
 	}
 	
 	/*
