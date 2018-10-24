@@ -872,7 +872,7 @@ class PD_Controller extends REST_Controller {
 											
 										
 										$fields = array('fk_user_id','fk_pd_type_id','allocated','scheduled','inprogress');
-										$where_condition_array = array('fk_team_id' => $general_team_id[0]['pdteam_id']),'isactive' => 1);
+										$where_condition_array = array('fk_team_id' => $general_team_id[0]['pdteam_id'],'isactive' => 1);
 										$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
 												
 										if(count($list_of_pd_officers))
