@@ -1346,7 +1346,7 @@ class PD_Controller extends REST_Controller {
 			$category_id = $this->post('category_id');
 			
 			$answers = $this->PD_Model->getAnswersForPD($question_id,$pd_id,$template_id,$category_id);
-			
+		
 			if(count($answers))
 					{
 						

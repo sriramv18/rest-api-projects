@@ -433,7 +433,7 @@ class PD_Model extends SPARQ_Model {
 						foreach($questions as $answer_key => $question)
 						{
 							
-						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDANSWER.pd_detail_answer_id,PDANSWER.fk_pd_detail_id');
+						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDANSWER.isactive,PDANSWER.pd_detail_answer_id,PDANSWER.fk_pd_detail_id');
 						  $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
 						  $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id','LEFT');
 						  $this->db->JOIN(PDANSWER." as PDANSWER","QUESTIONANSWERS.question_answer_id = PDANSWER.pd_answer_id AND TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = PDANSWER.pd_answer_id AND PDANSWER.isactive = 1 AND PDANSWER.fk_pd_id = $pdid",'LEFT');
@@ -494,6 +494,7 @@ class PD_Model extends SPARQ_Model {
 							 $where_condition_array = array('fk_pd_id'=>$pd_id,'fk_pd_detail_id'=> $pd_detail[0]['pd_detail_id']);
 							 
 							 $pd_docs = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDDOCUMENTS); 
+							// print_r($pd_docs);die();
 							 if(count($pd_docs))
 							 {
 								 $bucket_name = LENDER_BUCKET_NAME_PREFIX.$pd_master_detials[0]['fk_lender_id'];
@@ -506,8 +507,9 @@ class PD_Model extends SPARQ_Model {
 										 $pd_docs[$doc_key]['doc_url'] = $singed_uri;
 									 }
 								 }
-								 $overalldata['images'] = $pd_docs;
+								
 							 }
+							  $overalldata['images'] = $pd_docs;
 						 }
 						 
 						 return $overalldata;
