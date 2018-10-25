@@ -460,7 +460,7 @@ class PD_Model extends SPARQ_Model {
    
    public function getAnswersForPD($question_id,$pd_id,$template_id,$category_id)
    {
-				$overalldata ="";
+				$overalldata =array();
 				$pd_master_detials = $this->getPDMasterDetails($pd_id);
 						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDANSWER.pd_detail_answer_id,PDANSWER.isactive,PDANSWER.fk_pd_detail_id');
 						  $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
@@ -487,7 +487,9 @@ class PD_Model extends SPARQ_Model {
 						 if(count($pd_detail))
 						 {
 							 $overalldata['question_remark'] =  $pd_detail[0]['question_remark'];
-							 $overalldata['pd_detail_id'] =  array('pd_detail_id'=>$pd_detail[0]['pd_detail_id'],'question_id' => $pd_detail[0]['question_id'],'question' => $pd_detail[0]['pd_question']);
+							 $overalldata['pd_detail_id'] =  $pd_detail[0]['pd_detail_id'];
+							 $overalldata['question_id'] = $pd_detail[0]['question_id'];
+							 $overalldata['pd_question'] = $pd_detail[0]['pd_question'];
 							 $fields = array('pd_document_id', 'fk_pd_id', 'fk_pd_detail_id', 'pd_document_title', 'pd_document_name');
 							 $where_condition_array = array('fk_pd_id'=>$pd_id,'fk_pd_detail_id'=> $pd_detail[0]['pd_detail_id']);
 							 
