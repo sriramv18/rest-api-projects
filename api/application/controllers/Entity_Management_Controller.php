@@ -453,6 +453,7 @@ class Entity_Management_Controller extends REST_Controller {
 			if($records['vendor_city_map_id'] != null || $records['vendor_city_map_id'] != "")
 			{
 				
+				
 				$where_condition_array = array('vendor_city_map_id' => $records['vendor_city_map_id']);
 				$vendor_city_map_id = $this->Entity_Management_Model->updateRecords($records,VENDORCITYMAP,$where_condition_array);
 				if($vendor_city_map_id != "" || $vendor_city_map_id != null){ $count++; }

@@ -1104,7 +1104,7 @@ class PD_Controller extends REST_Controller {
 								//Deactivate Old Answers
 								$fields = array('pd_detail_answer_id');
 								$where_condition_array = array('fk_pd_id' => $answer['fk_pd_id'],'fk_pd_detail_id' => $answer['fk_pd_detail_id']);
-								$old_answers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,ENTITY);
+								$old_answers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDANSWER);
 								
 								foreach($old_answers as $old)
 								{
@@ -1172,6 +1172,8 @@ class PD_Controller extends REST_Controller {
 								if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
 								{
 									$image['pd_document_name'] = $tempdocname;
+									$image['fk_pd_detail_id'] = $record['pd_detail_id'];
+									$image['fk_pd_id'] = $record['fk_pd_id'];
 									$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
 									if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
 									
@@ -1268,7 +1270,9 @@ class PD_Controller extends REST_Controller {
 								if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
 								{
 									$image['pd_document_name'] = $tempdocname;
-									$answer['fk_pd_detail_id'] = $pd_detail_id;
+									
+									$image['fk_pd_detail_id'] = $record['pd_detail_id'];
+									$image['fk_pd_id'] = $record['fk_pd_id'];
 									$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
 									if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
 									
