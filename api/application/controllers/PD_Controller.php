@@ -245,7 +245,7 @@ class PD_Controller extends REST_Controller {
 		{
 			 $fields = array('fk_template_id');
 			 
-			 $where_condition_array = array('fk_lender_id'=>1 ,'fk_product_id'=> 1,'fk_customer_segment'=> 1,'isactive' => 1);
+			 $where_condition_array = array('fk_lender_id'=>$pd_details['fk_lender_id'] ,'fk_product_id'=> $pd_details['fk_product_id'],'fk_customer_segment'=> $pd_details['fk_customer_segment'],'isactive' => 1);
 			 
 			 $table = LENDERTEMPLATE;
 			 
@@ -465,15 +465,39 @@ class PD_Controller extends REST_Controller {
 			 $this->aws_sns->sendSMS($msg,$no);
 
 		}
-		$where_condition_array = array('pd_id' => $pd_details['pd_id']);
-		$pd_id_modified = $this->PD_Model->updateRecords($pd_details,PDTRIGGER,$where_condition_array);
+		
 		
 		if($pd_details['pd_status'] == TRIGGERED)
 		{
-			// Create entries on `t_pd_category_weightage` table from Template Category weightage 
+			// Template Re assign Functionality
+			
+			$fields = array('fk_lender_id','fk_product_id','fk_customer_segment');
+			$where_condition_array = array('pd_id'=>$pdid);
+			$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
+			
+			/***********************CHOOSE PD TEMPALATE*********************/
+			
+			if(count($res_array))
+			{
+					 $fields = array('fk_template_id');
+					 
+					 $where_condition_array = array('fk_lender_id'=>$res_array['fk_lender_id'] ,'fk_product_id'=> $res_array['fk_product_id'],'fk_customer_segment'=> $res_array['fk_customer_segment'],'isactive' => 1);
+					 
+					 $table = LENDERTEMPLATE;
+					 
+					 $choosed_template_id = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,$table);
+					 
+					 if(count($choosed_template_id))
+					 { 
+						$pd_details['fk_pd_template_id'] = $choosed_template_id[0]['fk_template_id']; 
+					 }
+			}
+					
 		}
 		
-
+			$where_condition_array = array('pd_id' => $pd_details['pd_id']);
+			$pd_id_modified = $this->PD_Model->updateRecords($pd_details,PDTRIGGER,$where_condition_array);
+			
 		if($pd_id_modified != null || $pd_id_modified != '' && $count != 0)
 		{
 						PDALERTS::pdnotification($pd_details['pd_id']);
@@ -712,6 +736,11 @@ class PD_Controller extends REST_Controller {
 		}
 		$where_condition_array = array('pd_id' => $records['pd_id']);
 		$pd_id_modified = $this->PD_Model->updateRecords($records,PDTRIGGER,$where_condition_array);
+		
+		// $where_condition_array = array('fk_user_id' => $records['fk_pd_allocated_to']);
+		// $temp_array = array('');
+		// $pd_id_modified = $this->PD_Model->updateRecords($records,PDTRIGGER,$where_condition_array);
+		
 		if($pd_id_modified != "" || $pd_id_modified != null)
 				{
 					PDALERTS::pdnotification($records['pd_id']);
