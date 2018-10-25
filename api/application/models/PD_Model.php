@@ -461,7 +461,7 @@ class PD_Model extends SPARQ_Model {
    public function getAnswersForPD($question_id,$pd_id,$template_id,$category_id)
    {
 				$pd_master_detials = $this->getPDMasterDetails($pd_id);
-						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDANSWER.pd_detail_answer_id');
+						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDANSWER.pd_detail_answer_id,PDANSWER.isactive = 1');
 						  $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
 						  $this->db->JOIN(TEMPLATEQUESTION." as TEMPLATEQUESTION","TEMPLATEANSWERWEIGHTAGE.fk_template_question_id = TEMPLATEQUESTION.template_question_id AND TEMPLATEQUESTION.fk_template_question_category_id = $category_id AND TEMPLATEQUESTION.fk_template_id = $template_id AND TEMPLATEQUESTION.fk_question_id = $question_id");
 						  $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id');
