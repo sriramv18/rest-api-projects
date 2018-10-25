@@ -1203,7 +1203,7 @@ class PD_Controller extends REST_Controller {
 									$image['pd_document_name'] = $tempdocname;
 									$image['fk_pd_detail_id'] = $record['pd_detail_id'];
 									$image['fk_pd_id'] = $record['fk_pd_id'];
-									$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
+									$pd_document_id = $this->PD_Model->saveRecords($image,PDDOCUMENTS);
 									if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
 									
 								}
@@ -1302,7 +1302,7 @@ class PD_Controller extends REST_Controller {
 									
 									$image['fk_pd_detail_id'] = $record['pd_detail_id'];
 									$image['fk_pd_id'] = $record['fk_pd_id'];
-									$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
+									$pd_document_id = $this->PD_Model->saveRecords($image,PDDOCUMENTS);
 									if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
 									
 								}
