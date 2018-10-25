@@ -169,6 +169,7 @@ class Template_Management_Model extends SPARQ_Model {
 				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question');
 				$this->db->FROM(QUESTIONS.' as QUESTIONS');
 				$this->db->WHERE('QUESTIONS.fk_question_category',$category_id);
+				$this->db->WHERE('QUESTIONS.isactive',1);
 				$this->db->WHERE_NOT_IN('QUESTIONS.question_id',$temp_array);
 				$questions = $this->db->GET()->result_array();
 				
@@ -207,6 +208,7 @@ class Template_Management_Model extends SPARQ_Model {
 				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question');
 				$this->db->FROM(QUESTIONS.' as QUESTIONS');
 				$this->db->WHERE('QUESTIONS.fk_question_category',$category_id);
+				$this->db->WHERE('QUESTIONS.isactive',1);
 				$questions = $this->db->GET()->result_array();
 				
 				
