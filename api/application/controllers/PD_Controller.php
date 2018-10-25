@@ -970,8 +970,8 @@ class PD_Controller extends REST_Controller {
 	*/
 	public function listLessPDDetails_get()
 	{
-			$page = 0;$limit = 50;$sort = 'DESC';$pdofficerid = "";$datetype = "";$fdate ="";$tdate ="";
-			$lenderid = "";
+			$page = 0;$limit = 100;$sort = 'DESC';$pdofficerid = "";$datetype = "";$fdate ="";$tdate ="";
+			$lenderid = "";$status="";
 			if($this->get('page')) { $page  = $this->get('page'); }
 			if($this->get('limit')){ $limit = $this->get('limit'); }
 			if($this->get('sort')) { $sort  = $this->get('sort'); }
@@ -980,8 +980,9 @@ class PD_Controller extends REST_Controller {
 			if($this->get('datetype')) { $datetype = $this->get('datetype'); }
 			if($this->get('fdate')) { $fdate = $this->get('fdate'); }
 			if($this->get('tdate')) { $tdate = $this->get('tdate'); }
+			if($this->get('status')) { $status = $this->get('status'); }
 			
-			$result_data = $this->PD_Model->listLessPDDetails($page,$limit,$sort,$pdofficerid,$datetype,$fdate,$tdate,$lenderid);
+			$result_data = $this->PD_Model->listLessPDDetails($page,$limit,$sort,$pdofficerid,$datetype,$fdate,$tdate,$lenderid,$status);
 			
 			if($result_data['data_status'] == true)
 			{
