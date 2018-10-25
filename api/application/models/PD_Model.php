@@ -431,9 +431,36 @@ class PD_Model extends SPARQ_Model {
 				
 				$questions = $this->db->GET()->result_array();
 				$answerd_count = 0;
-				foreach($questions as $question)
+				$pd_docs = array();
+				foreach($questions as $t_key => $question)
 				{
-					if($question['pd_detail_id'] != "" || $question['pd_detail_id'] != null){$answerd_count++;}
+					
+					if($question['pd_detail_id'] != "" || $question['pd_detail_id'] != null){
+						$answerd_count++;
+					
+					// Get Alredy stored Images
+							$fields = array('pd_document_title', 'pd_document_name');
+							 $where_condition_array = array('fk_pd_id'=>$pdid,'fk_pd_detail_id'=> $question['pd_detail_id']);
+							 
+							 $pd_docs = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDDOCUMENTS); 
+							// print_r($pd_docs);die();
+							 if(count($pd_docs))
+							 {
+								 $bucket_name = LENDER_BUCKET_NAME_PREFIX.$pd_master_detials[0]['fk_lender_id'];
+								 foreach($pd_docs as $doc_key => $doc)
+								 {
+									 if($doc['pd_document_name'] != "" || $doc['pd_document_name'] != null)
+									 {
+										 $profilepics3path = 'pd'.$pd_master_detials[0]['pd_id'].'/'.$doc['pd_document_name'];
+										 $singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+30 minutes');
+										 $pd_docs[$doc_key]['pd_document_name'] = $singed_uri;
+									 }
+								 }
+								
+							 }
+							 $questions[$t_key]['images'] = $pd_docs;
+					}
+							  
 				}
 				
 				//print_r($questions);die();
