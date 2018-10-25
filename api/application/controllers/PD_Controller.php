@@ -1094,69 +1094,90 @@ class PD_Controller extends REST_Controller {
 				$pd_detail_id = $this->PD_Model->updateRecords($record,PDDETAIL,$where_condition_array);
 				
 				// ANSWERS SAVE - pd_detail_answer_id, fk_pd_id, fk_pd_detail_id, pd_answer_id, pd_answer, pd_answer_weightage, pd_answer_remark
-				foreach($answers_array as $answer_key => $answer)
+				if(count($answers_array))
 				{
-					if($answer['pd_detail_answer_id'] != "" || $answer['pd_detail_answer_id'] != null)
-					{
-						$where_condition_array = array('pd_detail_answer_id'=>$answer['pd_detail_answer_id']);
-						$pd_detail_answer_id = $this->PD_Model->updateRecords($answer,PDANSWER,$where_condition_array);
-						if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
-					}
-					else
-					{
-						$answer['fk_pd_detail_id'] = $record['pd_detail_id'];
-						$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDANSWER);
-						if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
-					}
-					
-				}
-				
-				
-				//IMAGES SAVE - pd_document_id, fk_pd_id, fk_pd_detail_id, pd_document_title, pd_document_name, createdon, fk_createdby, updatedon, fk_updatedby
-		
-				foreach($images_array as $image_key => $image)
-				{
-							
-							
-							//Get Lender ID 
-							$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
-							$lender_id = $this->db->query($sql)->result_array();
-							
-							$temp_base64_string = $image['pd_document_name'];
-							$title = $image['pd_document_title'];
-							$output_file = APPPATH."/docs/temp_base64_image.png";
-							
-							//Generate Random File Name
-								$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-								$charactersLength = strlen($characters);
-								$randomString = '';
-									for ($i = 0; $i < 5; $i++) {
-										$randomString .= $characters[rand(0, $charactersLength - 1)];
-									}
-								$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
-								
-								
-							$ifp = fopen( $output_file, 'wb' ); 
-							$temp_data = explode( ',', $temp_base64_string );
-							fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
-							fclose( $ifp ); 
-							$tempdoc = $output_file;
-							$tempdocname = $temp_file_name;
-							$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
-							$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
-							$sourcefile = $tempdoc;
-							
-							$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
-							$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
-							
-							if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+						foreach($answers_array as $answer_key => $answer)
+						{
+							if($answer['pd_detail_answer_id'] == "" || $answer['pd_detail_answer_id'] == null)
 							{
-								$image['pd_document_name'] = $tempdocname;
-								$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
-								if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
+								
+								//Deactivate Old Answers
+								$fields = array('pd_detail_answer_id');
+								$where_condition_array = array('fk_pd_id' => $answer['fk_pd_id'],'fk_pd_detail_id' => $answer['fk_pd_detail_id']);
+								$old_answers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,ENTITY);
+								
+								foreach($old_answers as $old)
+								{
+									$where_condition_array = array('pd_detail_answer_id'=>$old['pd_detail_answer_id']);
+									$temp_array = array('isactive' => 0);
+									$pd_detail_answer_id = $this->PD_Model->updateRecords($temp_array,PDANSWER,$where_condition_array);
+								}
+								
+								//INsert New Answers
+								$answer['fk_pd_detail_id'] = $record['pd_detail_id'];
+								$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDANSWER);
+								if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
 								
 							}
-						
+							else
+							{
+								// Update Current Answer
+								$where_condition_array = array('pd_detail_answer_id'=>$answer['pd_detail_answer_id']);
+								$answer['isactive'] = 1;
+								$pd_detail_answer_id = $this->PD_Model->updateRecords($answer,PDANSWER,$where_condition_array);
+								if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
+							}
+							
+						}
+			}
+				
+				//IMAGES SAVE - pd_document_id, fk_pd_id, fk_pd_detail_id, pd_document_title, pd_document_name, createdon, fk_createdby, updatedon, fk_updatedby
+		if(count($images_array))
+				{
+					foreach($images_array as $image_key => $image)
+					{
+								
+								
+								//Get Lender ID 
+								$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
+								$lender_id = $this->db->query($sql)->result_array();
+								
+								$temp_base64_string = $image['pd_document_name'];
+								$title = $image['pd_document_title'];
+								$output_file = APPPATH."/docs/temp_base64_image.png";
+								
+								//Generate Random File Name
+									$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+									$charactersLength = strlen($characters);
+									$randomString = '';
+										for ($i = 0; $i < 5; $i++) {
+											$randomString .= $characters[rand(0, $charactersLength - 1)];
+										}
+									$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
+									
+									
+								$ifp = fopen( $output_file, 'wb' ); 
+								$temp_data = explode( ',', $temp_base64_string );
+								fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
+								fclose( $ifp ); 
+								$tempdoc = $output_file;
+								$tempdocname = $temp_file_name;
+								$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
+								$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
+								$sourcefile = $tempdoc;
+								
+								$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+								$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
+								
+								if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+								{
+									$image['pd_document_name'] = $tempdocname;
+									$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
+									if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
+									
+								}
+							
+					}
 				}
 				
 				if(($pd_detail_id != "" || $pd_detail_id != null) && count($images_array) == $image_count && count($answers_array) == $answer_count)
@@ -1196,61 +1217,67 @@ class PD_Controller extends REST_Controller {
 				$pd_detail_id = $this->PD_Model->saveRecords($record,PDDETAIL);
 				
 				// ANSWERS SAVE - pd_detail_answer_id, fk_pd_id, fk_pd_detail_id, pd_answer_id, pd_answer, pd_answer_weightage, pd_answer_remark
-				foreach($answers_array as $answer_key => $answer)
+				if(count($answers_array))
 				{
-					$answer['fk_pd_detail_id'] = $pd_detail_id;
-					$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDANSWER);
-					if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
+					foreach($answers_array as $answer_key => $answer)
+					{
+						$answer['fk_pd_detail_id'] = $pd_detail_id;
+						$pd_detail_answer_id = $this->PD_Model->saveRecords($answer,PDANSWER);
+						if($pd_detail_answer_id != "" || $pd_detail_answer_id != null){ $answer_count++; }
+					}
 				}
 				
 				//IMAGES SAVE - pd_document_id, fk_pd_id, fk_pd_detail_id, pd_document_title, pd_document_name, createdon, fk_createdby, updatedon, fk_updatedby
-				foreach($images_array as $image_key => $image)
+				if(count($images_array))
 				{
-							
-							
-							//Get Lender ID 
-							$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
-							$lender_id = $this->db->query($sql)->result_array();
-							
-							$temp_base64_string = $image['pd_document_name'];
-							$title = $image['pd_document_title'];
-							$output_file = APPPATH."/docs/temp_base64_image.png";
-							
-							//Generate Random File Name
-								$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-								$charactersLength = strlen($characters);
-								$randomString = '';
-									for ($i = 0; $i < 5; $i++) {
-										$randomString .= $characters[rand(0, $charactersLength - 1)];
-									}
-								$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
+					foreach($images_array as $image_key => $image)
+					{
 								
 								
-							$ifp = fopen( $output_file, 'wb' ); 
-							$temp_data = explode( ',', $temp_base64_string );
-							fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
-							fclose( $ifp ); 
-							$tempdoc = $output_file;
-							$tempdocname = $temp_file_name;
-							$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
-							$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
-							$sourcefile = $tempdoc;
-							
-							$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
-							$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
-							
-							if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
-							{
-								$image['pd_document_name'] = $tempdocname;
-								$answer['fk_pd_detail_id'] = $pd_detail_id;
-								$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
-								if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
+								//Get Lender ID 
+								$sql = 'SELECT fk_lender_id FROM '. PDTRIGGER .' WHERE pd_id ='.$record["fk_pd_id"];
+								$lender_id = $this->db->query($sql)->result_array();
 								
-							}
-						
+								$temp_base64_string = $image['pd_document_name'];
+								$title = $image['pd_document_title'];
+								$output_file = APPPATH."/docs/temp_base64_image.png";
+								
+								//Generate Random File Name
+									$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+									$charactersLength = strlen($characters);
+									$randomString = '';
+										for ($i = 0; $i < 5; $i++) {
+											$randomString .= $characters[rand(0, $charactersLength - 1)];
+										}
+									$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
+									
+									
+								$ifp = fopen( $output_file, 'wb' ); 
+								$temp_data = explode( ',', $temp_base64_string );
+								fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
+								fclose( $ifp ); 
+								$tempdoc = $output_file;
+								$tempdocname = $temp_file_name;
+								$bucketname = LENDER_BUCKET_NAME_PREFIX.$lender_id[0]['fk_lender_id'];
+								$key = 'pd'.$record['fk_pd_id'].'/'.$tempdocname ;
+								$sourcefile = $tempdoc;
+								
+								$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+								$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
+								
+								if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+								{
+									$image['pd_document_name'] = $tempdocname;
+									$answer['fk_pd_detail_id'] = $pd_detail_id;
+									$pd_document_id = $this->PD_Model->saveRecords($images,PDDOCUMENTS);
+									if($pd_document_id != "" || $pd_document_id != null){ $image_count++; }
+									
+								}
+							
+					}
 				}
 				
-				if(($pd_detail_id != "" || $pd_detail_id != null) && count($images_array) == $image_count && count($answers) == $answer_count)
+				if(($pd_detail_id != "" || $pd_detail_id != null) && count($images_array) == $image_count && count($answers_array) == $answer_count)
 					{
 						
 							$data['dataStatus'] = true;
