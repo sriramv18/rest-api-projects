@@ -503,7 +503,7 @@ class PD_Model extends SPARQ_Model {
 							 $overalldata['pd_detail_id'] =  $pd_detail[0]['pd_detail_id'];
 							 $overalldata['question_id'] = $pd_detail[0]['question_id'];
 							 $overalldata['pd_question'] = $pd_detail[0]['pd_question'];
-							 $fields = array('pd_document_id', 'fk_pd_id', 'fk_pd_detail_id', 'pd_document_title', 'pd_document_name');
+							 $fields = array('pd_document_title', 'pd_document_name');
 							 $where_condition_array = array('fk_pd_id'=>$pd_id,'fk_pd_detail_id'=> $pd_detail[0]['pd_detail_id']);
 							 
 							 $pd_docs = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDDOCUMENTS); 
@@ -517,7 +517,7 @@ class PD_Model extends SPARQ_Model {
 									 {
 										 $profilepics3path = 'pd'.$pd_master_detials[0]['pd_id'].'/'.$doc['pd_document_name'];
 										 $singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+30 minutes');
-										 $pd_docs[$doc_key]['doc_url'] = $singed_uri;
+										 $pd_docs[$doc_key]['pd_document_name'] = $singed_uri;
 									 }
 								 }
 								
