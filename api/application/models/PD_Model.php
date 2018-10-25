@@ -424,8 +424,15 @@ class PD_Model extends SPARQ_Model {
 				//$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
 				
 				$questions = $this->db->GET()->result_array();
+				$answerd_count = 0;
+				foreach($questions as $question)
+				{
+					if($question['pd_detail_id'] != "" || $question['pd_detail_id'] != null){$answerd_count++;}
+				}
+				
 				//print_r($questions);die();
 				$categories[$category_key]['questions_count'] = count($questions);
+				$categories[$category_key]['answerd_count'] = $answerd_count;
 
 					if(count($questions))
 					{
