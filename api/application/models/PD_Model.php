@@ -453,6 +453,7 @@ class PD_Model extends SPARQ_Model {
 						 // $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
 						  $this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_question_id',$question['template_question_id']);
 						 // $this->db->WHERE('PDDETAIL.fk_pd_id',$pdid);
+						 $this->db->ORDER_BY('QUESTIONANSWERS.question_answer_id');
 						  $answers = $this->db->GET()->result_array();
 						  $questions[$answer_key]['answers'] = $answers;
 						}
@@ -481,7 +482,7 @@ class PD_Model extends SPARQ_Model {
 						  $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id');
 						  
 						  $this->db->JOIN(PDANSWER.' as PDANSWER',"QUESTIONANSWERS.question_answer_id = PDANSWER.pd_answer_id AND TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = PDANSWER.pd_answer_id AND PDANSWER.fk_pd_id = $pd_id AND PDANSWER.isactive = 1",'LEFT');
-						  
+						  $this->db->ORDER_BY('QUESTIONANSWERS.question_answer_id');
 						
 						// $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
 						 // $this->db->WHERE('TEMPLATEANSWERWEIGHTAGE.fk_template_question_id',$question_id);
