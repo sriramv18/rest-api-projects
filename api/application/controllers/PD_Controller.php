@@ -1071,9 +1071,9 @@ class PD_Controller extends REST_Controller {
 		$pd_detail_answer_id = "";
 		$image_count = "";
 		$answer_count = "";
-		$image_array = array();
+		$images_array = array();
 		$answers_array = array();
-		//print_r($records);
+		//print_r($records); - text,options,checkbox
 		foreach($records as $record_key => $record)
 		{
 			if($record['pd_detail_id'] != "" || $record['pd_detail_id'] != null)
@@ -1113,6 +1113,7 @@ class PD_Controller extends REST_Controller {
 				
 				
 				//IMAGES SAVE - pd_document_id, fk_pd_id, fk_pd_detail_id, pd_document_title, pd_document_name, createdon, fk_createdby, updatedon, fk_updatedby
+		
 				foreach($images_array as $image_key => $image)
 				{
 							
@@ -1158,7 +1159,7 @@ class PD_Controller extends REST_Controller {
 						
 				}
 				
-				if(($pd_detail_id != "" || $pd_detail_id != null) && count($images_array) == $image_count && count($answers) == $answer_count)
+				if(($pd_detail_id != "" || $pd_detail_id != null) && count($images_array) == $image_count && count($answers_array) == $answer_count)
 					{
 						
 							$data['dataStatus'] = true;

@@ -447,29 +447,29 @@ class Entity_Management_Controller extends REST_Controller {
 		$count = 0;
 		$records = $this->post('records');
 		
-		foreach($records as $key => $record)
-		{
+		// foreach($records as $key => $record)
+		// {
 		
-			if($record['vendor_city_map_id'] != null || $record['vendor_city_map_id'] != "")
+			if($records['vendor_city_map_id'] != null || $records['vendor_city_map_id'] != "")
 			{
 				
-				$where_condition_array = array('vendor_city_map_id' => $record['vendor_city_map_id']);
-				$vendor_city_map_id = $this->Entity_Management_Model->updateRecords($record,VENDORCITYMAP,$where_condition_array);
+				$where_condition_array = array('vendor_city_map_id' => $records['vendor_city_map_id']);
+				$vendor_city_map_id = $this->Entity_Management_Model->updateRecords($records,VENDORCITYMAP,$where_condition_array);
 				if($vendor_city_map_id != "" || $vendor_city_map_id != null){ $count++; }
 			}
 			else
 			{
 				
-			    $vendor_city_map_id = $this->Entity_Management_Model->saveRecords($record,VENDORCITYMAP);
+			    $vendor_city_map_id = $this->Entity_Management_Model->saveRecords($records,VENDORCITYMAP);
 				if($vendor_city_map_id != "" || $vendor_city_map_id != null){ $count++; }	
 			}
-		}
+		// }
 		
-		if(count($records) == $count)
+		if($vendor_city_map_id != "" || $vendor_city_map_id != null)
 				{
 					$data['dataStatus'] = true;
 					$data['status'] = REST_Controller::HTTP_OK;
-					$data['records'] = true;
+					$data['records'] = $vendor_city_map_id;
 					$this->response($data,REST_Controller::HTTP_OK);
 				}
 				else
