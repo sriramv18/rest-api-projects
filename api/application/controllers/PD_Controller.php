@@ -454,6 +454,16 @@ class PD_Controller extends REST_Controller {
 		//print_r($pd_details);
 
 		// OTP Generate Condition
+		if($pd_details['pd_status'] == INITIATED)
+		{
+			$msg = "Dear ".$pd_details['firstName'].", Office ".$pd_details['officerName']." is on his way to meet you for a personal discussion with regards to your loan application.";
+			 $no = (string)$pd_details['mobile_no'];
+			unset($pd_details['mobile_no']);
+			unset($pd_details['firstName']);
+			unset($pd_details['officerName']);
+			$this->aws_sns->sendSMS($msg,$no);
+			
+		}
 		if($pd_details['pd_status'] == STARTED)
 		{
 			$string2 = str_shuffle('1234567890');   

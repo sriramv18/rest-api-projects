@@ -579,8 +579,8 @@ class PD_Model extends SPARQ_Model {
 		$this->db->select('OTP');
 		$this->db->where('pd_id',$pddata['pd_id']);
 		$result = $this->db->get(PDTRIGGER.' as PDTRIGGER')->first_row();
-		
-		if(count($result) !='0')
+		//print_r($result);die;
+		if($result !='')
 		{
 			if($result->OTP == $pddata['OTP'])
 			{
