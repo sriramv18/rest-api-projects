@@ -196,7 +196,7 @@ class PD_Model extends SPARQ_Model {
 	*/
 	public function getPDLogs($pdid)
 	{
-			$pdid = 63;
+			//$pdid = 63;
 			
 			$arrayForText = array("fk_lender_id" => "Lender", "fk_entity_billing_id" => "Billing ID", "lender_applicant_id" => "Applicant Ref ID", "pd_date_of_initiation" => "PD Date of Initiation", "fk_product_id" => "Product", "fk_subproduct_id" => "Sub Product","fk_pd_type" => "PD Type", "pd_status" => "PD Status", "pd_specific_clarification"=> "PD Specific Clarification","fk_pd_allocation_type" => "Allocation Type", "fk_pd_allocated_to" => "Allocated Person", "fk_pd_template_id" => "PD Tempale", "fk_customer_segment" => "Customer Segment", "pd_officier_final_judgement" => "PD Officer Finale Judgement", "pd_agency_id" => "PD Agency", "loan_amount" => "Loan Amount", "addressline1" => "Addressline1", "addressline2" => "Addressline1", "addressline3" => "Addressline1", "fk_city" => "City", "fk_state" => "State", "pincode" => "Pincode", "bounce_reason" => "Bounce Reason", "executive_id" => "PD Executive", "pd_contact_person" => "Lender Contact Person", "pd_contact_mobileno" => "Lender Contact Mobile Number", "scheduled_on" => "Scheduled On", "completed_on" => "Completed On");
 			
@@ -525,6 +525,11 @@ class PD_Model extends SPARQ_Model {
 						 $where_condition_array = array('fk_pd_id'=>$pd_id,'fk_question_id'=>$question_id);
 						 $pd_detail = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDDETAIL);
 						// print_r($pd_detail);die();
+							$overalldata['question_remark'] =  "";
+							 $overalldata['pd_detail_id'] =  "";
+							 $overalldata['question_id'] = "";
+							 $overalldata['pd_question'] = "";
+							  $overalldata['images'] = array();;
 						 if(count($pd_detail))
 						 {
 							 $overalldata['question_remark'] =  $pd_detail[0]['question_remark'];
