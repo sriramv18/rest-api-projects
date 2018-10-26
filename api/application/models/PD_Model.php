@@ -391,6 +391,8 @@ class PD_Model extends SPARQ_Model {
 		
 			 $template_id = "";
 			 $categories = "";
+			 $overall_answered_count = 0;
+			 $overall_question_count = 0;
 			 //Get PD Master Details including Template id @param $pd_id
 			 $pd_master_detials = $this->getPDMasterDetails($pdid);
 			 $pd_applicants_detials = $this->getApplicantsDetails($pdid);
@@ -466,6 +468,8 @@ class PD_Model extends SPARQ_Model {
 				//print_r($questions);die();
 				$categories[$category_key]['questions_count'] = count($questions);
 				$categories[$category_key]['answerd_count'] = $answerd_count;
+				 $overall_answered_count += count($questions);
+			     $overall_question_count += $answerd_count;
 
 					if(count($questions))
 					{
@@ -492,6 +496,7 @@ class PD_Model extends SPARQ_Model {
 	}
 
 	$result_data['question_answers'] = $categories;   
+	$result_data['counts'] = array('overall_answered_count'=>$overall_answered_count,'overall_question_count'=>$overall_question_count);
 	$result_data['pdmaster_details'] = $pd_master_detials[0];   
 	$result_data['pdapplicants_detials'] = $pd_applicants_detials;   
 	$result_data['assessed_income'] = "";   
@@ -557,6 +562,7 @@ class PD_Model extends SPARQ_Model {
 							 }
 							  $overalldata['images'] = $pd_docs;
 						 }
+						 $overalldata['counts'] = $this->getOverallAnsweredCount($pd_id);
 						 
 						 return $overalldata;
 						 
@@ -587,5 +593,100 @@ class PD_Model extends SPARQ_Model {
 		
 	return $result;
 	}
+	
+	public function getOverallAnsweredCount($pdid)
+	{
+		
+			 $template_id = "";
+			 $categories = "";
+			 $overall_answered_count = 0;
+			 $overall_question_count = 0;
+			  $temp['overall_answered_count'] = 0;
+			  $temp['overall_question_count'] = 0;
+			 //Get PD Master Details including Template id @param $pd_id
+			 $pd_master_detials = $this->getPDMasterDetails($pdid);
+			 $pd_applicants_detials = $this->getApplicantsDetails($pdid);
+			//sprint_r($pd_master_detials);
+			 $template_id = $pd_master_detials[0]['fk_pd_template_id'];
+			 
+			 if($template_id != "" || $template_id != null)
+			 {
+				 
+			 //Get Category, QUestions and Answers @param $template_id
+			  $this->db->SELECT('QUESTIONCATEGORY.category_name,TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weightage, DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.createdon,"%d/%m/%Y") as createdon, TEMPLATECATEGORYWEIGHTAGE.fk_createdby,  DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.updatedon, "%d/%m/%Y") as updatedon, TEMPLATECATEGORYWEIGHTAGE.isactive, TEMPLATECATEGORYWEIGHTAGE.fk_updatedby');
+			  $this->db->FROM(TEMPLATECATEGORYWEIGHTAGE .' as TEMPLATECATEGORYWEIGHTAGE');
+			  $this->db->JOIN(QUESTIONCATEGORY.' as QUESTIONCATEGORY','TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id = QUESTIONCATEGORY.question_category_id');
+			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATECATEGORYWEIGHTAGE.fk_createdby = USERPROFILE.userid','LEFT');
+			  // $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATECATEGORYWEIGHTAGE.fk_updatedby = USERPROFILE1.userid','LEFT');
+			  $this->db->WHERE('TEMPLATECATEGORYWEIGHTAGE.fk_template_id',$template_id);
+			  $categories = $this->db->GET()->result_array();
+			//print_r( $categories);
+		if(count($categories))
+		{
+				/*
+				DATE_FORMAT(TEMPLATEQUESTION.createdon,"%d/%m/%Y") as createdon, TEMPLATEQUESTION.fk_createdby,  DATE_FORMAT(TEMPLATEQUESTION.updatedon,"%d/%m/%Y") as updatedon, TEMPLATEQUESTION.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby
+				*/
+			  foreach($categories as $category_key => $category)
+			  {
+				 
+				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question,TEMPLATEQUESTION.template_question_id, TEMPLATEQUESTION.fk_template_id, TEMPLATEQUESTION.fk_question_id, TEMPLATEQUESTION.question_weightage, TEMPLATEQUESTION.question_answerable_by,TEMPLATEQUESTION.fk_template_question_category_id,  TEMPLATEQUESTION.isactive,QUESTIONS.fk_question_answertype,QUESTIONANSWERTYPE.answer_type_name,PDDETAIL.pd_detail_id');
+				//$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
+				$this->db->FROM(TEMPLATEQUESTION.' as TEMPLATEQUESTION');
+				$this->db->JOIN(QUESTIONS.' as QUESTIONS','TEMPLATEQUESTION.fk_question_id = QUESTIONS.question_id');
+				$this->db->JOIN(QUESTIONANSWERTYPE.' as QUESTIONANSWERTYPE','QUESTIONS.fk_question_answertype = QUESTIONANSWERTYPE.question_answer_type_id');
+				$this->db->JOIN(PDDETAIL.' as PDDETAIL',"QUESTIONS.question_id = PDDETAIL.fk_question_id AND PDDETAIL.fk_pd_id = $pdid",'LEFT');
+				// $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATEQUESTION.fk_createdby = USERPROFILE.userid','LEFT');
+				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
+				$this->db->WHERE('TEMPLATEQUESTION.fk_template_question_category_id',$category['fk_question_category_id']);
+				$this->db->WHERE('TEMPLATEQUESTION.fk_template_id', $template_id);
+				//$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
+				
+				$questions = $this->db->GET()->result_array();
+				$answerd_count = 0;
+				$pd_docs = array();
+				foreach($questions as $t_key => $question)
+				{
+					
+					if($question['pd_detail_id'] != "" || $question['pd_detail_id'] != null){
+						$answerd_count++;
+					
+					// Get Alredy stored Images
+							$fields = array('pd_document_title', 'pd_document_name');
+							 $where_condition_array = array('fk_pd_id'=>$pdid,'fk_pd_detail_id'=> $question['pd_detail_id']);
+							 
+							 $pd_docs = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDDOCUMENTS); 
+							// print_r($pd_docs);die();
+							 if(count($pd_docs))
+							 {
+								 $bucket_name = LENDER_BUCKET_NAME_PREFIX.$pd_master_detials[0]['fk_lender_id'];
+								 foreach($pd_docs as $doc_key => $doc)
+								 {
+									 if($doc['pd_document_name'] != "" || $doc['pd_document_name'] != null)
+									 {
+										 $profilepics3path = 'pd'.$pd_master_detials[0]['pd_id'].'/'.$doc['pd_document_name'];
+										 $singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+30 minutes');
+										 $pd_docs[$doc_key]['pd_document_name'] = $singed_uri;
+									 }
+								 }
+								
+							 }
+							 $questions[$t_key]['images'] = $pd_docs;
+					}
+							  
+				}
+				
+				//print_r($questions);die();
+				//$categories[$category_key]['questions_count'] = count($questions);
+				//$categories[$category_key]['answerd_count'] = $answerd_count;
+				 $temp['overall_answered_count'] += count($questions);
+			     $temp['overall_question_count'] += $answerd_count;
+		}
+		}
+			 }
+			 
+			return $temp;
+			// return $categories;
+	}
+	
 	
 }
