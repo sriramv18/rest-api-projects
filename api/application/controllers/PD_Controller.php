@@ -456,11 +456,12 @@ class PD_Controller extends REST_Controller {
 		// OTP Generate Condition
 		if($pd_details['pd_status'] == INITIATED)
 		{
-			$msg = "Dear ".$pd_details['firstName'].", Office ".$pd_details['officerName']." is on his way to meet you for a personal discussion with regards to your loan application.";
+			$msg = "Dear ".$pd_details['firstName'].", Office ".$pd_details['officerName']." is on his way to meet you for a personal discussion with regards to your loan application. You can track his realtime location in this link.http://maps.google.com/?q=".$pd_details['link'];
 			 $no = (string)$pd_details['mobile_no'];
 			unset($pd_details['mobile_no']);
 			unset($pd_details['firstName']);
 			unset($pd_details['officerName']);
+			unset($pd_details['link']);
 			$this->aws_sns->sendSMS($msg,$no);
 			
 		}
