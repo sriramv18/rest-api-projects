@@ -260,7 +260,7 @@ class Common_Masters_Controller extends REST_Controller {
 			$table = PDTEAMCUSTOMERSEGMENT. ' as PDTEAMCUSTOMERSEGMENT';
 			$joins = array(
 				array('table'=>CUSTOMERSEGMENT.' as CUSTOMERSEGMENT',
-				'condition'=>'PDTEAMCUSTOMERSEGMENT.fk_cs_id = CUSTOMERSEGMENT.customer_segment_id and CUSTOMERSEGMENT.isactive =1','jointype'=>'JOIN'),
+				'condition'=>'PDTEAMCUSTOMERSEGMENT.fk_cs_id = CUSTOMERSEGMENT.customer_segment_id and CUSTOMERSEGMENT.isactive =1','jointype'=>'LEFT'),
 			);
 			$where_condition_array = array('PDTEAMCUSTOMERSEGMENT.fk_pdteam_id'=>$res['pdteam_id']);
 			$result[$index]['CUSTOMERSEGMENT'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);	
@@ -268,7 +268,7 @@ class Common_Masters_Controller extends REST_Controller {
 			$columns = array("CITY.name");
 			$table = PDTEAMCITY.' as PDTEAMCITY';
 			$joins = array(
-				array('table'=>CITY.' as CITY','condition'=>'PDTEAMCITY.fk_city_id = CITY.city_id and CITY.isactive = 1','jointype'=>'JOIN')
+				array('table'=>CITY.' as CITY','condition'=>'PDTEAMCITY.fk_city_id = CITY.city_id and CITY.isactive = 1','jointype'=>'LEFT')
 			);
 			$where_condition_array = array('PDTEAMCITY.fk_pdteam_id'=>$res['pdteam_id']);
 			$result[$index]['CITYMAP'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
@@ -279,7 +279,7 @@ class Common_Masters_Controller extends REST_Controller {
 			$table = PDTEAMPRODUCT.' as PDTEAMPRODUCT';
 			$joins = array(
 				array('table'=>PRODUCTS.' as PRODUCTS',
-					'condition'=>'PDTEAMPRODUCT.fk_product_id = PRODUCTS.product_id and PRODUCTS.isactive =1','jointype'=>'JOIN')
+					'condition'=>'PDTEAMPRODUCT.fk_product_id = PRODUCTS.product_id and PRODUCTS.isactive =1','jointype'=>'LEFT')
 				
 			);
 			$where_condition_array = array('PDTEAMPRODUCT.fk_pdteam_id'=>$res['pdteam_id']);
@@ -289,7 +289,7 @@ class Common_Masters_Controller extends REST_Controller {
 			$columns = array("USERPROFILE.userid,concat(USERPROFILE.first_name,' ',USERPROFILE.last_name)as user_full_name");
 			$table = USERPROFILE.' as USERPROFILE';
 			$joins = array(
-				array('table'=>PDOFFICIERSDETAILS.' as PDOFFICIERSDETAILS','condition'=>'USERPROFILE.userid = PDOFFICIERSDETAILS.fk_user_id and USERPROFILE.isactive =1','jointype'=>'JOIN')
+				array('table'=>PDOFFICIERSDETAILS.' as PDOFFICIERSDETAILS','condition'=>'USERPROFILE.userid = PDOFFICIERSDETAILS.fk_user_id and USERPROFILE.isactive =1','jointype'=>'LEFT')
 			);
 			$where_condition_array = array('PDOFFICIERSDETAILS.fk_team_id'=>$res['pdteam_id']);
 			$result[$index]['USERPROFILE'] = $this->Common_Masters_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
