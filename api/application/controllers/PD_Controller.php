@@ -796,7 +796,7 @@ class PD_Controller extends REST_Controller {
 				/******* Code Snippt for Save Template Category Weightage info to PD category Info*/
 				$fields = array('fk_pd_template_id');
 				$where_condition_array = array('pd_id'=>$records['fk_pd_id']);
-				$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,);
+				$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
 				
 				if(count($res_array))
 				{
