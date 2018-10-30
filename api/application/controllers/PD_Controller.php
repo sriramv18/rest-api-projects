@@ -482,7 +482,7 @@ class PD_Controller extends REST_Controller {
 		{
 			// Template Re assign Functionality
 			
-			$fields = array('fk_lender_id','fk_product_id','fk_customer_segment');
+			$fields = array('fk_lender_id','fk_product_id','fk_customer_segment','pd_status');
 			$where_condition_array = array('pd_id'=>$pdid);
 			$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
 			
@@ -490,18 +490,26 @@ class PD_Controller extends REST_Controller {
 			
 			if(count($res_array))
 			{
-					 $fields = array('fk_template_id');
-					 
-					 $where_condition_array = array('fk_lender_id'=>$res_array['fk_lender_id'] ,'fk_product_id'=> $res_array['fk_product_id'],'fk_customer_segment'=> $res_array['fk_customer_segment'],'isactive' => 1);
-					 
-					 $table = LENDERTEMPLATE;
-					 
-					 $choosed_template_id = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,$table);
-					 
-					 if(count($choosed_template_id))
-					 { 
-						$pd_details['fk_pd_template_id'] = $choosed_template_id[0]['fk_template_id']; 
-					 }
+					
+					if($res_array['pd_status'] == TRIGGERED || $res_array['pd_status'] == DRAFT)
+						{
+							$fields = array('fk_template_id');
+						 
+						 $where_condition_array = array('fk_lender_id'=>$res_array['fk_lender_id'] ,'fk_product_id'=> $res_array['fk_product_id'],'fk_customer_segment'=> $res_array['fk_customer_segment'],'isactive' => 1);
+						 
+						 $table = LENDERTEMPLATE;
+						 
+						 $choosed_template_id = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,$table);
+						 
+						 if(count($choosed_template_id))
+						 { 
+							$pd_details['fk_pd_template_id'] = $choosed_template_id[0]['fk_template_id']; 
+						 }
+					}
+					else
+					{
+						unset($pd_details['pd_status']);
+					}
 			}
 					
 		}
@@ -943,7 +951,7 @@ class PD_Controller extends REST_Controller {
 										{
 											
 										
-										$fields = array('fk_user_id','fk_pd_type_id','allocated','scheduled','inprogress');
+										$fields = array('fk_user_id','fk_pd_type_id');
 										$where_condition_array = array('fk_team_id' => $general_team_id[0]['pdteam_id'],'isactive' => 1);
 										$list_of_pd_officers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDOFFICIERSDETAILS);
 												
@@ -951,13 +959,38 @@ class PD_Controller extends REST_Controller {
 										{
 											foreach($list_of_pd_officers as $key => $pdofficer)
 											{
-												$this->db->SELECT('USERPROFILE.first_name,USERPROFILE.last_name');
+												$this->db->SELECT('USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no');
 												$this->db->FROM(USERPROFILE.' as USERPROFILE');
 												$this->db->WHERE('USERPROFILE.userid',$pdofficer['fk_user_id']);
 												$names = $this->db->GET()->result_array();
+												
+												
 												if(count($names)){
 												$list_of_pd_officers[$key]['first_name'] = $names[0]['first_name'];
 												$list_of_pd_officers[$key]['last_name'] = $names[0]['last_name'];
+												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
+												$list_of_pd_officers[$key]['count'] = 0;
+												
+												$this->db->SELECT('COUNT(*) as count');
+												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
+												$this->db->OR_GROUP_START();
+												$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
+												$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
+												$this->db->OR_WHERE('PDTRIGGER.pd_status',ALLOCATED);
+												$this->db->GROUP_END();
+												$this->db->WHERE('PDTRIGGER.fk_pd_allocated_to',$pdofficer['fk_user_id']);
+												$pd_count = $this->db->GET()->result_array();
+												//print_r($this->db->last_query());
+												if(count($pd_count)){ $list_of_pd_officers[$key]['count'] = $pd_count[0]['count']; }
+												
+												// Get Profile Pic from S3
+												
+												$bucket_name = PROFILE_PICTURE_BUCKET_NAME;
+												$profilepics3path = 'sineedge/'.$names[0]['profilepic'];
+												$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+10 minutes');
+												$list_of_pd_officers[$key]['profile_url'] = $singed_uri;
+												
+												
 												}
 											}
 											
