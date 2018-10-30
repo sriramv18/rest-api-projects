@@ -847,7 +847,7 @@ class PD_Controller extends REST_Controller {
 		$fields = array('fk_lender_id','fk_city','fk_pd_type','fk_product_id','fk_customer_segment');
 		$where_condition_array = array('pd_id'=>$pdid);
 		$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
-		
+		//print_r($res_array);
 		//2.Get Team ID based on Lender ID
 		if(count($res_array))
 		{
@@ -868,7 +868,7 @@ class PD_Controller extends REST_Controller {
 						{
 							
 										//select list of pd officers based on pd type, product, customer segment, and team from table (t_pd_officiers_details) and choose minimun allocated one and assign pd Officer and change status form TRIGGERED to ALLOCATED 
-										$fields = array('fk_user_id','fk_pd_type_id','allocated','scheduled','inprogress');
+										$fields = array('fk_user_id','fk_pd_type_id');
 										
 										$where_condition_array = array('fk_team_id' => $temp_city_id[0]['pdteam_id'],'isactive' => 1);
 										
@@ -878,13 +878,36 @@ class PD_Controller extends REST_Controller {
 										{
 											foreach($list_of_pd_officers as $key => $pdofficer)
 											{
-												$this->db->SELECT('USERPROFILE.first_name,USERPROFILE.last_name');
+												$this->db->SELECT('USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no');
 												$this->db->FROM(USERPROFILE.' as USERPROFILE');
 												$this->db->WHERE('USERPROFILE.userid',$pdofficer['fk_user_id']);
 												$names = $this->db->GET()->result_array();
 												if(count($names)){
+													
+												
 												$list_of_pd_officers[$key]['first_name'] = $names[0]['first_name'];
 												$list_of_pd_officers[$key]['last_name'] = $names[0]['last_name'];
+												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
+												$list_of_pd_officers[$key]['count'] = 0;
+												
+												$this->db->SELECT('COUNT(*) as count');
+												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
+												$this->db->OR_GROUP_START();
+												$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
+												$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
+												$this->db->OR_WHERE('PDTRIGGER.pd_status',ALLOCATED);
+												$this->db->GROUP_END();
+												$this->db->WHERE('PDTRIGGER.fk_pd_allocated_to',$pdofficer['fk_user_id']);
+												$pd_count = $this->db->GET()->result_array();
+												//print_r($this->db->last_query());
+												if(count($pd_count)){ $list_of_pd_officers[$key]['count'] = $pd_count[0]['count']; }
+												
+												// Get Profile Pic from S3
+												
+												$bucket_name = PROFILE_PICTURE_BUCKET_NAME;
+												$profilepics3path = 'sineedge/'.$names[0]['profilepic'];
+												$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+10 minutes');
+												$list_of_pd_officers[$key]['profile_url'] = $singed_uri;
 												}
 											}
 											
