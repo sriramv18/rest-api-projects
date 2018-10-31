@@ -416,7 +416,7 @@ class Entity_Management_Controller extends REST_Controller {
 	public function getEntityRegionCityMap_get()
 	{
 		$entity_id = $this->get('entityid');
-		$fields = array('fk_region_id','fk_city_id','fk_entity_id','entity_region_map_id');
+		$fields = array('fk_region_id','fk_city_id','fk_entity_id','entity_region_map_id','isactive');
 		$where_condition_array = array('fk_entity_id' => $entity_id);
 		$records = $this->Entity_Management_Model->selectCustomRecords($fields,$where_condition_array,ENTITYREGION);
 		if($records != null || $records != "")

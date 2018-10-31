@@ -483,7 +483,7 @@ class PD_Controller extends REST_Controller {
 			// Template Re assign Functionality
 			
 			$fields = array('fk_lender_id','fk_product_id','fk_customer_segment','pd_status');
-			$where_condition_array = array('pd_id'=>$pdid);
+			$where_condition_array = array('pd_id'=>$pd_details['pd_id']);
 			$res_array = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
 			
 			/***********************CHOOSE PD TEMPALATE*********************/
@@ -1163,6 +1163,7 @@ class PD_Controller extends REST_Controller {
 	public function saveActualPDQuestions_post()
 	{
 		//$records = json_decode($this->post('records'),true);
+		//echo "hi";
 		$records = $this->post('records');
 		$pd_detail_id = "";
 		$pd_detail_answer_id = "";
@@ -1170,11 +1171,13 @@ class PD_Controller extends REST_Controller {
 		$answer_count = "";
 		$images_array = array();
 		$answers_array = array();
-		//print_r($records); - text,options,checkbox
+		
 		foreach($records as $record_key => $record)
-		{
+		{ 
+			
 			if($record['pd_detail_id'] != "" || $record['pd_detail_id'] != null)
 			 {
+				 
 				 if($record['answers'] != "" || $record['answers'] != null)
 				 {
 					$answers_array = $record['answers'];
@@ -1193,22 +1196,23 @@ class PD_Controller extends REST_Controller {
 				// ANSWERS SAVE - pd_detail_answer_id, fk_pd_id, fk_pd_detail_id, pd_answer_id, pd_answer, pd_answer_weightage, pd_answer_remark
 				if(count($answers_array))
 				{
-						foreach($answers_array as $answer_key => $answer)
-						{
-							if($answer['pd_detail_answer_id'] == "" || $answer['pd_detail_answer_id'] == null)
-							{
-								
+					
+					
 								//Deactivate Old Answers
 								$fields = array('pd_detail_answer_id');
-								$where_condition_array = array('fk_pd_id' => $answer['fk_pd_id'],'fk_pd_detail_id' => $answer['fk_pd_detail_id']);
+								$where_condition_array = array('fk_pd_id' => $record['fk_pd_id'],'fk_pd_detail_id' => $record['pd_detail_id']);
 								$old_answers = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDANSWER);
-								
 								foreach($old_answers as $old)
 								{
 									$where_condition_array = array('pd_detail_answer_id'=>$old['pd_detail_answer_id']);
 									$temp_array = array('isactive' => 0);
 									$pd_detail_answer_id = $this->PD_Model->updateRecords($temp_array,PDANSWER,$where_condition_array);
 								}
+								
+						foreach($answers_array as $answer_key => $answer)
+						{
+							if($answer['pd_detail_answer_id'] == "" || $answer['pd_detail_answer_id'] == null)
+							{
 								
 								//INsert New Answers
 								$answer['fk_pd_detail_id'] = $record['pd_detail_id'];
@@ -1300,6 +1304,7 @@ class PD_Controller extends REST_Controller {
 			 else
 			 {
 				 
+				
 				 
 				 if($record['answers'] != "" || $record['answers'] != null)
 				 {
@@ -1312,7 +1317,7 @@ class PD_Controller extends REST_Controller {
 					$images_array = $record['images'];
 					unset($record['images']);
 				 }
-				 
+				 //print_r($record);die();
 				$pd_detail_id = $this->PD_Model->saveRecords($record,PDDETAIL);
 				
 				// ANSWERS SAVE - pd_detail_answer_id, fk_pd_id, fk_pd_detail_id, pd_answer_id, pd_answer, pd_answer_weightage, pd_answer_remark
