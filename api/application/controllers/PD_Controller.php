@@ -491,11 +491,11 @@ class PD_Controller extends REST_Controller {
 			if(count($res_array))
 			{
 					
-					if($res_array['pd_status'] == TRIGGERED || $res_array['pd_status'] == DRAFT)
+					if($res_array[0]['pd_status'] == TRIGGERED || $res_array[0]['pd_status'] == DRAFT)
 						{
 							$fields = array('fk_template_id');
 						 
-						 $where_condition_array = array('fk_lender_id'=>$res_array['fk_lender_id'] ,'fk_product_id'=> $res_array['fk_product_id'],'fk_customer_segment'=> $res_array['fk_customer_segment'],'isactive' => 1);
+						 $where_condition_array = array('fk_lender_id'=>$res_array[0]['fk_lender_id'] ,'fk_product_id'=> $res_array[0]['fk_product_id'],'fk_customer_segment'=> $res_array[0]['fk_customer_segment'],'isactive' => 1);
 						 
 						 $table = LENDERTEMPLATE;
 						 
@@ -850,6 +850,17 @@ class PD_Controller extends REST_Controller {
 	*/
 	public function getListPDOfficers_post()
 	{
+		
+												// $this->db->SELECT('USERPROFILE.userid,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role');
+												// $this->db->FROM(USERPROFILE.' as USERPROFILE');
+												// $this->db->JOIN(USERPROFILEROLES.' as USERPROFILEROLES','USERPROFILE.userid = USERPROFILEROLES.fk_userid');
+												// $this->db->JOIN(ROLES.' as ROLES','USERPROFILEROLES.user_role = ROLES.role_name');
+												
+												// $names = $this->db->GET()->result_array();
+												// print_r($this->db->last_query());
+												// print_r($names);
+											
+		// die();
 		$pdid = $this->post('pdid');
 		//1.Get LenderID and CityID  by using pdid
 		$fields = array('fk_lender_id','fk_city','fk_pd_type','fk_product_id','fk_customer_segment');
@@ -918,6 +929,16 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['profile_url'] = $singed_uri;
 												}
 											}
+											
+											// if($res_array['fk_pd_type'] == 2 || $res_array['fk_pd_type'] == 3)
+											// {
+												// $this->db->SELECT('USERPROFILE.userid,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role');
+												// $this->db->FROM(USERPROFILE.' as USERPROFILE');
+												// $this->db->JOIN(USERPROFILEROLES.' as USERPROFILEROLES','USERPROFILE.userid = USERPROFILEROLES.fk_pdid');
+												// $this->db->JOIN(ROLES.' as ROLES','USERPROFILEROLES.user_role = ROLES.role_name');
+												// $this->db->WHERE('USERPROFILE.userid',$pdofficer['fk_user_id']);
+												// $names = $this->db->GET()->result_array();
+											// }
 											
 											$data['dataStatus'] = true;
 											$data['status'] = REST_Controller::HTTP_OK;
