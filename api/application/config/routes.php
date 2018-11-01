@@ -150,4 +150,7 @@ $route['savePDQuestions'] = 'PD_Controller/saveActualPDQuestions';
 $route['getAnswersForPD'] = 'PD_Controller/getAnswersForPD'; 
 $route['checkOTP'] = 'PD_Controller/checkOTP'; 
 
+//Dashboard and Reports Related routes
+$route['getDashBoardMaster'] = 'Dash_Board_Controller/getDetailsOfPDTypeAndPDStatusWithDayWeekMonth'; 
+
 

@@ -178,7 +178,7 @@ class Template_Management_Controller extends REST_Controller {
 	public function saveTemplateQuestionAnswers_post()
 	{
 		$question_count = 0;
-		
+		$count = 0;
 		$template_question_answers_details = $this->post('records');
 		//print_r($template_question_answers_details);
 		foreach($template_question_answers_details as $key => $template_question_answers_detail)
