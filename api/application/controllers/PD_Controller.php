@@ -851,16 +851,6 @@ class PD_Controller extends REST_Controller {
 	public function getListPDOfficers_post()
 	{
 		
-												// $this->db->SELECT('USERPROFILE.userid,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role');
-												// $this->db->FROM(USERPROFILE.' as USERPROFILE');
-												// $this->db->JOIN(USERPROFILEROLES.' as USERPROFILEROLES','USERPROFILE.userid = USERPROFILEROLES.fk_userid');
-												// $this->db->JOIN(ROLES.' as ROLES','USERPROFILEROLES.user_role = ROLES.role_name');
-												
-												// $names = $this->db->GET()->result_array();
-												// print_r($this->db->last_query());
-												// print_r($names);
-											
-		// die();
 		$pdid = $this->post('pdid');
 		//1.Get LenderID and CityID  by using pdid
 		$fields = array('fk_lender_id','fk_city','fk_pd_type','fk_product_id','fk_customer_segment');
@@ -929,20 +919,32 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['profile_url'] = $singed_uri;
 												}
 											}
-											
-											// if($res_array['fk_pd_type'] == 2 || $res_array['fk_pd_type'] == 3)
-											// {
-												// $this->db->SELECT('USERPROFILE.userid,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role');
-												// $this->db->FROM(USERPROFILE.' as USERPROFILE');
-												// $this->db->JOIN(USERPROFILEROLES.' as USERPROFILEROLES','USERPROFILE.userid = USERPROFILEROLES.fk_pdid');
-												// $this->db->JOIN(ROLES.' as ROLES','USERPROFILEROLES.user_role = ROLES.role_name');
-												// $this->db->WHERE('USERPROFILE.userid',$pdofficer['fk_user_id']);
-												// $names = $this->db->GET()->result_array();
-											// }
+											// Get Central PD Officers List
+											$central_pd_officers = array();
+											if($res_array[0]['fk_pd_type'] == 2 || $res_array[0]['fk_pd_type'] == 3)
+											{
+												$this->db->SELECT('USERPROFILE.userid,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role,ROLES.role_name');
+												$this->db->FROM(USERPROFILE.' as USERPROFILE');
+												$this->db->JOIN(USERPROFILEROLES.' as USERPROFILEROLES','USERPROFILE.userid = USERPROFILEROLES.fk_userid');
+												$this->db->JOIN(ROLES.' as ROLES','USERPROFILEROLES.user_role = ROLES.role_id');
+												$this->db->WHERE('ROLES.role_id',2);
+												$central_pd_officers = $this->db->GET()->result_array();
+												
+											if(count($central_pd_officers))
+												{
+														foreach($central_pd_officers as $k => $central_pd_officer)
+														{
+															$bucket_name = PROFILE_PICTURE_BUCKET_NAME;
+															$profilepics3path = 'sineedge/'.$central_pd_officer['profilepic'];
+															$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+10 minutes');
+															$central_pd_officers[$k]['profile_url'] = $singed_uri;
+														}
+												}
+											}
 											
 											$data['dataStatus'] = true;
 											$data['status'] = REST_Controller::HTTP_OK;
-											$data['records'] = $list_of_pd_officers;
+											$data['records'] = array('pdofficers' => $list_of_pd_officers,'centralpdofficers' => $central_pd_officers);
 											$this->response($data,REST_Controller::HTTP_OK);
 										}
 										else
@@ -1015,9 +1017,31 @@ class PD_Controller extends REST_Controller {
 												}
 											}
 											
+											// Get Central PD Officers List
+											$central_pd_officers = array();
+											if($res_array[0]['fk_pd_type'] == 2 || $res_array[0]['fk_pd_type'] == 3)
+											{
+												$this->db->SELECT('USERPROFILE.userid,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role,ROLES.role_name');
+												$this->db->FROM(USERPROFILE.' as USERPROFILE');
+												$this->db->JOIN(USERPROFILEROLES.' as USERPROFILEROLES','USERPROFILE.userid = USERPROFILEROLES.fk_userid');
+												$this->db->JOIN(ROLES.' as ROLES','USERPROFILEROLES.user_role = ROLES.role_id');
+												$this->db->WHERE('ROLES.role_id',2);
+												$central_pd_officers = $this->db->GET()->result_array();
+												
+											if(count($central_pd_officers))
+												{
+														foreach($central_pd_officers as $k => $central_pd_officer)
+														{
+															$bucket_name = PROFILE_PICTURE_BUCKET_NAME;
+															$profilepics3path = 'sineedge/'.$central_pd_officer['profilepic'];
+															$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+10 minutes');
+															$central_pd_officers[$k]['profile_url'] = $singed_uri;
+														}
+												}
+											}
 											$data['dataStatus'] = true;
 											$data['status'] = REST_Controller::HTTP_OK;
-											$data['records'] = $list_of_pd_officers;
+											$data['records'] = array('pdofficers' => $list_of_pd_officers,'centralpdofficers' => $central_pd_officers);
 											$this->response($data,REST_Controller::HTTP_OK);
 										}
 										else
