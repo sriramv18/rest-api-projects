@@ -21,7 +21,7 @@ class Dash_Board_Controller extends REST_Controller {
 		   
     }
 	
-	public function getDetailsOfPDTypeAndPDStatusWithDayWeekMonth_get()
+	public function getDashBoardDetailsOfPDTypeAndPDStatusWithDayWeekMonth_get()
 	{
 		$res = $this->Dash_Board_Model->getDetailsOfPDTypeAndPDStatusWithDayWeekMonth();
 						
@@ -31,9 +31,19 @@ class Dash_Board_Controller extends REST_Controller {
 		$this->response($data,REST_Controller::HTTP_OK);
 	}
 	
-	public function getDetailsOfLenderAndCitywise_get()
+	public function getDashBoardDetailsOfLenderAndCitywise_get()
 	{
 		$res = $this->Dash_Board_Model->getDetailsOfLenderAndCitywise();
+						
+		$data['dataStatus'] = true;
+		$data['status'] = REST_Controller::HTTP_OK;
+		$data['records'] = $res;
+		$this->response($data,REST_Controller::HTTP_OK);
+	}
+	
+	public function getDashBoardDetailsOfCitywise_get()
+	{
+		$res = $this->Dash_Board_Model->getDashBoardDetailsOfCitywise();
 						
 		$data['dataStatus'] = true;
 		$data['status'] = REST_Controller::HTTP_OK;

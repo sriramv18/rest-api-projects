@@ -151,6 +151,8 @@ $route['getAnswersForPD'] = 'PD_Controller/getAnswersForPD';
 $route['checkOTP'] = 'PD_Controller/checkOTP'; 
 
 //Dashboard and Reports Related routes
-$route['getDashBoardMaster'] = 'Dash_Board_Controller/getDetailsOfPDTypeAndPDStatusWithDayWeekMonth'; 
+$route['getDashBoardMaster'] = 'Dash_Board_Controller/getDashBoardDetailsOfPDTypeAndPDStatusWithDayWeekMonth'; 
+$route['getDashBoardLenderCity'] = 'Dash_Board_Controller/getDashBoardDetailsOfLenderAndCitywise'; 
+$route['getDashBoardDetailsOfCity'] = 'Dash_Board_Controller/getDashBoardDetailsOfCitywise'; 
 
 
