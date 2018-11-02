@@ -247,85 +247,129 @@ class PD_Model extends SPARQ_Model {
 					switch($field_name){
 						case 'fk_entity_billing_id':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_billing_name'].'" to "'.$log['new_billing_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_billing_name'].'" to "'.$log['new_billing_name'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						case 'fk_lender_id':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_entity_name'].'" to "'.$log['new_entity_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_entity_name'].'" to "'.$log['new_entity_name'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						case 'fk_product_id':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_product'].'" to "'.$log['new_product'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_product'].'" to "'.$log['new_product'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						case 'fk_subproduct_id':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_sub_product'].'" to "'.$log['new_sub_product'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_sub_product'].'" to "'.$log['new_sub_product'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						case 'fk_pd_type':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_type_name'].'" to "'.$log['new_type_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_type_name'].'" to "'.$log['new_type_name'].'"';
 							$actual_logs[]  = $log_string;
 							
 						break;
 						case 'fk_pd_allocated_to':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_allocated_to'].'" to "'.$log['new_allocated_to'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_allocated_to'].'" to "'.$log['new_allocated_to'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						case 'fk_pd_template_id':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_template_name'].'" to "'.$log['new_template_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_template_name'].'" to "'.$log['new_template_name'].'"';
 							$actual_logs[]  = $log_string;
 							
 						break;
 						case 'fk_customer_segment':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_cs_name'].'" to "'.$log['new_cs_name'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_cs_name'].'" to "'.$log['new_cs_name'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						case 'pd_agency_id':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_agencyname'].'" to "'.$log['new_agencyname'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_agencyname'].'" to "'.$log['new_agencyname'].'"';
 							$actual_logs[]  = $log_string;
 							
 						break;
 						case 'fk_city':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_city'].'" to "'.$log['new_city'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$logs[$log_key]['log']  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_city'].'" to "'.$log['new_city'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						case 'fk_state':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_state'].'" to "'.$log['new_state'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_state'].'" to "'.$log['new_state'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						case 'fk_pd_allocation_type':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_state'].'" to "'.$log['new_state'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_state'].'" to "'.$log['new_state'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						case 'executive_id':
 							
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_allocation_type'].'" to "'.$log['new_allocation_type'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_allocation_type'].'" to "'.$log['new_allocation_type'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 							
 						break;
 						default:
-							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_value'].'" to "'.$log['new_value'].'" by "'.$log['createdby'].'" on "'.$log['createdon'].'"';
-							$actual_logs[]  = $log_string;
+							$log_string = $arrayForText[$log['field_name']].' Changed From "'.$log['old_value'].'" to "'.$log['new_value'].'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
 						
 					}
 				}
