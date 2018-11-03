@@ -458,9 +458,7 @@ class PD_Model extends SPARQ_Model {
 			//print_r( $categories);
 		if(count($categories))
 		{
-				/*
-				DATE_FORMAT(TEMPLATEQUESTION.createdon,"%d/%m/%Y") as createdon, TEMPLATEQUESTION.fk_createdby,  DATE_FORMAT(TEMPLATEQUESTION.updatedon,"%d/%m/%Y") as updatedon, TEMPLATEQUESTION.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby
-				*/
+				
 			  foreach($categories as $category_key => $category)
 			  {
 				 
@@ -474,6 +472,7 @@ class PD_Model extends SPARQ_Model {
 				// $this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATEQUESTION.fk_updatedby = USERPROFILE1.userid','LEFT');
 				$this->db->WHERE('TEMPLATEQUESTION.fk_template_question_category_id',$category['fk_question_category_id']);
 				$this->db->WHERE('TEMPLATEQUESTION.fk_template_id', $template_id);
+				$this->db->ORDER_BY('QUESTIONS.question_id');
 				//$this->db->WHERE('TEMPLATEQUESTION.fk_template_id',$template_id);
 				
 				$questions = $this->db->GET()->result_array();

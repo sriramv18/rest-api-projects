@@ -85,8 +85,19 @@ class Template_Management_Model extends SPARQ_Model {
 			//  $this->db->JOIN(USERPROFILE.' as USERPROFILE','TEMPLATECATEGORYWEIGHTAGE.fk_createdby = USERPROFILE.userid','LEFT');
 			  //$this->db->JOIN(USERPROFILE.' as USERPROFILE1','TEMPLATECATEGORYWEIGHTAGE.fk_updatedby = USERPROFILE1.userid','LEFT');
 			 $this->db->WHERE('TEMPLATECATEGORYWEIGHTAGE.fk_template_id',$template_id);
-			  $data = $this->db->GET()->result_array();	
-			  return $data;   
+			  $categories = $this->db->GET()->result_array();	
+			  if(count($categories))
+			  {
+				  foreach($categories as $ckey => $category)
+				  {
+					 $this->db->SELECT('template_group_id,fk_question_group_id'); 
+					 $this->db->FROM(TEMPLATEGROUP); 
+					 $this->db->WHERE(TEMPLATEGROUP.'.fk_template_category_weightage_id',$category['template_category_weightage_id']); 
+					 $groups = $this->db->GET()->result_array(); 
+					 $categories[$ckey]['groups'] = $groups;
+				  }
+			  }
+			  return $categories;   
    }
    
    
@@ -148,13 +159,13 @@ class Template_Management_Model extends SPARQ_Model {
    }
    
    
-   public function getListOfQuestions($template_id,$category_id)
+   public function getListOfQuestions($template_id,$category_id,$group_id)
    {
 	   $questions = array();
 	  if(($template_id != "" || $template_id != null) && ($category_id != "" || $category_id != null))  
 	  {
 		$fields  = array('fk_question_id');
-		$where_condition_array = array('fk_template_question_category_id' => $category_id,'fk_template_id' => $template_id);
+		$where_condition_array = array('fk_template_question_category_id' => $category_id,'fk_template_id' => $template_id,'fk_question_group_id'=>$group_id);
 		$result_data = $this->selectCustomRecords($fields,$where_condition_array,TEMPLATEQUESTION);
 
 		if(count($result_data))
@@ -169,6 +180,7 @@ class Template_Management_Model extends SPARQ_Model {
 				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question');
 				$this->db->FROM(QUESTIONS.' as QUESTIONS');
 				$this->db->WHERE('QUESTIONS.fk_question_category',$category_id);
+				$this->db->WHERE('QUESTIONS.fk_question_group_id',$group_id);
 				$this->db->WHERE('QUESTIONS.isactive',1);
 				$this->db->WHERE_NOT_IN('QUESTIONS.question_id',$temp_array);
 				$questions = $this->db->GET()->result_array();
@@ -179,9 +191,10 @@ class Template_Management_Model extends SPARQ_Model {
 						
 						foreach($questions as $answer_key => $question)
 						{
-						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer');
+						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,QUESTIONANSWERS.fk_question_group_id');
 						  $this->db->FROM(QUESTIONANSWERS.' as QUESTIONANSWERS');
 						  $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
+						  $this->db->WHERE('QUESTIONANSWERS.isactive',1);
 						  $answers = $this->db->GET()->result_array();
 						  
 						  // Attach TEMPLATEANSWERWEIGHTAGE table keys for front purpose
@@ -208,6 +221,7 @@ class Template_Management_Model extends SPARQ_Model {
 				$this->db->SELECT('QUESTIONS.question_id,QUESTIONS.question');
 				$this->db->FROM(QUESTIONS.' as QUESTIONS');
 				$this->db->WHERE('QUESTIONS.fk_question_category',$category_id);
+				$this->db->WHERE('QUESTIONS.fk_question_group_id',$group_id);
 				$this->db->WHERE('QUESTIONS.isactive',1);
 				$questions = $this->db->GET()->result_array();
 				
@@ -218,7 +232,7 @@ class Template_Management_Model extends SPARQ_Model {
 						
 						foreach($questions as $answer_key => $question)
 						{
-						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer');
+						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,QUESTIONANSWERS.fk_question_group_id');
 						  $this->db->FROM(QUESTIONANSWERS.' as QUESTIONANSWERS');
 						  $this->db->WHERE('QUESTIONANSWERS.fk_question_id',$question['question_id']);
 						  $answers = $this->db->GET()->result_array();
@@ -251,6 +265,20 @@ class Template_Management_Model extends SPARQ_Model {
 	  }
 	 
 		return $questions;
+   }
+   
+   
+   public function getCategoryGroupCombinations($question_category_id)
+   {
+	   $this->db->DISTINCT();
+	   $this->db->SELECT('QUESTIONGROUP.question_group_id,QUESTIONGROUP.group_name');
+	   $this->db->FROM(QUESTIONS.' as QUESTIONS');
+	   $this->db->JOIN(QUESTIONGROUP.' as QUESTIONGROUP','QUESTIONS.fk_question_group_id = QUESTIONGROUP.question_group_id');
+	   $this->db->WHERE('QUESTIONS.fk_question_category',$question_category_id);
+	   $groups = $this->db->GET()->result_array();
+	   
+	   return $groups;
+	   
    }
 
 }

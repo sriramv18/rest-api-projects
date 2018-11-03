@@ -14,7 +14,7 @@ class Question_Management_Model extends SPARQ_Model {
    {
 	  
 	   	
-	   $this->db->SELECT('QUESTIONS.question_id,QUESTIONGROUP.question_group_id,QUESTIONGROUP.group_name, QUESTIONS.question, QUESTIONS.description, QUESTIONS.fk_question_category,QUESTIONCATEGORY.category_name, QUESTIONS.fk_question_answertype,QUESTIONANSWERTYPE.answer_type_name,QUESTIONS.isactive, QUESTIONS.createdon, QUESTIONS.fk_createdby, QUESTIONS.updatedon, QUESTIONS.fk_updatedby,concat(USERPROFILE.first_name," " ,USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby');
+	   $this->db->SELECT('QUESTIONS.question_id,QUESTIONS.fk_question_group_id,QUESTIONGROUP.group_name, QUESTIONS.question, QUESTIONS.description, QUESTIONS.fk_question_category,QUESTIONCATEGORY.category_name, QUESTIONS.fk_question_answertype,QUESTIONANSWERTYPE.answer_type_name,QUESTIONS.isactive, QUESTIONS.createdon, QUESTIONS.fk_createdby, QUESTIONS.updatedon, QUESTIONS.fk_updatedby,concat(USERPROFILE.first_name," " ,USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby');
 	   $this->db->FROM(QUESTIONS.' as QUESTIONS');
 	   $this->db->JOIN(QUESTIONANSWERTYPE.' as QUESTIONANSWERTYPE','QUESTIONS.fk_question_answertype = QUESTIONANSWERTYPE.question_answer_type_id');
 	   $this->db->JOIN(QUESTIONCATEGORY.' as QUESTIONCATEGORY','QUESTIONS.fk_question_category = QUESTIONCATEGORY.question_category_id');
@@ -32,7 +32,7 @@ class Question_Management_Model extends SPARQ_Model {
 	  
 	   foreach($result as $key => $r)
 	   {
-		   $this->db->SELECT('QUESTIONANSWERS.question_answer_id, QUESTIONANSWERS.fk_question_id, QUESTIONANSWERS.answer, QUESTIONANSWERS.createdon, QUESTIONANSWERS.fk_createdby, QUESTIONANSWERS.updatedon, QUESTIONANSWERS.fk_updatedby, QUESTIONANSWERS.isactive');
+		   $this->db->SELECT('QUESTIONANSWERS.question_answer_id, QUESTIONANSWERS.fk_question_id, QUESTIONANSWERS.fk_question_group_id,QUESTIONANSWERS.answer, QUESTIONANSWERS.createdon, QUESTIONANSWERS.fk_createdby, QUESTIONANSWERS.updatedon, QUESTIONANSWERS.fk_updatedby, QUESTIONANSWERS.isactive');
 		   $this->db->FROM(QUESTIONANSWERS.' as QUESTIONANSWERS');
 		   $this->db->JOIN(QUESTIONS.' as QUESTIONS','QUESTIONANSWERS.fk_question_id = QUESTIONS.question_id');
 		   $this->db->JOIN(USERPROFILE.' as USERPROFILE','QUESTIONANSWERS.fk_createdby = USERPROFILE.userid ');

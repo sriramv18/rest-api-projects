@@ -144,15 +144,41 @@ class Template_Management_Controller extends REST_Controller {
 		{
 			if($template_category_detail['template_category_weightage_id'] != null || $template_category_detail['template_category_weightage_id'] != "")
 			{
+				$groups = $template_category_detail['groups'];
+				unset($template_category_detail['groups']);
+				
 				$where_condition_array = array('template_category_weightage_id'=>$template_category_detail['template_category_weightage_id']);
 				$modified = $this->Template_Management_Model->updateRecords($template_category_detail,TEMPLATECATEGORYWEIGHTAGE,$where_condition_array);
 				if($modified != "" || $modified != null){ $count++; } 
+				
+				//Groups insert/update
+				foreach($groups as $group_key => $group)
+				{
+					if($group['template_group_id'] != null || $group['template_group_id'] != "")
+					{
+						$where_condition_array = array('template_group_id'=>$group['template_group_id']);
+						$modified = $this->Template_Management_Model->updateRecords($group,TEMPLATEGROUP,$where_condition_array);
+					}
+					else
+					{
+						$template_group_id = $this->Template_Management_Model->saveRecords($group,TEMPLATEGROUP);
+					}
+				}
 			}
+			//Insert Categories
 			else
 			{
-					unset($template_category_detail['template_category_weightage_id']);
+					$groups = $template_category_detail['groups'];
+					unset($template_category_detail['groups']);
 					$id = $this->Template_Management_Model->saveRecords($template_category_detail,TEMPLATECATEGORYWEIGHTAGE);
 					if($id != "" || $id != null){ $count++; }
+					//Groups insert
+						foreach($groups as $group_key => $group)
+						{
+							
+						 $template_group_id = $this->Template_Management_Model->saveRecords($group,TEMPLATEGROUP);
+							
+						}
 			}
 		}
 		
@@ -395,5 +421,36 @@ class Template_Management_Controller extends REST_Controller {
 						$this->response($data,REST_Controller::HTTP_OK);
 			
 		}
+	}
+	
+	//Get Categories and questions group compinations
+	public function getCategoryGroupCombinations_get()
+	{
+		$fields = array('question_category_id','category_name');
+		$where_condition_array = array('isactive' => 1);
+		$result_data = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,QUESTIONCATEGORY);
+		
+		if(count($result_data))
+		{
+			foreach($result_data as $key => $result)
+			{
+				$groups = $this->Template_Management_Model->getCategoryGroupCombinations($result['question_category_id']);
+				$result_data[$key]['gropus'] = $groups;
+			}
+			
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $result_data;
+						$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$data['msg'] = "No Categories Found!";
+						$this->response($data,REST_Controller::HTTP_OK);
+		}
+		
+		
 	}
 }
