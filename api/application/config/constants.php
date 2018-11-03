@@ -321,5 +321,8 @@ defined('PDANSWERID') OR define('PDANSWERID','pd_detail_answer_id');
 defined('COMMONMASTER') OR define('COMMONMASTER','h_common_masters');
 defined('COMMONMASTERID') OR define('COMMONMASTERID','log_id');
 
+defined('QUESTIONGROUP') OR define('QUESTIONGROUP','m_question_group');
+defined('QUESTIONGROUPID') OR define('QUESTIONGROUPID','question_group_id');
+
 
 
