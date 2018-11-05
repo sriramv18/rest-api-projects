@@ -1492,52 +1492,63 @@ class PD_Controller extends REST_Controller {
 		$result_array = $this->PD_Model->getPDFormDetails($pd_id,$pd_form_id);
 		$final_data = array();
 		
-		// if($pd_form_id == 1)
-		// {
+		
 			//print_r($result_array);
 			
 			
-			$group = array();
-			$pre_iter = 1;
+			$overall = array();
+			$pre_group = "";
+			$pre_iter = "";
 			$t1 = array();
 			$t2 = array();
+			$group = array();	
 			foreach($result_array as $rkey => $result)
 			{
+			  
 			  if($result['iteration'] != "" || $result['iteration'] != null)
 			  {
-				  if($result['iteration'] == $pre_iter)
+				  
+				  if($result['iter_column_name'] != $pre_group && $result['iter_column_name'] != $pre_iter)
 				  {
 					
-					 
-					  $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
-					  $group[$result['iter_column_name']][$result['iteration']] = $t1;
-					  $pre_iter = $result['iteration'];
+						$t1 = array();
+						$t2 = array();
+						$group = array();
+					// echo "New-".$result['iter_column_name'];
+						// print_r(array($result['column_name']=>$result['column_value']));
+					   $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
+					   $group[$result['iter_column_name']][$result['iteration']] = $t1;
+					   $pre_group = $result['iter_column_name'];
+					   $pre_iter = $result['iteration'];
 				  }
 				  else
 				  {
-					   
-						 $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
-						 $group[$result['iter_column_name']][$result['iteration']] = $t2;
-						 $pre_iter = $result['iteration'];
-				  }
+					 
+					 // echo "old-".$result['iter_column_name'];
+						// print_r(array($result['column_name']=>$result['column_value']));
+						 $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
+						 $group[$result['iter_column_name']][$result['iteration']] = $t1;
+						  $pre_group = $result['iter_column_name'];
+						  $pre_iter = $result['iteration'];
+				   }
 			  }
 			  else
 			  {
+				  
 				$t = array($result['column_name']=>$result['column_value']);
-				//$final_data[] = $t;  
 				$final_data = array_merge($final_data,$t);
 			  }
 			  
+			  
+
 			  $final_data = array_merge($final_data,$group);
 			}
 			
-			//$final_data[] = $group;
-			
-			
+			//$final_data = array_merge($final_data,$group);
 			$result_array = $final_data;
 			
 			
-		//}
+	
 		
 		if($result_array)
 		{
@@ -1614,6 +1625,11 @@ class PD_Controller extends REST_Controller {
 		   //**************** End of handle supplier form details logic***************//
 			
 		}
+		
+							$data['dataStatus'] = true;
+							$data['status'] = REST_Controller::HTTP_OK;
+							//$data['records'] = $result_array;
+							$this->response($data,REST_Controller::HTTP_OK);
 		
 	}
 	

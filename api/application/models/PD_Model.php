@@ -735,15 +735,17 @@ class PD_Model extends SPARQ_Model {
 	
       public function getPDFormDetails($pd_id,$pd_form_id)
 	  {
+		  //echo $pd_id.'-'.$pd_form_id;
 		  $this->db->SELECT('PDFORMDETAILS.iter_column_name,PDFORMDETAILS.iteration, PDFORMDETAILS.column_name, PDFORMDETAILS.column_id, PDFORMDETAILS.column_value, PDFORMDETAILS.createdon, PDFORMDETAILS.fk_createdby,USERPROFILE.first_name,USERPROFILE.last_name');
 		  $this->db->FROM(PDFORMDETAILS.' as PDFORMDETAILS');
-		  $this->db->JOIN(USERPROFILE.' as USERPROFILE','PDFORMDETAILS.fk_createdby = USERPROFILE.userid');
+		  $this->db->JOIN(USERPROFILE.' as USERPROFILE','PDFORMDETAILS.fk_createdby = USERPROFILE.userid','LEFT');
 		  $this->db->WHERE('PDFORMDETAILS.fk_pd_id',$pd_id);
 		  $this->db->WHERE('PDFORMDETAILS.fk_form_id',$pd_form_id);
 		  $this->db->WHERE('PDFORMDETAILS.isactive',1);
 		  //$this->db->ORDER_BY('PDFORMDETAILS.iteration');
 		  $form_details = $this->db->GET()->result_array();
-		  
+		  //print_r($this->db->last_query());
+		  //print_r($form_details);die();
 		  return $form_details;
 		  
 		  
