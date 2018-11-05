@@ -1499,30 +1499,41 @@ class PD_Controller extends REST_Controller {
 			
 			$group = array();
 			$pre_iter = 1;
+			$t1 = array();
+			$t2 = array();
 			foreach($result_array as $rkey => $result)
 			{
 			  if($result['iteration'] != "" || $result['iteration'] != null)
 			  {
 				  if($result['iteration'] == $pre_iter)
 				  {
-					  $group[$result['iteration']][] = $result;
+					
+					 
+					  $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
+					  $group[$result['iter_column_name']][$result['iteration']] = $t1;
 					  $pre_iter = $result['iteration'];
 				  }
 				  else
 				  {
-					   $group[$result['iteration']][] = $result;
-					   $pre_iter = $result['iteration'];
+					   
+						 $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
+						 $group[$result['iter_column_name']][$result['iteration']] = $t2;
+						 $pre_iter = $result['iteration'];
 				  }
 			  }
 			  else
 			  {
-				$final_data[] = $result;  
+				$t = array($result['column_name']=>$result['column_value']);
+				//$final_data[] = $t;  
+				$final_data = array_merge($final_data,$t);
 			  }
 			  
-			  
+			  $final_data = array_merge($final_data,$group);
 			}
-			$final_data[] = $group;
-			//print_r($final_data);
+			
+			//$final_data[] = $group;
+			
+			
 			$result_array = $final_data;
 			
 			
@@ -1555,6 +1566,12 @@ class PD_Controller extends REST_Controller {
 		$pd_form_id = $records['formid'];
 		$fk_createdby = $records['fk_createdby'];
 		$i = 0;
+		
+		//Deactivate Old rec
+			$where_condition_array = array('fk_pd_id' => $pd_id,"fk_form_id"=>$pd_form_id);
+			$array = array('isactive'=>0);
+			$pd_id_modified = $this->PD_Model->updateRecords($array,PDFORMDETAILS,$where_condition_array);
+			
 		foreach($records as $rec_key => $record)
 		{
 			$i++;
@@ -1562,7 +1579,7 @@ class PD_Controller extends REST_Controller {
 			//****************handle supplier form details logic***************//
 			// if($pd_form_id == 1)
 			// {
-				if($i != 1 && $i != 2 && $i != 3)
+				if($rec_key !='pdid' && $rec_key != 'formid' && $rec_key != 'fk_createdby')
 				{
 					//echo $rec_key;print_r($record);echo "\n\n\n";
 					if(!is_array($record))//sine key and value pair
@@ -1582,7 +1599,7 @@ class PD_Controller extends REST_Controller {
 								if($r != "" && $r != null)
 								{
 									
-									$temp_array = array('fk_pd_id'=>$pd_id,'fk_form_id'=>$pd_form_id,'column_name'=>$rkey,'column_value'=>$r,'fk_createdby'=>$fk_createdby,'iteration'=>$iter);
+									$temp_array = array('fk_pd_id'=>$pd_id,'fk_form_id'=>$pd_form_id,'iter_column_name'=>$rec_key,'column_name'=>$rkey,'column_value'=>$r,'fk_createdby'=>$fk_createdby,'iteration'=>$iter);
 									$id = $this->PD_Model->saveRecords($temp_array,PDFORMDETAILS);
 								}
 								
