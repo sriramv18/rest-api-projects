@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getTemplateCategories'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getPDFormDetails'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -326,6 +326,12 @@ defined('QUESTIONGROUPID') OR define('QUESTIONGROUPID','question_group_id');
 
 defined('TEMPLATEGROUP') OR define('TEMPLATEGROUP','m_template_group');
 defined('TEMPLATEGROUPID') OR define('TEMPLATEGROUPID','template_group_id');
+
+defined('PDFORMS') OR define('PDFORMS','m_pd_forms');
+defined('PDFORMSID') OR define('PDFORMSID','pd_form_id');
+
+defined('PDFORMDETAILS') OR define('PDFORMDETAILS','t_pd_form_details');
+defined('PDFORMDETAILSID') OR define('PDFORMDETAILSID','pd_form_detail_id');
 
 
 

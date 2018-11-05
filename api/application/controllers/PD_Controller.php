@@ -1484,5 +1484,121 @@ class PD_Controller extends REST_Controller {
 	}
 	
 	
+	/********* Get Form Informations @param pd_id and pd_form_id ******/
+	public function getPDFormDetails_post()
+	{
+		$pd_id = $this->post('pd_id');
+		$pd_form_id = $this->post('pd_form_id');
+		$result_array = $this->PD_Model->getPDFormDetails($pd_id,$pd_form_id);
+		$final_data = array();
+		
+		// if($pd_form_id == 1)
+		// {
+			//print_r($result_array);
+			
+			
+			$group = array();
+			$pre_iter = 1;
+			foreach($result_array as $rkey => $result)
+			{
+			  if($result['iteration'] != "" || $result['iteration'] != null)
+			  {
+				  if($result['iteration'] == $pre_iter)
+				  {
+					  $group[$result['iteration']][] = $result;
+					  $pre_iter = $result['iteration'];
+				  }
+				  else
+				  {
+					   $group[$result['iteration']][] = $result;
+					   $pre_iter = $result['iteration'];
+				  }
+			  }
+			  else
+			  {
+				$final_data[] = $result;  
+			  }
+			  
+			  
+			}
+			$final_data[] = $group;
+			//print_r($final_data);
+			$result_array = $final_data;
+			
+			
+		//}
+		
+		if($result_array)
+		{
+							$data['dataStatus'] = true;
+							$data['status'] = REST_Controller::HTTP_OK;
+							$data['records'] = $result_array;
+							$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+							$data['dataStatus'] = false;
+							$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+							$data['msg'] = "Details Not Available!";
+							$this->response($data,REST_Controller::HTTP_OK);
+		}
+		
+	}
+	
+	
+	/********* Get Form Informations @param pd_id and pd_form_id ******/
+	public function savePDFormDetails_post()
+	{
+		$records = $this->post('records');
+		
+		$pd_id = $records['pdid'];
+		$pd_form_id = $records['formid'];
+		$fk_createdby = $records['fk_createdby'];
+		$i = 0;
+		foreach($records as $rec_key => $record)
+		{
+			$i++;
+			
+			//****************handle supplier form details logic***************//
+			// if($pd_form_id == 1)
+			// {
+				if($i != 1 && $i != 2 && $i != 3)
+				{
+					//echo $rec_key;print_r($record);echo "\n\n\n";
+					if(!is_array($record))//sine key and value pair
+					{
+						$temp_array = array('fk_pd_id'=>$pd_id,'fk_form_id'=>$pd_form_id,'column_name'=>$rec_key,'column_value'=>$record,'fk_createdby'=>$fk_createdby);
+						$id = $this->PD_Model->saveRecords($temp_array,PDFORMDETAILS);
+					}
+					else // array of key value pairs
+					{
+						$iter=0;
+						foreach($record as $mkey => $rec)
+						{
+							$iter++;
+							foreach($rec as $rkey => $r)
+							{
+								$temp_array = array('');
+								if($r != "" && $r != null)
+								{
+									
+									$temp_array = array('fk_pd_id'=>$pd_id,'fk_form_id'=>$pd_form_id,'column_name'=>$rkey,'column_value'=>$r,'fk_createdby'=>$fk_createdby,'iteration'=>$iter);
+									$id = $this->PD_Model->saveRecords($temp_array,PDFORMDETAILS);
+								}
+								
+							}
+							
+							
+							
+						}
+					}// end of array of key value pairs
+				}
+			//}
+		   //**************** End of handle supplier form details logic***************//
+			
+		}
+		
+	}
+	
 	
 }

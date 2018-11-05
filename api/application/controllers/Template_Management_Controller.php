@@ -406,7 +406,7 @@ class Template_Management_Controller extends REST_Controller {
 		if($this->post('template_id')){ $template_id = $this->post('template_id'); }
 		if($this->post('category_id')){ $category_id = $this->post('category_id'); }
 		
-		$questions = $this->Template_Management_Model->getListOfQuestions($template_id,$category_id);
+		$questions = $this->Template_Management_Model->getListOfQuestions($template_id,$category_id,$group_id);
 		if(count($questions))
 		{
 						$data['dataStatus'] = true;

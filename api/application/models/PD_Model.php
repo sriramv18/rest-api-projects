@@ -733,5 +733,18 @@ class PD_Model extends SPARQ_Model {
 			// return $categories;
 	}
 	
-	
+      public function getPDFormDetails($pd_id,$pd_form_id)
+	  {
+		  $this->db->SELECT('PDFORMDETAILS.iteration, PDFORMDETAILS.column_name, PDFORMDETAILS.column_id, PDFORMDETAILS.column_value, PDFORMDETAILS.createdon, PDFORMDETAILS.fk_createdby,USERPROFILE.first_name,USERPROFILE.last_name');
+		  $this->db->FROM(PDFORMDETAILS.' as PDFORMDETAILS');
+		  $this->db->JOIN(USERPROFILE.' as USERPROFILE','PDFORMDETAILS.fk_createdby = USERPROFILE.userid');
+		  $this->db->WHERE('PDFORMDETAILS.fk_pd_id',$pd_id);
+		  $this->db->WHERE('PDFORMDETAILS.fk_form_id',$pd_form_id);
+		  $this->db->ORDER_BY('PDFORMDETAILS.iteration');
+		  $form_details = $this->db->GET()->result_array();
+		  
+		  return $form_details;
+		  
+		  
+	  }		  
 }
