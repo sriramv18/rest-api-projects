@@ -50,5 +50,15 @@ class Dash_Board_Controller extends REST_Controller {
 		$data['records'] = $res;
 		$this->response($data,REST_Controller::HTTP_OK);
 	}
+	public function getDashBoardDetailsOfAlert_get(){
+		
+		$res = $this->Dash_Board_Model->getDashBoardDetailsOfAlert();
+						
+		$data['dataStatus'] = true;
+		$data['status'] = REST_Controller::HTTP_OK;
+		$data['records'] = $res;
+		$this->response($data,REST_Controller::HTTP_OK);
+	
+	}
     
 }	

@@ -72,6 +72,25 @@ class Dash_Board_Model extends SPARQ_Model {
 				$result_data['current_month'] = $this->db->query($sql_query_current_month)->result_array();
 				return $result_data;
 		}
+
+		public function getDashBoardDetailsOfAlert(){
+
+			$this->db->select('PDTRIGGER.lender_applicant_id,
+							   PDTRIGGER.pd_status,
+							   PDTRIGGER.fk_lender_id,
+							   PDTRIGGER.pd_id,
+							   ENTITY.full_name as entity_name,
+							   COAPPLICANTSDETAILS.applicant_name as applicant_name');
+			$this->db->from('t_pd_triggered PDTRIGGER');
+			$this->db->join('m_entity ENTITY', 'PDTRIGGER.fk_lender_id = ENTITY.entity_id','left');
+			$this->db->join('t_pd_co_applicants_details COAPPLICANTSDETAILS', 'PDTRIGGER.pd_id = COAPPLICANTSDETAILS.fk_pd_id and COAPPLICANTSDETAILS.applicant_type = 1','left');
+			$this->db->where('PDTRIGGER.pd_status = "TRIGGERED"');
+			$this->db->or_where('PDTRIGGER.pd_status = "ALLOCATED"');
+
+			$query = $this->db->get();
+			
+			return $query->result();
+	    }
 		
 			
 }
