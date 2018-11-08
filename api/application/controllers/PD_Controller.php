@@ -1512,12 +1512,12 @@ class PD_Controller extends REST_Controller {
 			  {
 				  if($result['iter_sub_column_name'] == "" || $result['iter_sub_column_name'] == null)
 				  {  
-					  if($result['iter_column_name'] != $pre_group && $result['iteration'] != $pre_iter)
+					  if($result['iter_column_name'] != $pre_group)// && $result['iteration'] != $pre_iter)
 					  {
 						
 							$t1 = array();
 							$group = array();
-						// echo "New-".$result['iter_column_name'];
+						//echo "New-".$result['iter_column_name'];
 							// print_r(array($result['column_name']=>$result['column_value']));
 						   $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
 						   $group[$result['iter_column_name']][$result['iteration']] = $t1;
@@ -1571,7 +1571,7 @@ class PD_Controller extends REST_Controller {
 			  }
 			  
 			  
-					
+			  //print_r($group);		
 			  $final_data = array_merge($final_data,$group);
 			}
 			//print_r($sub_group);
@@ -1580,6 +1580,7 @@ class PD_Controller extends REST_Controller {
 			$i = 0;
 			if(count($sub_group))
 			{
+				
 				foreach($sub_group as $key => $value)
 				{
 					//echo $key;
