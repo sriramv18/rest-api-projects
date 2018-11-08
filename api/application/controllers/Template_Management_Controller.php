@@ -144,41 +144,41 @@ class Template_Management_Controller extends REST_Controller {
 		{
 			if($template_category_detail['template_category_weightage_id'] != null || $template_category_detail['template_category_weightage_id'] != "")
 			{
-				$groups = $template_category_detail['groups'];
-				unset($template_category_detail['groups']);
+				//$groups = $template_category_detail['groups'];
+				//unset($template_category_detail['groups']);
 				
 				$where_condition_array = array('template_category_weightage_id'=>$template_category_detail['template_category_weightage_id']);
 				$modified = $this->Template_Management_Model->updateRecords($template_category_detail,TEMPLATECATEGORYWEIGHTAGE,$where_condition_array);
 				if($modified != "" || $modified != null){ $count++; } 
 				
 				//Groups insert/update
-				foreach($groups as $group_key => $group)
-				{
-					if($group['template_group_id'] != null || $group['template_group_id'] != "")
-					{
-						$where_condition_array = array('template_group_id'=>$group['template_group_id']);
-						$modified = $this->Template_Management_Model->updateRecords($group,TEMPLATEGROUP,$where_condition_array);
-					}
-					else
-					{
-						$template_group_id = $this->Template_Management_Model->saveRecords($group,TEMPLATEGROUP);
-					}
-				}
+				// foreach($groups as $group_key => $group)
+				// {
+					// if($group['template_group_id'] != null || $group['template_group_id'] != "")
+					// {
+						// $where_condition_array = array('template_group_id'=>$group['template_group_id']);
+						// $modified = $this->Template_Management_Model->updateRecords($group,TEMPLATEGROUP,$where_condition_array);
+					// }
+					// else
+					// {
+						// $template_group_id = $this->Template_Management_Model->saveRecords($group,TEMPLATEGROUP);
+					// }
+				// }
 			}
 			//Insert Categories
 			else
 			{
-					$groups = $template_category_detail['groups'];
-					unset($template_category_detail['groups']);
+					// $groups = $template_category_detail['groups'];
+					// unset($template_category_detail['groups']);
 					$id = $this->Template_Management_Model->saveRecords($template_category_detail,TEMPLATECATEGORYWEIGHTAGE);
 					if($id != "" || $id != null){ $count++; }
 					//Groups insert
-						foreach($groups as $group_key => $group)
-						{
+						// foreach($groups as $group_key => $group)
+						// {
 							
-						 $template_group_id = $this->Template_Management_Model->saveRecords($group,TEMPLATEGROUP);
+						 // $template_group_id = $this->Template_Management_Model->saveRecords($group,TEMPLATEGROUP);
 							
-						}
+						// }
 			}
 		}
 		

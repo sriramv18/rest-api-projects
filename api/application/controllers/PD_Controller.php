@@ -1490,6 +1490,7 @@ class PD_Controller extends REST_Controller {
 		$pd_id = $this->post('pd_id');
 		$pd_form_id = $this->post('pd_form_id');
 		$result_array = $this->PD_Model->getPDFormDetails($pd_id,$pd_form_id);
+		
 		$final_data = array();
 		
 		
@@ -1498,39 +1499,69 @@ class PD_Controller extends REST_Controller {
 			
 			$overall = array();
 			$pre_group = "";
+			$pre_sub_group = "";
 			$pre_iter = "";
 			$t1 = array();
 			$t2 = array();
 			$group = array();	
+			$sub_group = array();	
 			foreach($result_array as $rkey => $result)
 			{
 			  
 			  if($result['iteration'] != "" || $result['iteration'] != null)
 			  {
-				  
-				  if($result['iter_column_name'] != $pre_group && $result['iter_column_name'] != $pre_iter)
-				  {
-					
-						$t1 = array();
-						$t2 = array();
-						$group = array();
-					// echo "New-".$result['iter_column_name'];
-						// print_r(array($result['column_name']=>$result['column_value']));
-					   $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
-					   $group[$result['iter_column_name']][$result['iteration']] = $t1;
-					   $pre_group = $result['iter_column_name'];
-					   $pre_iter = $result['iteration'];
-				  }
-				  else
-				  {
-					 
-					 // echo "old-".$result['iter_column_name'];
-						// print_r(array($result['column_name']=>$result['column_value']));
-						 $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
-						 $group[$result['iter_column_name']][$result['iteration']] = $t1;
-						  $pre_group = $result['iter_column_name'];
-						  $pre_iter = $result['iteration'];
-				   }
+				  if($result['iter_sub_column_name'] == "" || $result['iter_sub_column_name'] == null)
+				  {  
+					  if($result['iter_column_name'] != $pre_group && $result['iteration'] != $pre_iter)
+					  {
+						
+							$t1 = array();
+							$group = array();
+						// echo "New-".$result['iter_column_name'];
+							// print_r(array($result['column_name']=>$result['column_value']));
+						   $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
+						   $group[$result['iter_column_name']][$result['iteration']] = $t1;
+						   $pre_group = $result['iter_column_name'];
+						   $pre_iter = $result['iteration'];
+					  }
+					  else
+					  {
+						 
+						 // echo "old-".$result['iter_column_name'];
+							// print_r(array($result['column_name']=>$result['column_value']));
+							 $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
+							 $group[$result['iter_column_name']][$result['iteration']] = $t1;
+							  $pre_group = $result['iter_column_name'];
+							  $pre_iter = $result['iteration'];
+					   }
+				}
+				else// Handle child group
+				{
+					 if($result['iter_sub_column_name'] != $pre_group && $result['iteration'] != $pre_iter)
+					  {
+						
+							$t2 = array();
+							$sub_group = array();
+						// echo "New-".$result['iter_column_name'];
+							// print_r(array($result['column_name']=>$result['column_value']));
+						   $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
+						   $sub_group[$result['iter_sub_column_name']][$result['iteration']] = $t2;
+						   $pre_sub_group = $result['iter_sub_column_name'];
+						   $pre_iter = $result['iteration'];
+					  }
+					  else
+					  {
+						 
+						 // echo "old-".$result['iter_column_name'];
+							// print_r(array($result['column_name']=>$result['column_value']));
+							 $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
+							 $sub_group[$result['iter_sub_column_name']][$result['iteration']] = $t2;
+							  $pre_sub_group = $result['iter_sub_column_name'];
+							  $pre_iter = $result['iteration'];
+					   }
+					   
+					   
+				}
 			  }
 			  else
 			  {
@@ -1540,10 +1571,43 @@ class PD_Controller extends REST_Controller {
 			  }
 			  
 			  
-
+					
 			  $final_data = array_merge($final_data,$group);
 			}
+			//print_r($sub_group);
 			
+			// Merge subgroup into main group
+			$i = 0;
+			if(count($sub_group))
+			{
+				foreach($sub_group as $key => $value)
+				{
+					//echo $key;
+					//print_r($value);
+					foreach($value as $vkey =>$final_value)
+					{
+						//echo $vkey;
+					    // print_r($final_value);
+						$temp_array = array($key=>$final_value);
+						//print_r($temp_array);
+						
+						foreach($final_data as $fkey => $fdata)
+						{
+							
+							$i++;
+							//echo $vkey.'-'.$i;
+							if($i == $vkey)
+							{
+								
+								$final_data[$fkey][$vkey] = array_merge($final_data[$fkey][$vkey],$temp_array);
+							}
+							//$fdata[$i]
+						}
+						
+					}
+				}
+				
+			}
 			//$final_data = array_merge($final_data,$group);
 			$result_array = $final_data;
 			
@@ -1587,13 +1651,10 @@ class PD_Controller extends REST_Controller {
 		{
 			$i++;
 			
-			//****************handle supplier form details logic***************//
-			// if($pd_form_id == 1)
-			// {
 				if($rec_key !='pdid' && $rec_key != 'formid' && $rec_key != 'fk_createdby')
 				{
-					//echo $rec_key;print_r($record);echo "\n\n\n";
-					if(!is_array($record))//sine key and value pair
+					
+					if(!is_array($record))//check key and value pair is not an array
 					{
 						$temp_array = array('fk_pd_id'=>$pd_id,'fk_form_id'=>$pd_form_id,'column_name'=>$rec_key,'column_value'=>$record,'fk_createdby'=>$fk_createdby);
 						$id = $this->PD_Model->saveRecords($temp_array,PDFORMDETAILS);
@@ -1603,17 +1664,60 @@ class PD_Controller extends REST_Controller {
 						$iter=0;
 						foreach($record as $mkey => $rec)
 						{
+							//print_r($rec);
 							$iter++;
-							foreach($rec as $rkey => $r)
-							{
-								$temp_array = array('');
-								if($r != "" && $r != null)
+							if(!is_array($rec))
+							{	
+								
+								foreach($rec as $rkey => $r)
 								{
+									$temp_array = array('');
+									if($r != "" && $r != null)
+									{
+										
+										$temp_array = array('fk_pd_id'=>$pd_id,'fk_form_id'=>$pd_form_id,'iter_column_name'=>$rec_key,'column_name'=>$rkey,'column_value'=>$r,'fk_createdby'=>$fk_createdby,'iteration'=>$iter);
+										$id = $this->PD_Model->saveRecords($temp_array,PDFORMDETAILS);
+									}
 									
-									$temp_array = array('fk_pd_id'=>$pd_id,'fk_form_id'=>$pd_form_id,'iter_column_name'=>$rec_key,'column_name'=>$rkey,'column_value'=>$r,'fk_createdby'=>$fk_createdby,'iteration'=>$iter);
-									$id = $this->PD_Model->saveRecords($temp_array,PDFORMDETAILS);
 								}
 								
+						    }
+							else
+							{
+								foreach($rec as $child_key => $child_data)
+								{
+									//print_r($child_data);
+									// echo "$child_key-\n\n\n";
+									if(!is_array($child_data))
+									{
+										//echo "not array\n\n";
+										//print_r($child_data);
+										$temp_array = array('fk_pd_id'=>$pd_id,'fk_form_id'=>$pd_form_id,'column_name'=>$child_key,'column_value'=>$child_data,'iter_column_name'=>$rec_key,'fk_createdby'=>$fk_createdby,'iteration'=>$iter);
+										//print_r($temp_array);
+									$id = $this->PD_Model->saveRecords($temp_array,PDFORMDETAILS);
+										
+									
+									}
+									else
+									{
+										//echo "array";
+										//print_r($child_data);
+										//echo "$child_key-\n\n\n";
+										foreach($child_data as $last_key => $last_data)
+										{
+											foreach($last_data as $final_key => $final_data)
+											{
+											$temp_array = array('fk_pd_id'=>$pd_id,'fk_form_id'=>$pd_form_id,'column_name'=>$final_key,'column_value'=>$final_data,'iter_column_name'=>$rec_key,'iter_sub_column_name'=>$child_key,'fk_createdby'=>$fk_createdby,'iteration'=>$iter);
+											//print_r($temp_array);
+											$id = $this->PD_Model->saveRecords($temp_array,PDFORMDETAILS);
+										}
+									
+										}
+										
+										
+										
+									}
+								}
 							}
 							
 							

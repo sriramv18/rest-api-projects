@@ -14,7 +14,7 @@ class PD_Model extends SPARQ_Model {
 		public function listLessPDDetails($page,$limit,$sort,$pdofficerid,$datetype,$fdate,$tdate,$lenderid,$status)// $page represents mysql offset
 		{
 			//echo $status;die();
-			$this->db->SELECT('PDTRIGGER.pd_id, PDTRIGGER.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name,PDTRIGGER.fk_entity_billing_id,ENTITYBILLING.billing_name, PDTRIGGER.lender_applicant_id, DATE_FORMAT(PDTRIGGER.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDTRIGGER.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDTRIGGER.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDTRIGGER.fk_pd_type,PDTYPE.type_name as pd_type_name, PDTRIGGER.pd_status,PDSTATUS.pd_status_name, PDTRIGGER.pd_specific_clarification, DATE_FORMAT(PDTRIGGER.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDTRIGGER.fk_createdby, DATE_FORMAT(PDTRIGGER.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDTRIGGER.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDTRIGGER.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDTRIGGER.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDTRIGGER.fk_pd_template_id,TEMPLATE.template_name, PDTRIGGER.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDTRIGGER.pd_officier_final_judgement, PDTRIGGER.pd_agency_id,AGENCY.full_name as agency_name, PDTRIGGER.loan_amount,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode,PDTRIGGER.pd_contact_person,PDTRIGGER.pd_contact_mobileno,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %h:%i %p") as scheduled_on,DATE_FORMAT(PDTRIGGER.completed_on,"%d/%m/%Y %h:%i:%s %p") as completed_on,PDTRIGGER.remarks');
+			$this->db->SELECT('PDTRIGGER.pd_id, PDTRIGGER.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name,PDTRIGGER.fk_entity_billing_id,ENTITYBILLING.billing_name, PDTRIGGER.lender_applicant_id, DATE_FORMAT(PDTRIGGER.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDTRIGGER.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDTRIGGER.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDTRIGGER.fk_pd_type,PDTYPE.type_name as pd_type_name, PDTRIGGER.pd_status,PDSTATUS.pd_status_name, PDTRIGGER.pd_specific_clarification, DATE_FORMAT(PDTRIGGER.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDTRIGGER.fk_createdby, DATE_FORMAT(PDTRIGGER.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDTRIGGER.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDTRIGGER.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDTRIGGER.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDTRIGGER.executive_id,concat(EXECUTIVE.first_name," ",EXECUTIVE.last_name) as executive_name,PDTRIGGER.central_pd_officer_id,concat(CENTRALOFFICER.first_name," ",CENTRALOFFICER.last_name) as centralofficer,PDTRIGGER.fk_pd_template_id,TEMPLATE.template_name, PDTRIGGER.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDTRIGGER.pd_officier_final_judgement, PDTRIGGER.pd_agency_id,AGENCY.full_name as agency_name, PDTRIGGER.loan_amount,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode,PDTRIGGER.pd_contact_person,PDTRIGGER.pd_contact_mobileno,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %h:%i %p") as scheduled_on,DATE_FORMAT(PDTRIGGER.completed_on,"%d/%m/%Y %h:%i:%s %p") as completed_on,PDTRIGGER.remarks');
 			$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 			$this->db->JOIN(ENTITY.' as ENTITY','PDTRIGGER.fk_lender_id = ENTITY.entity_id','LEFT');
 			$this->db->JOIN(ENTITYBILLING.' as ENTITYBILLING','PDTRIGGER.fk_entity_billing_id = ENTITYBILLING.entity_billing_id','LEFT');
@@ -26,6 +26,8 @@ class PD_Model extends SPARQ_Model {
 			$this->db->JOIN(USERPROFILE.' as USERPROFILE1','PDTRIGGER.fk_updatedby = USERPROFILE1.userid','LEFT');
 			$this->db->JOIN(PDALLOCATIONTYPE.' as PDALLOCATIONTYPE','PDTRIGGER.fk_pd_allocation_type = PDALLOCATIONTYPE.pd_allocation_type_id','LEFT');
 			$this->db->JOIN(USERPROFILE.' as USERPROFILE2','PDTRIGGER.fk_pd_allocated_to = USERPROFILE2.userid','LEFT');
+			$this->db->JOIN(USERPROFILE.' as EXECUTIVE','PDTRIGGER.executive_id = EXECUTIVE.userid','LEFT');
+			$this->db->JOIN(USERPROFILE.' as CENTRALOFFICER','PDTRIGGER.central_pd_officer_id = CENTRALOFFICER.userid','LEFT');
 			$this->db->JOIN(TEMPLATE.' as TEMPLATE','PDTRIGGER.fk_pd_template_id = TEMPLATE.template_id','LEFT');
 			$this->db->JOIN(CUSTOMERSEGMENT.' as CUSTOMERSEGMENT','PDTRIGGER.fk_customer_segment = CUSTOMERSEGMENT.customer_segment_id','LEFT');
 			$this->db->JOIN(ENTITY.' as AGENCY','PDTRIGGER.pd_agency_id = AGENCY.entity_id','LEFT');
@@ -403,7 +405,7 @@ class PD_Model extends SPARQ_Model {
 	*/
 	public function getPDMasterDetails($pdid)
 	{
-		$this->db->SELECT('PDTRIGGER.pd_id, PDTRIGGER.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name, PDTRIGGER.fk_entity_billing_id,ENTITYBILLING.billing_name,PDTRIGGER.lender_applicant_id, DATE_FORMAT(PDTRIGGER.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDTRIGGER.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDTRIGGER.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDTRIGGER.fk_pd_type,PDTYPE.type_name as pd_type_name, PDTRIGGER.pd_status,PDSTATUS.pd_status_name, PDTRIGGER.pd_specific_clarification, DATE_FORMAT(PDTRIGGER.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDTRIGGER.fk_createdby, DATE_FORMAT(PDTRIGGER.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDTRIGGER.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDTRIGGER.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDTRIGGER.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,concat(USERPROFILE3.first_name," ",USERPROFILE3.last_name) as pd_executive,PDTRIGGER.fk_pd_template_id,TEMPLATE.template_name, PDTRIGGER.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDTRIGGER.pd_officier_final_judgement, PDTRIGGER.pd_agency_id,AGENCY.full_name as agency_name, PDTRIGGER.loan_amount,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode,PDTRIGGER.pd_contact_person,PDTRIGGER.pd_contact_mobileno,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %h:%i %p") as scheduled_on,DATE_FORMAT(PDTRIGGER.completed_on,"%d/%m/%Y %h:%i:%s %p") as completed_on,PDTRIGGER.remarks');
+		$this->db->SELECT('PDTRIGGER.pd_id, PDTRIGGER.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name, PDTRIGGER.fk_entity_billing_id,ENTITYBILLING.billing_name,PDTRIGGER.lender_applicant_id, DATE_FORMAT(PDTRIGGER.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDTRIGGER.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDTRIGGER.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDTRIGGER.fk_pd_type,PDTYPE.type_name as pd_type_name, PDTRIGGER.pd_status,PDSTATUS.pd_status_name, PDTRIGGER.pd_specific_clarification, DATE_FORMAT(PDTRIGGER.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDTRIGGER.fk_createdby, DATE_FORMAT(PDTRIGGER.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDTRIGGER.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDTRIGGER.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDTRIGGER.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDTRIGGER.executive_id,concat(EXECUTIVE.first_name," ",EXECUTIVE.last_name) as executive_name,PDTRIGGER.central_pd_officer_id,concat(CENTRALOFFICER.first_name," ",CENTRALOFFICER.last_name) as centralofficer,PDTRIGGER.fk_pd_template_id,TEMPLATE.template_name, PDTRIGGER.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDTRIGGER.pd_officier_final_judgement, PDTRIGGER.pd_agency_id,AGENCY.full_name as agency_name, PDTRIGGER.loan_amount,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode,PDTRIGGER.pd_contact_person,PDTRIGGER.pd_contact_mobileno,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %h:%i %p") as scheduled_on,DATE_FORMAT(PDTRIGGER.completed_on,"%d/%m/%Y %h:%i:%s %p") as completed_on,PDTRIGGER.remarks');
 			$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 			$this->db->JOIN(ENTITY.' as ENTITY','PDTRIGGER.fk_lender_id = ENTITY.entity_id ','LEFT');
 			$this->db->JOIN(ENTITYBILLING.' as ENTITYBILLING','PDTRIGGER.fk_entity_billing_id = ENTITYBILLING.entity_billing_id','LEFT');
@@ -416,6 +418,8 @@ class PD_Model extends SPARQ_Model {
 			$this->db->JOIN(PDALLOCATIONTYPE.' as PDALLOCATIONTYPE','PDTRIGGER.fk_pd_allocation_type = PDALLOCATIONTYPE.pd_allocation_type_id','LEFT');
 			$this->db->JOIN(USERPROFILE.' as USERPROFILE2','PDTRIGGER.fk_pd_allocated_to = USERPROFILE2.userid','LEFT');
 			$this->db->JOIN(USERPROFILE.' as USERPROFILE3','PDTRIGGER.executive_id = USERPROFILE3.userid','LEFT');
+			$this->db->JOIN(USERPROFILE.' as EXECUTIVE','PDTRIGGER.executive_id = EXECUTIVE.userid','LEFT');
+			$this->db->JOIN(USERPROFILE.' as CENTRALOFFICER','PDTRIGGER.central_pd_officer_id = CENTRALOFFICER.userid','LEFT');
 			$this->db->JOIN(TEMPLATE.' as TEMPLATE','PDTRIGGER.fk_pd_template_id = TEMPLATE.template_id','LEFT');
 			$this->db->JOIN(CUSTOMERSEGMENT.' as CUSTOMERSEGMENT','PDTRIGGER.fk_customer_segment = CUSTOMERSEGMENT.customer_segment_id','LEFT');
 			$this->db->JOIN(ENTITY.' as AGENCY','PDTRIGGER.pd_agency_id = AGENCY.entity_id','LEFT');
@@ -521,7 +525,7 @@ class PD_Model extends SPARQ_Model {
 						foreach($questions as $answer_key => $question)
 						{
 							
-						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDANSWER.isactive,PDANSWER.pd_detail_answer_id,PDANSWER.fk_pd_detail_id');
+						  $this->db->SELECT('QUESTIONANSWERS.question_answer_id,QUESTIONANSWERS.answer,PDANSWER.pd_answer,TEMPLATEANSWERWEIGHTAGE.template_answer_weightage_id, TEMPLATEANSWERWEIGHTAGE.fk_template_question_id, TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id, TEMPLATEANSWERWEIGHTAGE.template_answer_weightage,PDANSWER.isactive,PDANSWER.pd_detail_answer_id,PDANSWER.fk_pd_detail_id');
 						  $this->db->FROM(TEMPLATEANSWERWEIGHTAGE.' as TEMPLATEANSWERWEIGHTAGE');
 						  $this->db->JOIN(QUESTIONANSWERS.' as QUESTIONANSWERS','TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = QUESTIONANSWERS.question_answer_id','LEFT');
 						  $this->db->JOIN(PDANSWER." as PDANSWER","QUESTIONANSWERS.question_answer_id = PDANSWER.pd_answer_id AND TEMPLATEANSWERWEIGHTAGE.fk_question_answer_id = PDANSWER.pd_answer_id AND PDANSWER.isactive = 1 AND PDANSWER.fk_pd_id = $pdid",'LEFT');
@@ -539,11 +543,20 @@ class PD_Model extends SPARQ_Model {
 		}
 	}
 
+	
+	//Get Forms details
+			$this->db->SELECT('TEMPLATEFORMS.form_id,PDFORMS.pd_form_name as form_name');
+			$this->db->FROM(TEMPLATEFORMS.' as TEMPLATEFORMS');
+			$this->db->JOIN(PDFORMS.' as PDFORMS','TEMPLATEFORMS.form_id = PDFORMS.pd_form_id');
+			$this->db->WHERE('TEMPLATEFORMS.fk_template_id',$template_id);
+			$template_forms = $this->db->GET()->result_array();
+			
 	$result_data['question_answers'] = $categories;   
 	$result_data['counts'] = array('overall_answered_count'=>$overall_answered_count,'overall_question_count'=>$overall_question_count);
 	$result_data['pdmaster_details'] = $pd_master_detials[0];   
 	$result_data['pdapplicants_detials'] = $pd_applicants_detials;   
 	$result_data['assessed_income'] = "";   
+	$result_data['template_forms'] = $template_forms;   
 	return $result_data;
    }
    
@@ -735,19 +748,15 @@ class PD_Model extends SPARQ_Model {
 	
       public function getPDFormDetails($pd_id,$pd_form_id)
 	  {
-		  //echo $pd_id.'-'.$pd_form_id;
-		  $this->db->SELECT('PDFORMDETAILS.iter_column_name,PDFORMDETAILS.iteration, PDFORMDETAILS.column_name, PDFORMDETAILS.column_id, PDFORMDETAILS.column_value, PDFORMDETAILS.createdon, PDFORMDETAILS.fk_createdby,USERPROFILE.first_name,USERPROFILE.last_name');
+		  
+		  $this->db->SELECT('PDFORMDETAILS.iter_column_name,PDFORMDETAILS.iter_sub_column_name,PDFORMDETAILS.iteration, PDFORMDETAILS.column_name, PDFORMDETAILS.column_id, PDFORMDETAILS.column_value, PDFORMDETAILS.createdon, PDFORMDETAILS.fk_createdby,USERPROFILE.first_name,USERPROFILE.last_name');
 		  $this->db->FROM(PDFORMDETAILS.' as PDFORMDETAILS');
 		  $this->db->JOIN(USERPROFILE.' as USERPROFILE','PDFORMDETAILS.fk_createdby = USERPROFILE.userid','LEFT');
 		  $this->db->WHERE('PDFORMDETAILS.fk_pd_id',$pd_id);
 		  $this->db->WHERE('PDFORMDETAILS.fk_form_id',$pd_form_id);
 		  $this->db->WHERE('PDFORMDETAILS.isactive',1);
-		  //$this->db->ORDER_BY('PDFORMDETAILS.iteration');
 		  $form_details = $this->db->GET()->result_array();
-		  //print_r($this->db->last_query());
-		  //print_r($form_details);die();
 		  return $form_details;
-		  
 		  
 	  }		  
 }
