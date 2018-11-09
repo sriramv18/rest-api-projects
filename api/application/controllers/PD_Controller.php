@@ -1501,6 +1501,7 @@ class PD_Controller extends REST_Controller {
 			$pre_group = "";
 			$pre_sub_group = "";
 			$pre_iter = "";
+			$pre_sub_iter = "";
 			$t1 = array();
 			$t2 = array();
 			$group = array();	
@@ -1537,27 +1538,27 @@ class PD_Controller extends REST_Controller {
 				}
 				else// Handle child group
 				{
-					 if($result['iter_sub_column_name'] != $pre_group && $result['iteration'] != $pre_iter)
+					 if($result['iter_sub_column_name'] != $pre_sub_group || $result['iteration'] != $pre_sub_iter)
 					  {
 						
 							$t2 = array();
-							$sub_group = array();
-						// echo "New-".$result['iter_column_name'];
+							//$sub_group = array();
+							//echo '\n'."New-".$result['iter_column_name'].$result['iteration'];
 							// print_r(array($result['column_name']=>$result['column_value']));
 						   $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
 						   $sub_group[$result['iter_sub_column_name']][$result['iteration']] = $t2;
 						   $pre_sub_group = $result['iter_sub_column_name'];
-						   $pre_iter = $result['iteration'];
+						   $pre_sub_iter = $result['iteration'];
 					  }
 					  else
 					  {
 						 
-						 // echo "old-".$result['iter_column_name'];
+						 // echo '\n'."old-".$result['iter_column_name'].$result['iteration'];
 							// print_r(array($result['column_name']=>$result['column_value']));
 							 $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
 							 $sub_group[$result['iter_sub_column_name']][$result['iteration']] = $t2;
 							  $pre_sub_group = $result['iter_sub_column_name'];
-							  $pre_iter = $result['iteration'];
+							  $pre_sub_iter = $result['iteration'];
 					   }
 					   
 					   
@@ -1591,16 +1592,17 @@ class PD_Controller extends REST_Controller {
 					    // print_r($final_value);
 						$temp_array = array($key=>$final_value);
 						//print_r($temp_array);
-						
+						//$i = 0;
 						foreach($final_data as $fkey => $fdata)
 						{
 							
 							$i++;
-							//echo $vkey.'-'.$i;
+							//echo $vkey.'-'.$i.'-'.$fkey.'\n';
 							if($i == $vkey)
 							{
-								
+								//$i--;
 								$final_data[$fkey][$vkey] = array_merge($final_data[$fkey][$vkey],$temp_array);
+								//print_r($final_data[$fkey][$vkey]);
 							}
 							//$fdata[$i]
 						}

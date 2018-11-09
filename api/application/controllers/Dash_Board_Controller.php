@@ -34,7 +34,7 @@ class Dash_Board_Controller extends REST_Controller {
 	public function getDashBoardDetailsOfLenderAndCitywise_get()
 	{
 		$res = $this->Dash_Board_Model->getDetailsOfLenderAndCitywise();
-						
+		print_r($res);	die();
 		$data['dataStatus'] = true;
 		$data['status'] = REST_Controller::HTTP_OK;
 		$data['records'] = $res;

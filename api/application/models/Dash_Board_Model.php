@@ -32,6 +32,7 @@ class Dash_Board_Model extends SPARQ_Model {
 				where date_format(pd.createdon,'%Y-%m-%d') = date_format(CURDATE(),'%Y-%m-%d') 
 				group by pd.fk_lender_id,pd.fk_city,pd.fk_pd_type,pd.pd_status;";
 				$result_data['current_day'] = $this->db->query($sql_query_current_day)->result_array();
+				$result_data['current_day'] =  $this->groupData($result_data['current_day']);
 				
 				$sql_query_current_week = "SELECT pd.fk_lender_id,entity.full_name,pd.fk_city,city.name as city_name,if(pd.fk_pd_type = 1,'FULL',if(pd.fk_pd_type = 2,'SMART',if(pd.fk_pd_type = 3,'TELE','OTHERS'))) as PDTYPE,pd.pd_status,count(*) as count FROM t_pd_triggered as pd 
 				JOIN m_entity as entity on pd.fk_lender_id = entity.entity_id
@@ -39,19 +40,23 @@ class Dash_Board_Model extends SPARQ_Model {
 				where WEEK(pd.createdon) = WEEK(CURDATE()) 
 				group by pd.fk_lender_id,pd.fk_city,pd.fk_pd_type,pd.pd_status;";
 				$result_data['current_week'] = $this->db->query($sql_query_current_week)->result_array();
+				$result_data['current_week'] =  $this->groupData($result_data['current_week']);
 				
 				$sql_query_current_month = "SELECT pd.fk_lender_id,entity.full_name,pd.fk_city,city.name as city_name,if(pd.fk_pd_type = 1,'FULL',if(pd.fk_pd_type = 2,'SMART',if(pd.fk_pd_type = 3,'TELE','OTHERS'))) as PDTYPE,pd.pd_status,count(*) as count FROM t_pd_triggered as pd 
 				JOIN m_entity as entity on pd.fk_lender_id = entity.entity_id
 				JOIN m_city as city on pd.fk_city = city.city_id
 				where MONTH(pd.createdon) = MONTH(CURDATE()) 
-				group by pd.fk_lender_id,pd.fk_city,pd.fk_pd_type,pd.pd_status;";
+				group by pd.fk_lender_id,pd.fk_city,pd.fk_pd_type;";
 				$result_data['current_month'] = $this->db->query($sql_query_current_month)->result_array();
+				$result_data['current_month'] =  $this->groupData($result_data['current_month']);
+				   
 				return $result_data;
 		}
 		
 		
 		public function getDashBoardDetailsOfCitywise()
 		{
+			
 				$sql_query_current_day = "SELECT pd.fk_city,city.name as city_name,if(pd.fk_pd_type = 1,'FULL',if(pd.fk_pd_type = 2,'SMART',if(pd.fk_pd_type = 3,'TELE','OTHERS'))) as PDTYPE,pd.pd_status,count(*) as count FROM t_pd_triggered as pd
 				JOIN m_city as city on pd.fk_city = city.city_id
 				where date_format(pd.createdon,'%Y-%m-%d') = date_format('31-10-2018','%Y-%m-%d') 
@@ -59,17 +64,22 @@ class Dash_Board_Model extends SPARQ_Model {
 				
 				$result_data['current_day'] = $this->db->query($sql_query_current_day)->result_array();
 				
+				
 				$sql_query_current_week = "SELECT pd.fk_city,city.name as city_name,if(pd.fk_pd_type = 1,'FULL',if(pd.fk_pd_type = 2,'SMART',if(pd.fk_pd_type = 3,'TELE','OTHERS'))) as PDTYPE,pd.pd_status,count(*) as count FROM t_pd_triggered as pd
 				JOIN m_city as city on pd.fk_city = city.city_id
 				where WEEK(pd.createdon) = WEEK(CURDATE()) 
 				group by pd.fk_city,pd.fk_pd_type,pd.pd_status;";
 				$result_data['current_week'] = $this->db->query($sql_query_current_week)->result_array();
 				
+				
 				$sql_query_current_month = "SELECT pd.fk_city,city.name as city_name,if(pd.fk_pd_type = 1,'FULL',if(pd.fk_pd_type = 2,'SMART',if(pd.fk_pd_type = 3,'TELE','OTHERS'))) as PDTYPE,pd.pd_status,count(*) as count FROM t_pd_triggered as pd
 				JOIN m_city as city on pd.fk_city = city.city_id
 				where MONTH(pd.createdon) = MONTH(CURDATE()) 
 				group by pd.fk_city,pd.fk_pd_type,pd.pd_status;";
 				$result_data['current_month'] = $this->db->query($sql_query_current_month)->result_array();
+				//print_r($result_data['current_month']);
+
+				
 				return $result_data;
 		}
 
@@ -91,6 +101,38 @@ class Dash_Board_Model extends SPARQ_Model {
 			
 			return $query->result();
 	    }
+		
+		//for Internal purpose
+		public function groupData($arrayOfData)
+		{
+					
+			        $pre_lender = "";
+					$pre_city = "";
+					$string = "";
+					$array  = array();
+					$fkey = "";
+				foreach($arrayOfData as $key => $d)
+				{
+					//print_r($d);
+					
+					if($d['fk_lender_id'] != $pre_lender || $d['fk_city'] != $pre_city)
+					{
+						//echo "New";
+					  	$array[$key] = array('lender'=>$d['full_name'],'city'=>$d['city_name'],$d['PDTYPE'] => $d['count']);
+						$pre_lender = $d['fk_lender_id'];
+					   $pre_city = $d['fk_city'];
+						$fkey = $key;
+					}
+					else
+					{
+						//echo "OLd";
+						$array[$fkey] = array_merge($array[$fkey],array($d['PDTYPE'] => $d['count']));
+						$pre_lender = $d['fk_lender_id'];
+					   $pre_city = $d['fk_city'];
+					}
+				}
+				return $array;
+		}
 		
 			
 }
