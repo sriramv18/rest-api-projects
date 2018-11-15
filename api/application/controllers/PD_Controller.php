@@ -451,7 +451,7 @@ class PD_Controller extends REST_Controller {
 	{
 		$pd_details = $this->post('records');
 		// print_r($pd_details);die;
-		//print_r($pd_details);
+		print_r($pd_details);
 
 		// OTP Generate Condition
 		if($pd_details['pd_status'] == INITIATED)
@@ -923,7 +923,7 @@ class PD_Controller extends REST_Controller {
 											$central_pd_officers = array();
 											if($res_array[0]['fk_pd_type'] == 2 || $res_array[0]['fk_pd_type'] == 3)
 											{
-												$this->db->SELECT('USERPROFILE.userid,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role,ROLES.role_name');
+												$this->db->SELECT('USERPROFILE.userid as fk_user_id,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role,ROLES.role_name');
 												$this->db->FROM(USERPROFILE.' as USERPROFILE');
 												$this->db->JOIN(USERPROFILEROLES.' as USERPROFILEROLES','USERPROFILE.userid = USERPROFILEROLES.fk_userid');
 												$this->db->JOIN(ROLES.' as ROLES','USERPROFILEROLES.user_role = ROLES.role_id');
@@ -1021,7 +1021,7 @@ class PD_Controller extends REST_Controller {
 											$central_pd_officers = array();
 											if($res_array[0]['fk_pd_type'] == 2 || $res_array[0]['fk_pd_type'] == 3)
 											{
-												$this->db->SELECT('USERPROFILE.userid,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role,ROLES.role_name');
+												$this->db->SELECT('USERPROFILE.userid as fk_user_id,USERPROFILE.first_name,USERPROFILE.last_name,USERPROFILE.profilepic,USERPROFILE.mobile_no,USERPROFILEROLES.user_role,ROLES.role_name');
 												$this->db->FROM(USERPROFILE.' as USERPROFILE');
 												$this->db->JOIN(USERPROFILEROLES.' as USERPROFILEROLES','USERPROFILE.userid = USERPROFILEROLES.fk_userid');
 												$this->db->JOIN(ROLES.' as ROLES','USERPROFILEROLES.user_role = ROLES.role_id');
@@ -1543,7 +1543,7 @@ class PD_Controller extends REST_Controller {
 						
 							$t2 = array();
 							//$sub_group = array();
-							//echo '\n'."New-".$result['iter_column_name'].$result['iteration'];
+							//echo '\n'."New-".$result['iter_column_name'].$result['iteration'].$result['iter_sub_column_name'];
 							// print_r(array($result['column_name']=>$result['column_value']));
 						   $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
 						   $sub_group[$result['iter_sub_column_name']][$result['iteration']] = $t2;
@@ -1553,7 +1553,7 @@ class PD_Controller extends REST_Controller {
 					  else
 					  {
 						 
-						 // echo '\n'."old-".$result['iter_column_name'].$result['iteration'];
+						 // echo '\n'."old-".$result['iter_column_name'].$result['iteration'].$result['iter_sub_column_name'];
 							// print_r(array($result['column_name']=>$result['column_value']));
 							 $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
 							 $sub_group[$result['iter_sub_column_name']][$result['iteration']] = $t2;
@@ -1575,7 +1575,7 @@ class PD_Controller extends REST_Controller {
 			  //print_r($group);		
 			  $final_data = array_merge($final_data,$group);
 			}
-			//print_r($sub_group);
+			//print_r($sub_group);die();
 			
 			// Merge subgroup into main group
 			$i = 0;

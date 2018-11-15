@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getDashBoardDetailsOfCity'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'updatePDMaster'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -335,6 +335,48 @@ defined('PDFORMDETAILSID') OR define('PDFORMDETAILSID','pd_form_detail_id');
 
 defined('TEMPLATEFORMS') OR define('TEMPLATEFORMS','m_template_forms');
 defined('TEMPLATEFORMSID') OR define('TEMPLATEFORMSID','template_form_id');
+
+
+// These master are not available in front end.not able to add front end master
+defined('EARNINGMEMBERSSTATUS') OR define('EARNINGMEMBERSSTATUS','m_earning_members_status');
+defined('EARNINGMEMBERSSTATUSID') OR define('EARNINGMEMBERSSTATUSID','earning_member_status_id');
+
+defined('EDUQUALIFICATION') OR define('EDUQUALIFICATION','m_edu_qualification');
+defined('EDUQUALIFICATIONID') OR define('EDUQUALIFICATIONID','qualification_id');
+
+defined('ADDRESSTYPE') OR define('ADDRESSTYPE','m_address_type');
+defined('ADDRESSTYPEID') OR define('ADDRESSTYPEID','address_type_id');
+
+defined('LOCALITY') OR define('LOCALITY','m_locality');
+defined('LOCALITYID') OR define('LOCALITYID','locality_id');
+
+defined('ASSETTYPE') OR define('ASSETTYPE','m_asset_type');
+//defined('ASSETTYPEID') OR define('ASSETTYPEID','asset_type_id');
+
+defined('PROPERTIES') OR define('PROPERTIES','m_properties');
+//defined('PROPERTIESID') OR define('PROPERTIESID','property_id');
+
+defined('INVESTMENTTYPE') OR define('INVESTMENTTYPE','m_investment_type');
+//defined('INVESTMENTTYPEID') OR define('INVESTMENTTYPEID','investment_type_id');
+
+defined('INSURANCETYPE') OR define('INSURANCETYPE','m_insurance_type');
+//defined('INSURANCETYPEID') OR define('INSURANCETYPEID','insurance_type_id');
+
+defined('PERSONSMET') OR define('PERSONSMET','m_persons_met');
+//defined('PERSONSMETID') OR define('PERSONSMETID','person_met_id');
+
+defined('RESIDENCEOWNERSHIP') OR define('RESIDENCEOWNERSHIP','m_residence_ownership');
+//defined('PERSONSMETID') OR define('PERSONSMETID','id');
+
+defined('PAYMENTMODE') OR define('PAYMENTMODE','m_payment_mode');
+defined('ACCOUNTTYPE') OR define('ACCOUNTTYPE','m_account_type');
+defined('SOURCEOFOTHERINCOME') OR define('SOURCEOFOTHERINCOME','m_source_of_other_income');
+defined('MORTAGEPROPERTYTYPE') OR define('MORTAGEPROPERTYTYPE','m_mortage_property_type');
+defined('ENDUSEOFLOAN') OR define('ENDUSEOFLOAN','m_enduse_of_loan');
+defined('SOURCEOFBALANCETRANSFER') OR define('SOURCEOFBALANCETRANSFER','m_source_of_balance_transfer');
+
+
+
 
 
 
