@@ -56,9 +56,11 @@ class PDALERTS
 				$CI->db->WHERE("PDNOTIFICATION.pd_status",$core_details[0]['pd_status']);
 				$CI->db->WHERE("PDNOTIFICATION.isactive",1);
 				$pd_notification_configs = $CI->db->GET()->result_array();
-				//print_r($pd_notification_configs);die();
+				//print_r($CI->db->last_query());
+				//print_r($pd_notification_configs);
 				
-								
+					if(count($pd_notification_configs))
+					{
 				 //sent sms to  lender contacts 
 				
 					if($pd_notification_configs[0]['sms_lender'] == 1)
@@ -100,6 +102,7 @@ class PDALERTS
 						}
 				}
 				
+			}
 				$msg = "PD for Lender Applicant ID -:". $core_details[0]['lender_applicant_id'] ."  has been  ". $core_details[0]['pd_status']; // status base configurable
 				//print_r($mobile_nos_to_send_notification);
 				foreach($mobile_nos_to_send_notification as $no)
@@ -111,7 +114,7 @@ class PDALERTS
 					$CI->aws_sns->sendSMS($msg,$no);
 				}
 				
-				
+			}
 				/*
 				* **********************************************************************************************************
 				* EMAIL FUNCTIONALITY
@@ -123,7 +126,8 @@ class PDALERTS
 			{
 							
 				
-				
+				if(count($pd_notification_configs))
+				{
 				//add pd officer email
 				if($pd_notification_configs[0]['mail_pdofficer'] == 1)
 				{
@@ -138,6 +142,8 @@ class PDALERTS
 					}
 				}
 				
+				
+					
 				//add pd incharge emails
 				if($pd_notification_configs[0]['mail_pdincharge'] == 1)
 				{
@@ -164,7 +170,7 @@ class PDALERTS
 					//$CI->aws_ses->sendMail($email);
 				}
 				
-			
+			}
 			}
 			
 			/*End of Email Functionality*/
@@ -178,6 +184,6 @@ class PDALERTS
 	
 	
 
-}
+
 
 ?>
