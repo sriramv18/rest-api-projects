@@ -374,6 +374,7 @@ defined('SOURCEOFOTHERINCOME') OR define('SOURCEOFOTHERINCOME','m_source_of_othe
 defined('MORTAGEPROPERTYTYPE') OR define('MORTAGEPROPERTYTYPE','m_mortage_property_type');
 defined('ENDUSEOFLOAN') OR define('ENDUSEOFLOAN','m_enduse_of_loan');
 defined('SOURCEOFBALANCETRANSFER') OR define('SOURCEOFBALANCETRANSFER','m_source_of_balance_transfer');
+defined('STATUSOFCONSTRUCTION') OR define('STATUSOFCONSTRUCTION','m_status_of_construction');
 
 
 

@@ -451,7 +451,7 @@ class PD_Controller extends REST_Controller {
 	{
 		$pd_details = $this->post('records');
 		// print_r($pd_details);die;
-		print_r($pd_details);
+		//print_r($pd_details);
 
 		// OTP Generate Condition
 		if($pd_details['pd_status'] == INITIATED)
