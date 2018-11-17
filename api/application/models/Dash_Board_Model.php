@@ -11,19 +11,55 @@ class Dash_Board_Model extends SPARQ_Model {
         }
 		
 	
-		public function getDetailsOfPDTypeAndPDStatusWithDayWeekMonth()
+		// public function getDetailsOfPDTypeAndPDStatusWithDayWeekMonth()
+		// {
+		// 		$sql_query_current_day = "SELECT if(fk_pd_type = 1,'FULL',if(fk_pd_type = 2,'SMART',if(fk_pd_type = 3,'TELE','NULL'))) as PDTYPE,pd_status,count(*) as count FROM t_pd_triggered  where date_format(createdon,'%Y-%m-%d') = date_format(CURDATE(),'%Y-%m-%d') group by fk_pd_type,pd_status;";
+		// 		$result_data['current_day'] = $this->db->query($sql_query_current_day)->result_array();
+				
+		// 		$sql_query_current_week = "SELECT if(fk_pd_type = 1,'FULL',if(fk_pd_type = 2,'SMART',if(fk_pd_type = 3,'TELE','NULL'))) as PDTYPE,pd_status,count(*) as count,WEEK(createdon),WEEK(CURDATE()) FROM t_pd_triggered  where WEEK(createdon) = WEEK(CURDATE()) group by fk_pd_type,pd_status;";
+		// 		$result_data['current_week'] = $this->db->query($sql_query_current_week)->result_array();
+				
+		// 		$sql_query_current_month = "SELECT if(fk_pd_type = 1,'FULL',if(fk_pd_type = 2,'SMART',if(fk_pd_type = 3,'TELE','NULL'))) as PDTYPE,pd_status,count(*) as count FROM t_pd_triggered  where MONTH(createdon) = MONTH(CURDATE()) group by fk_pd_type,pd_status;";
+		// 		$result_data['current_month'] = $this->db->query($sql_query_current_month)->result_array();
+		// 		return $result_data;
+		// }
+
+		public function getDetailsOfPDType($fdate,$tdate,$cityarr,$lenderarr)
 		{
-				$sql_query_current_day = "SELECT if(fk_pd_type = 1,'FULL',if(fk_pd_type = 2,'SMART',if(fk_pd_type = 3,'TELE','NULL'))) as PDTYPE,pd_status,count(*) as count FROM t_pd_triggered  where date_format(createdon,'%Y-%m-%d') = date_format(CURDATE(),'%Y-%m-%d') group by fk_pd_type,pd_status;";
-				$result_data['current_day'] = $this->db->query($sql_query_current_day)->result_array();
+			if(($lenderarr != "" || $lenderarr != null)&& ($cityarr != "" || $cityarr != null) && ($fdate && $tdate != '')){
+				$sql_query = "SELECT if(fk_pd_type = 1,'FULL',if(fk_pd_type = 2,'SMART',if(fk_pd_type = 3,'TELE','NULL'))) as PDTYPE,pd_status,count(*) as count FROM t_pd_triggered  where MONTH(createdon) = MONTH(CURDATE()) group by fk_pd_type,pd_status;";
+			}
+			else{
+				$sql_query = "SELECT if(fk_pd_type = 1,'FULL',if(fk_pd_type = 2,'SMART',if(fk_pd_type = 3,'TELE','NULL'))) as PDTYPE,pd_status,count(*) as count FROM t_pd_triggered where ";
 				
-				$sql_query_current_week = "SELECT if(fk_pd_type = 1,'FULL',if(fk_pd_type = 2,'SMART',if(fk_pd_type = 3,'TELE','NULL'))) as PDTYPE,pd_status,count(*) as count,WEEK(createdon),WEEK(CURDATE()) FROM t_pd_triggered  where WEEK(createdon) = WEEK(CURDATE()) group by fk_pd_type,pd_status;";
-				$result_data['current_week'] = $this->db->query($sql_query_current_week)->result_array();
-				
-				$sql_query_current_month = "SELECT if(fk_pd_type = 1,'FULL',if(fk_pd_type = 2,'SMART',if(fk_pd_type = 3,'TELE','NULL'))) as PDTYPE,pd_status,count(*) as count FROM t_pd_triggered  where MONTH(createdon) = MONTH(CURDATE()) group by fk_pd_type,pd_status;";
-				$result_data['current_month'] = $this->db->query($sql_query_current_month)->result_array();
-				return $result_data;
+					if($lenderarr != "")
+					{
+						$lenderarr = implode(",",$lenderarr);
+						$sql_query.="fk_lender_id IN (".$lenderarr.") and ";
+						
+					}
+					if($cityarr != "" || $cityarr != null)
+					{
+						$cityarr = implode(",",$cityarr);
+						$sql_query.="fk_city IN (".$cityarr.") and ";
+						
+					}
+					if($fdate != ""){
+						
+						$from= date("Y-m-d",strtotime($fdate));
+						$to=date("Y-m-d",strtotime($tdate));
+						$sql_query.="date(t_pd_triggered.createdon) >= '".$from."'
+										and date(t_pd_triggered.createdon) <= '".$to."' and ";
+						
+					}
+
+					$sql_query.= " 1 = 1 group by fk_pd_type,pd_status ;";	
+			}
+			
+			$result_data['current_month'] = $this->db->query($sql_query)->result_array();
+			return $result_data;
 		}
-		
+
 		public function getDetailsOfLenderAndCitywise()
 		{
 				$sql_query_current_day = "SELECT pd.fk_lender_id,entity.full_name,pd.fk_city,city.name as city_name,if(pd.fk_pd_type = 1,'FULL',if(pd.fk_pd_type = 2,'SMART',if(pd.fk_pd_type = 3,'TELE','OTHERS'))) as PDTYPE,pd.pd_status,count(*) as count FROM t_pd_triggered as pd 

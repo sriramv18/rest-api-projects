@@ -30,6 +30,32 @@ class Dash_Board_Controller extends REST_Controller {
 		$data['records'] = $res;
 		$this->response($data,REST_Controller::HTTP_OK);
 	}
+
+	public function getDashBoardDetails_post()
+	{
+		$fdate = '';
+		$tdate = '';
+		$cityarr = '';
+		$lenderarr = '';
+
+		if($this->post('fromdate')) { $fdate = $this->post('fromdate'); }
+		if($this->post('todate')){ $tdate = $this->post('todate'); }
+		if($this->post('cityarr')) { $cityarr = $this->post('cityarr'); }
+		if($this->post('lenderarr')) { $lenderarr = $this->post('lenderarr'); }
+			
+		// echo $from_date;
+		// echo $to_date;
+		// print_r($city_arr);
+		// print_r($lender_arr);
+		// die();
+		$res = $this->Dash_Board_Model->getDetailsOfPDType($fdate,$tdate,$lenderarr,$cityarr);
+		
+						
+		$data['dataStatus'] = true;
+		$data['status'] = REST_Controller::HTTP_OK;
+		$data['records'] = $res;
+		$this->response($data,REST_Controller::HTTP_OK);
+	}
 	
 	public function getDashBoardDetailsOfLenderAndCitywise_get()
 	{

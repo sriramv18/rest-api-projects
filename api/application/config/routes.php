@@ -156,7 +156,8 @@ $route['getPDFormDetails'] = 'PD_Controller/getPDFormDetails';
 $route['savePDFormDetails'] = 'PD_Controller/savePDFormDetails'; 
 
 //Dashboard and Reports Related routes
-$route['getDashBoardMaster'] = 'Dash_Board_Controller/getDashBoardDetailsOfPDTypeAndPDStatusWithDayWeekMonth'; 
+//$route['getDashBoardMaster'] = 'Dash_Board_Controller/getDashBoardDetailsOfPDTypeAndPDStatusWithDayWeekMonth'; 
+$route['getDashBoardMaster'] = 'Dash_Board_Controller/getDashBoardDetails'; 
 $route['getDashBoardLenderCity'] = 'Dash_Board_Controller/getDashBoardDetailsOfLenderAndCitywise'; 
 $route['getDashBoardDetailsOfCity'] = 'Dash_Board_Controller/getDashBoardDetailsOfCitywise'; 
 $route['getDashBoardAlertDetails'] = 'Dash_Board_Controller/getDashBoardDetailsOfAlert'; 
