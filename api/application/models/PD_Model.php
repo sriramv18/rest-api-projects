@@ -446,7 +446,9 @@ class PD_Model extends SPARQ_Model {
 			 $pd_master_detials = $this->getPDMasterDetails($pdid);
 			 $pd_applicants_detials = $this->getApplicantsDetails($pdid);
 			//sprint_r($pd_master_detials);
+			if(count($pd_master_detials)){
 			 $template_id = $pd_master_detials[0]['fk_pd_template_id'];
+			}
 			 
 			 if($template_id != "" || $template_id != null)
 			 {
@@ -550,10 +552,30 @@ class PD_Model extends SPARQ_Model {
 			$this->db->JOIN(PDFORMS.' as PDFORMS','TEMPLATEFORMS.form_id = PDFORMS.pd_form_id');
 			$this->db->WHERE('TEMPLATEFORMS.fk_template_id',$template_id);
 			$template_forms = $this->db->GET()->result_array();
+			foreach($template_forms as $template_key => $value)
+			{
+				$this->db->SELECT('count(*) as count');
+				$this->db->FROM(PDFORMDETAILS.' as PDFORMDETAILS');
+				$this->db->WHERE('PDFORMDETAILS.fk_pd_id',$pdid);
+				$this->db->WHERE('PDFORMDETAILS.fk_form_id',$value['form_id']);
+				$template_forms_count = $this->db->GET()->result_array();
+				if(count($template_forms_count))
+				{
+					$template_forms[$template_key]['isAnswered'] = true;
+				}
+				else
+				{
+					$template_forms[$template_key]['isAnswered'] = false;
+				}
+				
+			}
 			
 	$result_data['question_answers'] = $categories;   
 	$result_data['counts'] = array('overall_answered_count'=>$overall_answered_count,'overall_question_count'=>$overall_question_count);
-	$result_data['pdmaster_details'] = $pd_master_detials[0];   
+	if(count($pd_master_detials))
+	{
+		$result_data['pdmaster_details'] = $pd_master_detials[0];   
+	}
 	$result_data['pdapplicants_detials'] = $pd_applicants_detials;   
 	$result_data['assessed_income'] = "";   
 	$result_data['template_forms'] = $template_forms;   

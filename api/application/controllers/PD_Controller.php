@@ -790,7 +790,7 @@ class PD_Controller extends REST_Controller {
 			//$id = $this->PD_Model->saveRecords($records,PDSCHEDULE);
 			
 				$where_condition_array = array('pd_id' => $records['fk_pd_id']);
-				$temp_array = array('pd_status' => SCHEDULED,'fk_updatedby'=>$records['fk_scheduled_by'],'updatedon'=>$records['createdon'],'scheduled_on'=>$records['schedule_time']);
+				$temp_array = array('pd_status' => SCHEDULED,'fk_updatedby'=>$records['fk_scheduled_by'],'updatedon'=>date('Y-m-d H:m:i');,'scheduled_on'=>$records['schedule_time']);
 				$pd_id_modified = $this->PD_Model->updateRecords($temp_array,PDTRIGGER,$where_condition_array);
 				
 				/******* Code Snippt for Save Template Category Weightage info to PD category Info*/
