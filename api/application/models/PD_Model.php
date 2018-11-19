@@ -14,7 +14,7 @@ class PD_Model extends SPARQ_Model {
 		public function listLessPDDetails($page,$limit,$sort,$pdofficerid,$datetype,$fdate,$tdate,$lenderid,$status)// $page represents mysql offset
 		{
 			//echo $status;die();
-			$this->db->SELECT('PDTRIGGER.pd_id, PDTRIGGER.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name,PDTRIGGER.fk_entity_billing_id,ENTITYBILLING.billing_name, PDTRIGGER.lender_applicant_id, DATE_FORMAT(PDTRIGGER.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDTRIGGER.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDTRIGGER.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDTRIGGER.fk_pd_type,PDTYPE.type_name as pd_type_name, PDTRIGGER.pd_status,PDSTATUS.pd_status_name, PDTRIGGER.pd_specific_clarification, DATE_FORMAT(PDTRIGGER.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDTRIGGER.fk_createdby, DATE_FORMAT(PDTRIGGER.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDTRIGGER.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDTRIGGER.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDTRIGGER.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDTRIGGER.executive_id,concat(EXECUTIVE.first_name," ",EXECUTIVE.last_name) as executive_name,PDTRIGGER.central_pd_officer_id,concat(CENTRALOFFICER.first_name," ",CENTRALOFFICER.last_name) as centralofficer,PDTRIGGER.fk_pd_template_id,TEMPLATE.template_name, PDTRIGGER.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDTRIGGER.pd_officier_final_judgement, PDTRIGGER.pd_agency_id,AGENCY.full_name as agency_name, PDTRIGGER.loan_amount,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode,PDTRIGGER.pd_contact_person,PDTRIGGER.pd_contact_mobileno,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %h:%i %p") as scheduled_on,DATE_FORMAT(PDTRIGGER.completed_on,"%d/%m/%Y %h:%i:%s %p") as completed_on,PDTRIGGER.remarks');
+			$this->get->SELECT('PDTRIGGER.pd_id, PDTRIGGER.fk_lender_id,ENTITY.full_name as lender_full_name,ENTITY.short_name as lender_short_name,PDTRIGGER.fk_entity_billing_id,ENTITYBILLING.billing_name, PDTRIGGER.lender_applicant_id, DATE_FORMAT(PDTRIGGER.pd_date_of_initiation, "%d/%m/%Y") as pd_date_of_initiation, PDTRIGGER.fk_product_id,PRODUCTS.name as product_name,PRODUCTS.abbr as product_abbr, PDTRIGGER.fk_subproduct_id,SUBPRODUCTS.name as subproduct_name,SUBPRODUCTS.abbr as subproduct_abbr, PDTRIGGER.fk_pd_type,PDTYPE.type_name as pd_type_name, PDTRIGGER.pd_status,PDSTATUS.pd_status_name, PDTRIGGER.pd_specific_clarification, DATE_FORMAT(PDTRIGGER.createdon,"%d/%m/%Y %H:%i:%s") as createdon, PDTRIGGER.fk_createdby, DATE_FORMAT(PDTRIGGER.updatedon,"%d/%m/%Y %H:%i:%s") as updatedon, PDTRIGGER.fk_updatedby,concat(USERPROFILE.first_name," ",USERPROFILE.last_name) as createdby,concat(USERPROFILE1.first_name," ",USERPROFILE1.last_name) as updatedby, PDTRIGGER.fk_pd_allocation_type,,PDALLOCATIONTYPE.pd_allocation_type_name, PDTRIGGER.fk_pd_allocated_to,concat(USERPROFILE2.first_name," ",USERPROFILE2.last_name) as pd_allocated_to,PDTRIGGER.executive_id,concat(EXECUTIVE.first_name," ",EXECUTIVE.last_name) as executive_name,PDTRIGGER.central_pd_officer_id,concat(CENTRALOFFICER.first_name," ",CENTRALOFFICER.last_name) as centralofficer,PDTRIGGER.fk_pd_template_id,TEMPLATE.template_name, PDTRIGGER.fk_customer_segment,CUSTOMERSEGMENT.name as customer_segment_name,CUSTOMERSEGMENT.abbr as customer_segment_abbr, PDTRIGGER.pd_officier_final_judgement, PDTRIGGER.pd_agency_id,AGENCY.full_name as agency_name, PDTRIGGER.loan_amount,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode,PDTRIGGER.pd_contact_person,PDTRIGGER.pd_contact_mobileno,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %h:%i %p") as scheduled_on,DATE_FORMAT(PDTRIGGER.completed_on,"%d/%m/%Y %h:%i:%s %p") as completed_on,PDTRIGGER.remarks');
 			$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 			$this->db->JOIN(ENTITY.' as ENTITY','PDTRIGGER.fk_lender_id = ENTITY.entity_id','LEFT');
 			$this->db->JOIN(ENTITYBILLING.' as ENTITYBILLING','PDTRIGGER.fk_entity_billing_id = ENTITYBILLING.entity_billing_id','LEFT');
@@ -559,8 +559,10 @@ class PD_Model extends SPARQ_Model {
 				$this->db->FROM(PDFORMDETAILS.' as PDFORMDETAILS');
 				$this->db->WHERE('PDFORMDETAILS.fk_pd_id',$pdid);
 				$this->db->WHERE('PDFORMDETAILS.fk_form_id',$value['form_id']);
+				$template_forms_count = 0;
 				$template_forms_count = $this->db->GET()->result_array();
-				if(count($template_forms_count))
+				//print_r($template_forms_count);die();
+				if(count($template_forms_count) && $template_forms_count[0]['count'] != 0)
 				{
 					$template_forms[$template_key]['isAnswered'] = true;
 				}
@@ -571,6 +573,63 @@ class PD_Model extends SPARQ_Model {
 				
 			}
 			
+			
+	/********************************* Assessd Income Sections   *****************************************/
+	$assessed_income = array();
+		
+	//get sales_declared_by_customer details
+	$fields = array('sdc_id','sales_declared_by_customer');	
+	$where_condition_array = array('fk_pd_id'=>$pdid,'isactive'=>1);	
+	$sales_declared_by_customer = $this->selectCustomRecords($fields,$where_condition_array,SALESDECLAREDBYCUSTOMER);
+	
+	
+	//get sales_calculated_by_itemwise details
+	$fields = array('sci_id','sales_item','sales_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_sale_value');	
+	$table = SALESCALCULATEDBYITEMWISE.' as SALESCALCULATEDBYITEMWISE';
+	$where_condition_array = array('fk_pd_id'=>$pdid,'SALESCALCULATEDBYITEMWISE.isactive'=>1);
+	$joins = array(
+					array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'SALESCALCULATEDBYITEMWISE.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'),
+					array('table'=>UOM.' as UOM','condition'=>'SALESCALCULATEDBYITEMWISE.fk_uom_id = UOM.uom_id','jointype'=>'INNER JOIN'));
+	$sales_calculated_by_itemwise = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
+	
+   
+   //$sales_items_by_monthwise = 
+	
+	
+	
+	//Get purchase_details
+	   $fields = array('purchase_id','purchase_item','purchase_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_purchase_value');	
+	   $table = PDPURCHASEDETAILS.' as PDPURCHASEDETAILS';
+	   $where_condition_array = array('fk_pd_id'=>$pdid,'PDPURCHASEDETAILS.isactive'=>1);
+	   $joins = array(
+					array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'PDPURCHASEDETAILS.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'),
+					array('table'=>UOM.' as UOM','condition'=>'PDPURCHASEDETAILS.fk_uom_id = UOM.uom_id','jointype'=>'INNER JOIN'));
+	 $purchase_details = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
+	 
+	 
+	 //Get business_expenses
+	   $fields = array('pd_expense_id','PDBUSINESSEXPENSES.expense_item_id','BUSINESSEXPENSES.expense_item','FREQUENCY.name as frequency_name','fk_frequency_id','expense_value','annual_expenses_value');	
+	   $table = PDBUSINESSEXPENSES.' as PDBUSINESSEXPENSES';
+	   $where_condition_array = array('fk_pd_id'=>$pdid,'PDBUSINESSEXPENSES.isactive'=>1);
+	   $joins = array(
+					array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'PDBUSINESSEXPENSES.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'),
+					array('table'=>BUSINESSEXPENSES.' as BUSINESSEXPENSES','condition'=>'PDBUSINESSEXPENSES.expense_item_id = BUSINESSEXPENSES.expense_item_id','jointype'=>'INNER JOIN'));
+	 $business_expenses = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
+	 
+	 
+	  
+	  //Get house_hold_expenses
+		$fields = array('household_expense_id','expense_item','FREQUENCY.name as frequency_name','fk_frequency_id','expense_value','annual_expense_value');	
+		$table = PDHOUSEHOLDEXPENSES.' as PDHOUSEHOLDEXPENSES';
+		$where_condition_array = array('fk_pd_id'=>$pdid,'PDHOUSEHOLDEXPENSES.isactive'=>1);
+		$joins = array(
+					array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'PDHOUSEHOLDEXPENSES.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'));
+	  $house_hold_expenses = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
+	
+	/*********************************End of Assessd Income Sections   *****************************************/
+	
+	
+	
 	$result_data['question_answers'] = $categories;   
 	$result_data['counts'] = array('overall_answered_count'=>$overall_answered_count,'overall_question_count'=>$overall_question_count);
 	if(count($pd_master_detials))
@@ -578,7 +637,7 @@ class PD_Model extends SPARQ_Model {
 		$result_data['pdmaster_details'] = $pd_master_detials[0];   
 	}
 	$result_data['pdapplicants_detials'] = $pd_applicants_detials;   
-	$result_data['assessed_income'] = "";   
+	$result_data['assessed_income'] = array('sales_declared_by_customer'=>$sales_declared_by_customer,'sales_calculated_by_itemwise'=>$sales_calculated_by_itemwise,'purchase_details'=>$purchase_details,'business_expenses'=>$business_expenses,'house_hold_expenses'=>$house_hold_expenses);   
 	$result_data['template_forms'] = $template_forms;   
 	return $result_data;
    }

@@ -377,6 +377,32 @@ defined('SOURCEOFBALANCETRANSFER') OR define('SOURCEOFBALANCETRANSFER','m_source
 defined('STATUSOFCONSTRUCTION') OR define('STATUSOFCONSTRUCTION','m_status_of_construction');
 
 
+// Assessed Income related Tables
+defined('SALESDECLAREDBYCUSTOMER') OR define('SALESDECLAREDBYCUSTOMER','t_pd_sales_declared_by_customer');
+defined('SALESDECLAREDBYCUSTOMERID') OR define('SALESDECLAREDBYCUSTOMERID','sdc_id');
+
+defined('SALESCALCULATEDBYITEMWISE') OR define('SALESCALCULATEDBYITEMWISE','t_pd_sales_calculated_by_itemwise');
+defined('SALESCALCULATEDBYITEMWISEID') OR define('SALESCALCULATEDBYITEMWISEID','sci_id');
+
+defined('SALESITEMMONTHWISE') OR define('SALESITEMMONTHWISE','t_pd_sales_item_monthwise');
+defined('SALESITEMMONTHWISEID') OR define('SALESITEMMONTHWISEID','sim_id');
+
+defined('SALESITEMMONTHWISECHILD') OR define('SALESITEMMONTHWISECHILD','t_pd_sales_item_monthwise_child');
+defined('SALESITEMMONTHWISECHILDID') OR define('SALESITEMMONTHWISECHILDID','simc_id');
+
+defined('PDPURCHASEDETAILS') OR define('PDPURCHASEDETAILS','t_pd_purchase_details');
+defined('PDPURCHASEDETAILSID') OR define('PDPURCHASEDETAILSID','purchase_id');
+
+defined('BUSINESSEXPENSES') OR define('BUSINESSEXPENSES','m_business_expenses');
+defined('BUSINESSEXPENSESID') OR define('BUSINESSEXPENSESID','expense_id');
+
+defined('PDBUSINESSEXPENSES') OR define('PDBUSINESSEXPENSES','t_pd_business_expenses');
+defined('PDBUSINESSEXPENSESID') OR define('PDBUSINESSEXPENSESID','pd_expense_id');
+
+defined('PDHOUSEHOLDEXPENSES') OR define('PDHOUSEHOLDEXPENSES','t_pd_household_expense');
+defined('PDHOUSEHOLDEXPENSESID') OR define('PDHOUSEHOLDEXPENSESID','household_expense_id');
+
+
 
 
 
