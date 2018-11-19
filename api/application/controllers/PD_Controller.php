@@ -1741,4 +1741,17 @@ class PD_Controller extends REST_Controller {
 	}
 	
 	
+	public function getAssessedIncome_post()
+	{
+		$pd_id = $this->post('pd_id');
+		$pd_form_id = $this->post('pd_form_id');
+		$result_array = $this->PD_Model->getAssessedIncome($pd_id,$pd_form_id);
+		
+		$data['dataStatus'] = true;
+		$data['status'] = REST_Controller::HTTP_OK;
+	    $data['records'] = $result_array;
+		$this->response($data,REST_Controller::HTTP_OK);
+	}
+	
+	
 }

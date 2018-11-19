@@ -574,59 +574,7 @@ class PD_Model extends SPARQ_Model {
 			}
 			
 			
-	/********************************* Assessd Income Sections   *****************************************/
-	$assessed_income = array();
-		
-	//get sales_declared_by_customer details
-	$fields = array('sdc_id','sales_declared_by_customer');	
-	$where_condition_array = array('fk_pd_id'=>$pdid,'isactive'=>1);	
-	$sales_declared_by_customer = $this->selectCustomRecords($fields,$where_condition_array,SALESDECLAREDBYCUSTOMER);
 	
-	
-	//get sales_calculated_by_itemwise details
-	$fields = array('sci_id','sales_item','sales_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_sale_value');	
-	$table = SALESCALCULATEDBYITEMWISE.' as SALESCALCULATEDBYITEMWISE';
-	$where_condition_array = array('fk_pd_id'=>$pdid,'SALESCALCULATEDBYITEMWISE.isactive'=>1);
-	$joins = array(
-					array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'SALESCALCULATEDBYITEMWISE.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'),
-					array('table'=>UOM.' as UOM','condition'=>'SALESCALCULATEDBYITEMWISE.fk_uom_id = UOM.uom_id','jointype'=>'INNER JOIN'));
-	$sales_calculated_by_itemwise = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
-	
-   
-   //$sales_items_by_monthwise = 
-	
-	
-	
-	//Get purchase_details
-	   $fields = array('purchase_id','purchase_item','purchase_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_purchase_value');	
-	   $table = PDPURCHASEDETAILS.' as PDPURCHASEDETAILS';
-	   $where_condition_array = array('fk_pd_id'=>$pdid,'PDPURCHASEDETAILS.isactive'=>1);
-	   $joins = array(
-					array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'PDPURCHASEDETAILS.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'),
-					array('table'=>UOM.' as UOM','condition'=>'PDPURCHASEDETAILS.fk_uom_id = UOM.uom_id','jointype'=>'INNER JOIN'));
-	 $purchase_details = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
-	 
-	 
-	 //Get business_expenses
-	   $fields = array('pd_expense_id','PDBUSINESSEXPENSES.expense_item_id','BUSINESSEXPENSES.expense_item','FREQUENCY.name as frequency_name','fk_frequency_id','expense_value','annual_expenses_value');	
-	   $table = PDBUSINESSEXPENSES.' as PDBUSINESSEXPENSES';
-	   $where_condition_array = array('fk_pd_id'=>$pdid,'PDBUSINESSEXPENSES.isactive'=>1);
-	   $joins = array(
-					array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'PDBUSINESSEXPENSES.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'),
-					array('table'=>BUSINESSEXPENSES.' as BUSINESSEXPENSES','condition'=>'PDBUSINESSEXPENSES.expense_item_id = BUSINESSEXPENSES.expense_item_id','jointype'=>'INNER JOIN'));
-	 $business_expenses = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
-	 
-	 
-	  
-	  //Get house_hold_expenses
-		$fields = array('household_expense_id','expense_item','FREQUENCY.name as frequency_name','fk_frequency_id','expense_value','annual_expense_value');	
-		$table = PDHOUSEHOLDEXPENSES.' as PDHOUSEHOLDEXPENSES';
-		$where_condition_array = array('fk_pd_id'=>$pdid,'PDHOUSEHOLDEXPENSES.isactive'=>1);
-		$joins = array(
-					array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'PDHOUSEHOLDEXPENSES.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'));
-	  $house_hold_expenses = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
-	
-	/*********************************End of Assessd Income Sections   *****************************************/
 	
 	
 	
@@ -636,8 +584,7 @@ class PD_Model extends SPARQ_Model {
 	{
 		$result_data['pdmaster_details'] = $pd_master_detials[0];   
 	}
-	$result_data['pdapplicants_detials'] = $pd_applicants_detials;   
-	$result_data['assessed_income'] = array('sales_declared_by_customer'=>$sales_declared_by_customer,'sales_calculated_by_itemwise'=>$sales_calculated_by_itemwise,'purchase_details'=>$purchase_details,'business_expenses'=>$business_expenses,'house_hold_expenses'=>$house_hold_expenses);   
+	$result_data['pdapplicants_detials'] = $pd_applicants_detials;    
 	$result_data['template_forms'] = $template_forms;   
 	return $result_data;
    }
@@ -840,5 +787,86 @@ class PD_Model extends SPARQ_Model {
 		  $form_details = $this->db->GET()->result_array();
 		  return $form_details;
 		  
-	  }		  
+	  }	
+
+	 public function getAssessedIncome($pdid,$pd_form_id)
+	 {
+		/********************************* Assessd Income Sections   *****************************************/
+			$assessed_income = array();
+				
+			//get sales_declared_by_customer details
+			$fields = array('sdc_id','sales_declared_by_customer');	
+			$where_condition_array = array('fk_pd_id'=>$pdid,'isactive'=>1);	
+			$sales_declared_by_customer = $this->selectCustomRecords($fields,$where_condition_array,SALESDECLAREDBYCUSTOMER);
+			
+			
+			//get sales_calculated_by_itemwise details
+			$fields = array('sci_id','sales_item','sales_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_sale_value');	
+			$table = SALESCALCULATEDBYITEMWISE.' as SALESCALCULATEDBYITEMWISE';
+			$where_condition_array = array('fk_pd_id'=>$pdid,'SALESCALCULATEDBYITEMWISE.isactive'=>1);
+			$joins = array(
+							array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'SALESCALCULATEDBYITEMWISE.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'),
+							array('table'=>UOM.' as UOM','condition'=>'SALESCALCULATEDBYITEMWISE.fk_uom_id = UOM.uom_id','jointype'=>'INNER JOIN'));
+			$sales_calculated_by_itemwise = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
+			
+		   
+		   //get sales_items_by_monthwise details
+			$this->db->SELECT('sim_id,sales_item');
+			$this->db->FROM(SALESITEMMONTHWISE.' as SALESITEMMONTHWISE');
+			$this->db->WHERE('SALESITEMMONTHWISE.fk_pd_id',$pdid);
+			$this->db->WHERE('SALESITEMMONTHWISE.isactive',1);
+			$sales_items_by_monthwise = $this->db->GET()->result_array();
+			if(count($sales_items_by_monthwise))
+			{
+				foreach($sales_items_by_monthwise as $key => $item)
+				{
+					$this->db->SELECT('simc_id,sales_date,sales_value');
+					$this->db->FROM(SALESITEMMONTHWISECHILD.' as SALESITEMMONTHWISECHILD');
+					$this->db->WHERE('SALESITEMMONTHWISECHILD.fk_sim_id',$item['sim_id']);
+					$this->db->WHERE('SALESITEMMONTHWISECHILD.isactive',1);
+					//$this->db->GROUP_BY('SALESITEMMONTHWISECHILD.sales_date');
+					$sales_items_by_monthwise_child = $this->db->GET()->result_array();
+					$sales_items_by_monthwise[$key]['items'] = $sales_items_by_monthwise_child;
+				}
+			}
+			
+		  
+			
+			
+			
+			//Get purchase_details
+			   $fields = array('purchase_id','purchase_item','purchase_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_purchase_value');	
+			   $table = PDPURCHASEDETAILS.' as PDPURCHASEDETAILS';
+			   $where_condition_array = array('fk_pd_id'=>$pdid,'PDPURCHASEDETAILS.isactive'=>1);
+			   $joins = array(
+							array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'PDPURCHASEDETAILS.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'),
+							array('table'=>UOM.' as UOM','condition'=>'PDPURCHASEDETAILS.fk_uom_id = UOM.uom_id','jointype'=>'INNER JOIN'));
+			 $purchase_details = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
+			 
+			 
+			 //Get business_expenses
+			   $fields = array('pd_expense_id','PDBUSINESSEXPENSES.expense_item_id','BUSINESSEXPENSES.expense_item','FREQUENCY.name as frequency_name','fk_frequency_id','expense_value','annual_expenses_value');	
+			   $table = PDBUSINESSEXPENSES.' as PDBUSINESSEXPENSES';
+			   $where_condition_array = array('fk_pd_id'=>$pdid,'PDBUSINESSEXPENSES.isactive'=>1);
+			   $joins = array(
+							array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'PDBUSINESSEXPENSES.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'),
+							array('table'=>BUSINESSEXPENSES.' as BUSINESSEXPENSES','condition'=>'PDBUSINESSEXPENSES.expense_item_id = BUSINESSEXPENSES.expense_item_id','jointype'=>'INNER JOIN'));
+			 $business_expenses = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
+			 
+			 
+			  
+			  //Get house_hold_expenses
+				$fields = array('household_expense_id','expense_item','FREQUENCY.name as frequency_name','fk_frequency_id','expense_value','annual_expense_value');	
+				$table = PDHOUSEHOLDEXPENSES.' as PDHOUSEHOLDEXPENSES';
+				$where_condition_array = array('fk_pd_id'=>$pdid,'PDHOUSEHOLDEXPENSES.isactive'=>1);
+				$joins = array(
+							array('table'=>FREQUENCY.' as FREQUENCY','condition'=>'PDHOUSEHOLDEXPENSES.fk_frequency_id = FREQUENCY.frequency_id','jointype'=>'INNER JOIN'));
+			  $house_hold_expenses = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
+			
+			/*********************************End of Assessd Income Sections   *****************************************/ 
+			
+			$assessed_income= array('sales_declared_by_customer'=>$sales_declared_by_customer,'sales_calculated_by_itemwise'=>$sales_calculated_by_itemwise,'sales_items_by_monthwise'=>$sales_items_by_monthwise,'purchase_details'=>$purchase_details,'business_expenses'=>$business_expenses,'house_hold_expenses'=>$house_hold_expenses);
+			
+			return $assessed_income;
+	 }
 }

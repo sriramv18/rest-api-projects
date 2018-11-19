@@ -150,6 +150,7 @@ $route['allbase'] = 'PD_Controller/base';
 $route['savePDQuestions'] = 'PD_Controller/saveActualPDQuestions'; 
 $route['getAnswersForPD'] = 'PD_Controller/getAnswersForPD'; 
 $route['checkOTP'] = 'PD_Controller/checkOTP'; 
+$route['getAssessedIncome'] = 'PD_Controller/getAssessedIncome'; 
 
 //PD Form Related
 $route['getPDFormDetails'] = 'PD_Controller/getPDFormDetails'; 
