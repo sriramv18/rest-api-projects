@@ -1752,6 +1752,219 @@ class PD_Controller extends REST_Controller {
 	    $data['records'] = $result_array;
 		$this->response($data,REST_Controller::HTTP_OK);
 	}
+		
+	public function saveAssessedIncomeSalesDeclaredByCustomer_post()
+	{
+		$records = $this->post('records');
+		$pk = "";
+		if($records['sdc_id'] != null || $records['sdc_id'] != "")
+		{
+			
+			$where_condition_array = array('sdc_id'=>$records['sdc_id']);
+			$pk = $this->PD_Model->updateRecords($records,SALESDECLAREDBYCUSTOMER,$where_condition_array);
+		}
+		else
+		{
+			$pk = $this->PD_Model->saveRecords($records,SALESDECLAREDBYCUSTOMER);
+		}
+		
+		if($pk != "" || $pk != null)
+		{
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $pk;
+			$this->response($data,REST_Controller::HTTP_OK);	
+		}
+		else
+		{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+			$data['msg'] = 'Something went wrong! Try Later';
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+		
+	}
+
+	public function saveAssessedIncomeSalesCalculatedByItemwise_post()
+	{
+		$records = $this->post('records');
+		$id = "";
+		if($records['sci_id'] != null || $records['sci_id'] != "")
+		{
+			$where_condition_array = array('sci_id'=>$records['sci_id']);
+			$id = $this->PD_Model->updateRecords($records,SALESCALCULATEDBYITEMWISE,$where_condition_array);
+		}
+		else
+		{
+			$id = $this->PD_Model->saveRecords($records,SALESCALCULATEDBYITEMWISE);
+		}
+		
+		if($id != "" || $id != null)
+		{
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $id;
+			$this->response($data,REST_Controller::HTTP_OK);	
+		}
+		else
+		{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+			$data['msg'] = 'Something went wrong! Try Later';
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+	}
+	
+	public function saveAssessedIncomePurchaseDetails_post()
+	{
+		$records = $this->post('records');
+		$id = "";
+		if($records['purchase_id'] != null || $records['purchase_id'] != "")
+		{
+			$where_condition_array = array('purchase_id'=>$records['purchase_id']);
+			$id = $this->PD_Model->updateRecords($records,PDPURCHASEDETAILS,$where_condition_array);
+		}
+		else
+		{
+			$id = $this->PD_Model->saveRecords($records,PDPURCHASEDETAILS);
+		}
+		
+		if($id != "" || $id != null)
+		{
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $id;
+			$this->response($data,REST_Controller::HTTP_OK);	
+		}
+		else
+		{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+			$data['msg'] = 'Something went wrong! Try Later';
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+	}
+	
+	public function saveAssessedIncomeBusinessExpenses_post()
+	{
+		$records = $this->post('records');
+		$id = "";
+		if($records['pd_expense_id'] != null || $records['pd_expense_id'] != "")
+		{
+			$where_condition_array = array('pd_expense_id'=>$records['pd_expense_id']);
+			$id = $this->PD_Model->updateRecords($records,PDBUSINESSEXPENSES,$where_condition_array);
+		}
+		else
+		{
+			$id = $this->PD_Model->saveRecords($records,PDBUSINESSEXPENSES);
+		}
+		
+		if($id != "" || $id != null)
+		{
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $id;
+			$this->response($data,REST_Controller::HTTP_OK);	
+		}
+		else
+		{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+			$data['msg'] = 'Something went wrong! Try Later';
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+	}
+	
+	public function saveAssessedIncomeHouseholdExpenses_post()
+	{
+		$records = $this->post('records');
+		$id = "";
+		if($records['household_expense_id'] != null || $records['household_expense_id'] != "")
+		{
+			$where_condition_array = array('household_expense_id'=>$records['household_expense_id']);
+			$id = $this->PD_Model->updateRecords($records,PDHOUSEHOLDEXPENSES,$where_condition_array);
+		}
+		else
+		{
+			$id = $this->PD_Model->saveRecords($records,PDHOUSEHOLDEXPENSES);
+		}
+		
+		if($id != "" || $id != null)
+		{
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $id;
+			$this->response($data,REST_Controller::HTTP_OK);	
+		}
+		else
+		{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+			$data['msg'] = 'Something went wrong! Try Later';
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+	}
 	
 	
+	
+	public function saveAssessedIncomeMonthwiseItems_post()//SALESITEMMONTHWISECHILD
+	{
+		$records = $this->post('records');
+		$child_data = array();
+		if(array_key_exists('child',$records))
+		{
+			$child_data = $records['child'];
+			unset($records['child']);
+		}
+		$id = "";
+		if($records['sim_id'] != null || $records['sim_id'] != "")
+		{
+			$where_condition_array = array('sim_id'=>$records['sim_id']);
+			$id = $this->PD_Model->updateRecords($records,SALESITEMMONTHWISE,$where_condition_array);
+			if($id != "" || $id != null)
+			{
+				foreach($child_data as $ckey => $child)
+				{
+					if($child['simc_id'] != "" || $child['simc_id'] != null)
+					{
+						$where_condition_array = array('simc_id'=>$child['simc_id']);
+						$child_id = $this->PD_Model->updateRecords($child,SALESITEMMONTHWISECHILD,$where_condition_array);
+					}
+					else
+					{
+						$child['fk_sim_id'] = $records['sim_id'];
+						$child_id = $this->PD_Model->saveRecords($child,SALESITEMMONTHWISECHILD);
+					}
+				}
+			}
+			
+		}
+		else
+		{
+			$id = $this->PD_Model->saveRecords($records,SALESITEMMONTHWISE);
+			if($id != "" || $id != null)
+			{
+				foreach($child_data as $ckey => $child)
+				{
+					$child['fk_sim_id'] = $id;
+					$child_id = $this->PD_Model->saveRecords($child,SALESITEMMONTHWISECHILD);
+				}
+			}
+		}
+		
+		if($id != "" || $id != null)
+		{
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $id;
+			$this->response($data,REST_Controller::HTTP_OK);	
+		}
+		else
+		{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+			$data['msg'] = 'Something went wrong! Try Later';
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+	}
 }

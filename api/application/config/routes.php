@@ -151,6 +151,12 @@ $route['savePDQuestions'] = 'PD_Controller/saveActualPDQuestions';
 $route['getAnswersForPD'] = 'PD_Controller/getAnswersForPD'; 
 $route['checkOTP'] = 'PD_Controller/checkOTP'; 
 $route['getAssessedIncome'] = 'PD_Controller/getAssessedIncome'; 
+$route['saveAssessedIncomeSalesDeclaredByCustomer'] = 'PD_Controller/saveAssessedIncomeSalesDeclaredByCustomer'; 
+$route['saveAssessedIncomeSalesCalculatedByItemwise'] = 'PD_Controller/saveAssessedIncomeSalesCalculatedByItemwise'; 
+$route['saveAssessedIncomePurchaseDetails'] = 'PD_Controller/saveAssessedIncomePurchaseDetails'; 
+$route['saveAssessedIncomeBusinessExpenses'] = 'PD_Controller/saveAssessedIncomeBusinessExpenses'; 
+$route['saveAssessedIncomeHouseholdExpenses'] = 'PD_Controller/saveAssessedIncomeHouseholdExpenses'; 
+$route['saveAssessedIncomeMonthwiseItems'] = 'PD_Controller/saveAssessedIncomeMonthwiseItems'; 
 
 //PD Form Related
 $route['getPDFormDetails'] = 'PD_Controller/getPDFormDetails'; 
