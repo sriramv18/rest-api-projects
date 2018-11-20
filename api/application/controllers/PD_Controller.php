@@ -1823,22 +1823,26 @@ class PD_Controller extends REST_Controller {
 	public function saveAssessedIncomeSalesCalculatedByItemwise_post()
 	{
 		$records = $this->post('records');
-		$id = "";
-		if($records['sci_id'] != null || $records['sci_id'] != "")
-		{
-			$where_condition_array = array('sci_id'=>$records['sci_id']);
-			$id = $this->PD_Model->updateRecords($records,SALESCALCULATEDBYITEMWISE,$where_condition_array);
+		$count = 0;
+		foreach($records as $rec_key => $record)
+		{	
+				if($record['sci_id'] != null || $record['sci_id'] != "")
+				{
+					$where_condition_array = array('sci_id'=>$record['sci_id']);
+					$id = $this->PD_Model->updateRecords($record,SALESCALCULATEDBYITEMWISE,$where_condition_array);
+					if($id != "" || $id != null){$count++;}
+				}
+				else
+				{
+					$id = $this->PD_Model->saveRecords($record,SALESCALCULATEDBYITEMWISE);
+					if($id != "" || $id != null){$count++;}
+				}
 		}
-		else
-		{
-			$id = $this->PD_Model->saveRecords($records,SALESCALCULATEDBYITEMWISE);
-		}
-		
-		if($id != "" || $id != null)
+		if($count == count($records))
 		{
 			$data['dataStatus'] = true;
 			$data['status'] = REST_Controller::HTTP_OK;
-			$data['records'] = $id;
+			$data['records'] = true;
 			$this->response($data,REST_Controller::HTTP_OK);	
 		}
 		else
@@ -1853,22 +1857,26 @@ class PD_Controller extends REST_Controller {
 	public function saveAssessedIncomePurchaseDetails_post()
 	{
 		$records = $this->post('records');
-		$id = "";
-		if($records['purchase_id'] != null || $records['purchase_id'] != "")
-		{
-			$where_condition_array = array('purchase_id'=>$records['purchase_id']);
-			$id = $this->PD_Model->updateRecords($records,PDPURCHASEDETAILS,$where_condition_array);
-		}
-		else
-		{
-			$id = $this->PD_Model->saveRecords($records,PDPURCHASEDETAILS);
-		}
-		
-		if($id != "" || $id != null)
+		$count = 0;
+			foreach($records as $rec_key => $record)
+			{
+				if($record['purchase_id'] != null || $record['purchase_id'] != "")
+				{
+					$where_condition_array = array('purchase_id'=>$record['purchase_id']);
+					$id = $this->PD_Model->updateRecords($record,PDPURCHASEDETAILS,$where_condition_array);
+					if($id != "" || $id != null){$count++;}
+				}
+				else
+				{
+					$id = $this->PD_Model->saveRecords($record,PDPURCHASEDETAILS);
+					if($id != "" || $id != null){$count++;}
+				}
+			}
+		if($count == count($records))
 		{
 			$data['dataStatus'] = true;
 			$data['status'] = REST_Controller::HTTP_OK;
-			$data['records'] = $id;
+			$data['records'] = true;
 			$this->response($data,REST_Controller::HTTP_OK);	
 		}
 		else
@@ -1883,22 +1891,27 @@ class PD_Controller extends REST_Controller {
 	public function saveAssessedIncomeBusinessExpenses_post()
 	{
 		$records = $this->post('records');
-		$id = "";
-		if($records['pd_expense_id'] != null || $records['pd_expense_id'] != "")
-		{
-			$where_condition_array = array('pd_expense_id'=>$records['pd_expense_id']);
-			$id = $this->PD_Model->updateRecords($records,PDBUSINESSEXPENSES,$where_condition_array);
-		}
-		else
-		{
-			$id = $this->PD_Model->saveRecords($records,PDBUSINESSEXPENSES);
-		}
+		$count = 0;
+			foreach($records as $rec_key => $record)
+			{
+				if($record['pd_expense_id'] != null || $record['pd_expense_id'] != "")
+				{
+					$where_condition_array = array('pd_expense_id'=>$record['pd_expense_id']);
+					$id = $this->PD_Model->updateRecords($record,PDBUSINESSEXPENSES,$where_condition_array);
+					if($id != "" || $id != null){$count++;}
+				}
+				else
+				{
+					$id = $this->PD_Model->saveRecords($record,PDBUSINESSEXPENSES);
+					if($id != "" || $id != null){$count++;}
+				}
+			}
 		
-		if($id != "" || $id != null)
+		if($count == count($records))
 		{
 			$data['dataStatus'] = true;
 			$data['status'] = REST_Controller::HTTP_OK;
-			$data['records'] = $id;
+			$data['records'] = true;
 			$this->response($data,REST_Controller::HTTP_OK);	
 		}
 		else
@@ -1913,22 +1926,27 @@ class PD_Controller extends REST_Controller {
 	public function saveAssessedIncomeHouseholdExpenses_post()
 	{
 		$records = $this->post('records');
-		$id = "";
-		if($records['household_expense_id'] != null || $records['household_expense_id'] != "")
-		{
-			$where_condition_array = array('household_expense_id'=>$records['household_expense_id']);
-			$id = $this->PD_Model->updateRecords($records,PDHOUSEHOLDEXPENSES,$where_condition_array);
-		}
-		else
-		{
-			$id = $this->PD_Model->saveRecords($records,PDHOUSEHOLDEXPENSES);
-		}
+		$count = 0;
+			foreach($records as $rec_key => $record)
+			{
+					if($record['household_expense_id'] != null || $record['household_expense_id'] != "")
+					{
+						$where_condition_array = array('household_expense_id'=>$record['household_expense_id']);
+						$id = $this->PD_Model->updateRecords($record,PDHOUSEHOLDEXPENSES,$where_condition_array);
+						if($id != "" || $id != null){$count++;}
+					}
+					else
+					{
+						$id = $this->PD_Model->saveRecords($record,PDHOUSEHOLDEXPENSES);
+						if($id != "" || $id != null){$count++;}
+					}
+			}
 		
-		if($id != "" || $id != null)
+		if($count == count($records))
 		{
 			$data['dataStatus'] = true;
 			$data['status'] = REST_Controller::HTTP_OK;
-			$data['records'] = $id;
+			$data['records'] = true;
 			$this->response($data,REST_Controller::HTTP_OK);	
 		}
 		else
