@@ -1963,49 +1963,56 @@ class PD_Controller extends REST_Controller {
 	public function saveAssessedIncomeMonthwiseItems_post()//SALESITEMMONTHWISECHILD
 	{
 		$records = $this->post('records');
-		$child_data = array();
-		if(array_key_exists('child',$records))
+		$count = 0;
+		foreach($records as $key => $record)
 		{
-			$child_data = $records['child'];
-			unset($records['child']);
-		}
-		$id = "";
-		if($records['sim_id'] != null || $records['sim_id'] != "")
-		{
-			$where_condition_array = array('sim_id'=>$records['sim_id']);
-			$id = $this->PD_Model->updateRecords($records,SALESITEMMONTHWISE,$where_condition_array);
-			if($id != "" || $id != null)
-			{
-				foreach($child_data as $ckey => $child)
+		
+				$child_data = array();
+				if(array_key_exists('child',$record))
 				{
-					if($child['simc_id'] != "" || $child['simc_id'] != null)
+					$child_data = $record['child'];
+					unset($record['child']);
+				}
+				$id = "";
+				if($record['sim_id'] != null || $record['sim_id'] != "")
+				{
+					$where_condition_array = array('sim_id'=>$record['sim_id']);
+					$id = $this->PD_Model->updateRecords($record,SALESITEMMONTHWISE,$where_condition_array);
+					if($id != "" || $id != null)
 					{
-						$where_condition_array = array('simc_id'=>$child['simc_id']);
-						$child_id = $this->PD_Model->updateRecords($child,SALESITEMMONTHWISECHILD,$where_condition_array);
+						$count++;
+						foreach($child_data as $ckey => $child)
+						{
+							if($child['simc_id'] != "" || $child['simc_id'] != null)
+							{
+								$where_condition_array = array('simc_id'=>$child['simc_id']);
+								$child_id = $this->PD_Model->updateRecords($child,SALESITEMMONTHWISECHILD,$where_condition_array);
+							}
+							else
+							{
+								$child['fk_sim_id'] = $records['sim_id'];
+								$child_id = $this->PD_Model->saveRecords($child,SALESITEMMONTHWISECHILD);
+							}
+						}
 					}
-					else
+					
+				}
+				else
+				{
+					$id = $this->PD_Model->saveRecords($record,SALESITEMMONTHWISE);
+					if($id != "" || $id != null)
 					{
-						$child['fk_sim_id'] = $records['sim_id'];
-						$child_id = $this->PD_Model->saveRecords($child,SALESITEMMONTHWISECHILD);
+						$count++;
+						foreach($child_data as $ckey => $child)
+						{
+							$child['fk_sim_id'] = $id;
+							$child_id = $this->PD_Model->saveRecords($child,SALESITEMMONTHWISECHILD);
+						}
 					}
 				}
-			}
-			
-		}
-		else
-		{
-			$id = $this->PD_Model->saveRecords($records,SALESITEMMONTHWISE);
-			if($id != "" || $id != null)
-			{
-				foreach($child_data as $ckey => $child)
-				{
-					$child['fk_sim_id'] = $id;
-					$child_id = $this->PD_Model->saveRecords($child,SALESITEMMONTHWISECHILD);
-				}
-			}
 		}
 		
-		if($id != "" || $id != null)
+		if($count == count($records))
 		{
 			$data['dataStatus'] = true;
 			$data['status'] = REST_Controller::HTTP_OK;
