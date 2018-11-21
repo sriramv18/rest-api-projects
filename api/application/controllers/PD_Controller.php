@@ -1512,6 +1512,11 @@ class PD_Controller extends REST_Controller {
 			$z = 0;
 			$y = 0;
 			/////For handling Rendal form Sub array//////
+			
+			/////For handling Asset form Commom Remark Filed//////
+			
+			$asset_remark = array();
+			/////For handling Asset form Commom Remark Filed//////
 			foreach($result_array as $rkey => $result)
 			{
 			  
@@ -1593,8 +1598,15 @@ class PD_Controller extends REST_Controller {
 			  else
 			  {
 				  
-				$t = array($result['column_name']=>$result['column_value']);
-				$final_data = array_merge($final_data,$t);
+				if($pd_form_id != 4)
+				{  
+					$t = array($result['column_name']=>$result['column_value']);
+					$final_data = array_merge($final_data,$t);
+				}
+				else // asset form details commom remark field
+				{
+					$asset_remark = array($result['column_name']=>$result['column_value']);
+				}
 			  }
 			  
 			  
@@ -1638,7 +1650,12 @@ class PD_Controller extends REST_Controller {
 				
 			}
 			//$final_data = array_merge($final_data,$group);
-			if($pd_form_id == 17)
+			if($pd_form_id == 4)// to merge assest form commom remarks at end of final data.
+			{
+				$final_data = array_merge($final_data,$asset_remark);
+			}
+			
+			if($pd_form_id == 17)//merge subgroup of rental verification form with parent group, diff scenario not like other forms  
 			{
 				if(array_key_exists('rental_home',$final_data))
 				{
