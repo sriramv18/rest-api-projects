@@ -20,6 +20,7 @@ class PD_Controller extends REST_Controller {
 		$this->load->model('PD_Model');
 		$this->load->library('AWS_S3');
 		$this->load->library('AWS_SNS');
+		$this->load->helper('GETPDFORMDETAILS');
         
     }
     
@@ -1490,193 +1491,13 @@ class PD_Controller extends REST_Controller {
 		$pd_id = $this->post('pd_id');
 		$pd_form_id = $this->post('pd_form_id');
 		$result_array = $this->PD_Model->getPDFormDetails($pd_id,$pd_form_id);
-		
-		$final_data = array();
-		
-		
-			//print_r($result_array);
-			
-			
-			$overall = array();
-			$pre_group = "";
-			$pre_sub_group = "";
-			$pre_iter = "";
-			$pre_sub_iter = "";
-			$t1 = array();
-			$t2 = array();
-			$group = array();	
-			$sub_group = array();	
-			
-			/////For handling Rendal form Sub array//////
-			$pre_column_name = "name";
-			$z = 0;
-			$y = 0;
-			/////For handling Rendal form Sub array//////
-			
-			/////For handling Asset form Commom Remark Filed//////
-			
-			$asset_remark = array();
-			/////For handling Asset form Commom Remark Filed//////
-			foreach($result_array as $rkey => $result)
-			{
-			  
-			  if($result['iteration'] != "" || $result['iteration'] != null)
-			  {
-				  if($result['iter_sub_column_name'] == "" || $result['iter_sub_column_name'] == null)
-				  {  
-					  if($result['iter_column_name'] != $pre_group)// && $result['iteration'] != $pre_iter)
-					  {
-						
-							$t1 = array();
-							$group = array();
-						//echo "New-".$result['iter_column_name'];
-							// print_r(array($result['column_name']=>$result['column_value']));
-						   $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
-						   $group[$result['iter_column_name']][$result['iteration']] = $t1;
-						   $pre_group = $result['iter_column_name'];
-						   $pre_iter = $result['iteration'];
-					  }
-					  else
-					  {
-						 
-						 // echo "old-".$result['iter_column_name'];
-							// print_r(array($result['column_name']=>$result['column_value']));
-							 $t1 = array_merge($t1,array($result['column_name']=>$result['column_value']));
-							 $group[$result['iter_column_name']][$result['iteration']] = $t1;
-							  $pre_group = $result['iter_column_name'];
-							  $pre_iter = $result['iteration'];
-					   }
-				}
-				else// Handle child group
-				{
-					if($pd_form_id != 17)
-					{
-						if($result['iter_sub_column_name'] != $pre_sub_group || $result['iteration'] != $pre_sub_iter)
-						  {
-							
-								$t2 = array();
-								//$sub_group = array();
-								//echo '\n'."New-".$result['iter_column_name'].$result['iteration'].$result['iter_sub_column_name'];
-								// print_r(array($result['column_name']=>$result['column_value']));
-							   $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
-							   $sub_group[$result['iter_sub_column_name']][$result['iteration']] = $t2;
-							   $pre_sub_group = $result['iter_sub_column_name'];
-							   $pre_sub_iter = $result['iteration'];
-						  }
-						  else
-						  {
-							 
-							 // echo '\n'."old-".$result['iter_column_name'].$result['iteration'].$result['iter_sub_column_name'];
-								// print_r(array($result['column_name']=>$result['column_value']));
-								 $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
-								 $sub_group[$result['iter_sub_column_name']][$result['iteration']] = $t2;
-								  $pre_sub_group = $result['iter_sub_column_name'];
-								  $pre_sub_iter = $result['iteration'];
-						   }
-					}
-					else// handle Rental form Sub group
-					{
-						if($result['column_name'] == $pre_column_name)// || $result['iteration'] != $pre_sub_iter)
-						  {
-							  $t2 = array();
-							  $z++;
-							  $y++;
-							  $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
-							  $sub_group[$result['iter_sub_column_name']][$result['iteration']][$z] = $t2;
-							  //$pre_column_name = $result['column_name'];
-						  }
-						  else
-						  {
-								 $t2 = array_merge($t2,array($result['column_name']=>$result['column_value']));
-								 $sub_group[$result['iter_sub_column_name']][$result['iteration']][$z] = $t2;
-								 //$pre_column_name = $result['column_name'];
-						  }
-					}						
-					   
-				}
-			  }
-			  else
-			  {
-				  
-				if($pd_form_id != 4)
-				{  
-					$t = array($result['column_name']=>$result['column_value']);
-					$final_data = array_merge($final_data,$t);
-				}
-				else // asset form details commom remark field
-				{
-					$asset_remark = array($result['column_name']=>$result['column_value']);
-				}
-			  }
-			  
-			  
-			  //print_r($group);		
-			  $final_data = array_merge($final_data,$group);
-			}
-			//print_r($sub_group);die();
-			
-			// Merge subgroup into main group
-			$i = 0;
-			if(count($sub_group) && $pd_form_id != 17)
-			{
-				
-				foreach($sub_group as $key => $value)
-				{
-					//echo $key;
-					//print_r($value);
-					foreach($value as $vkey =>$final_value)
-					{
-						//echo $vkey;
-					    // print_r($final_value);
-						$temp_array = array($key=>$final_value);
-						//print_r($temp_array);
-						//$i = 0;
-						foreach($final_data as $fkey => $fdata)
-						{
-							
-							$i++;
-							//echo $vkey.'-'.$i.'-'.$fkey.'\n';
-							if($i == $vkey)
-							{
-								//$i--;
-								$final_data[$fkey][$vkey] = array_merge($final_data[$fkey][$vkey],$temp_array);
-								//print_r($final_data[$fkey][$vkey]);
-							}
-							//$fdata[$i]
-						}
-						
-					}
-				}
-				
-			}
-			//$final_data = array_merge($final_data,$group);
-			if($pd_form_id == 4)// to merge assest form commom remarks at end of final data.
-			{
-				$final_data = array_merge($final_data,$asset_remark);
-			}
-			
-			if($pd_form_id == 17)//merge subgroup of rental verification form with parent group, diff scenario not like other forms  
-			{
-				if(array_key_exists('rental_home',$final_data))
-				{
-					
-					for($i = 1;$i<=count($final_data['rental_home']);$i++)
-					{
-						$final_data['rental_home'][$i]['details_tenants'] = $sub_group['details_tenants'][$i];
-						
-					}
-				}
-			}
-			$result_array = $final_data;
-			
-			
-	
+		$final_array = GETPDFORMDETAILS::getPDFormDetailsStructured($result_array,$pd_id,$pd_form_id);
 		
 		if($result_array)
 		{
 							$data['dataStatus'] = true;
 							$data['status'] = REST_Controller::HTTP_OK;
-							$data['records'] = $result_array;
+							$data['records'] = $final_array;
 							$this->response($data,REST_Controller::HTTP_OK);
 		}
 		else
@@ -2046,5 +1867,62 @@ class PD_Controller extends REST_Controller {
 			$data['msg'] = 'Something went wrong! Try Later';
 			$this->response($data,REST_Controller::HTTP_OK);
 		}
+	}
+	
+	public function getFinialPDReportQuestions_post()
+	{
+		$pd_id = $this->post('pd_id');
+		
+		//Get Template id 
+		$fields = array('fk_pd_template_id');
+		$where_condition_array = array('pd_id' => $pd_id);
+		$template_details = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDTRIGGER);
+		$template_id = null;
+		if(count($template_details))
+		{
+			$template_id = $template_details[0]['fk_pd_template_id'];
+		}
+		
+		// Get all assigned pd forms associated with this pd from template_forms table
+		if($template_id != null)
+		{
+			$columns = array('TEMPLATEFORMS.form_id','PDFORMS.pd_form_name');
+			$table = TEMPLATEFORMS.' as TEMPLATEFORMS';
+			$joins = array(array('table' => PDFORMS. ' as PDFORMS',
+								  'condition' =>'TEMPLATEFORMS.form_id = PDFORMS.pd_form_id AND TEMPLATEFORMS.isactive = 1',
+								   'jointype' => 'INNER'));
+			$where_condition_array = array('fk_template_id' => $template_id);
+			$template_form_details = $this->PD_Model->getJoinRecords($columns,$table,$joins,$where_condition_array);
+			//print_r($template_form_details);
+			if(count($template_form_details))
+			{
+				foreach($template_form_details as $template_key => $template_form_detail)
+				{
+					$pd_form_raw_data = $this->PD_Model->getPDFormDetails($pd_id,$template_form_detail['form_id']);
+					
+					$pd_form_structured_data = GETPDFORMDETAILS::getPDFormDetailsStructured($pd_form_raw_data,$pd_id,$template_form_detail['form_id']);
+					
+					echo "\n\n";
+					echo $template_form_detail['pd_form_name'].'-- details';
+					print_r($pd_form_structured_data);
+					echo "\n\n";
+					
+					$transformed_data = "";
+					
+					
+					
+				}
+			}
+		}
+		
+		
+		
+		
+	}
+	
+	
+	public function transformKeyPairToQuestionAnswers()
+	{
+		
 	}
 }

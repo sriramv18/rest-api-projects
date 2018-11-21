@@ -836,6 +836,7 @@ class PD_Model extends SPARQ_Model {
 						$sales_items_by_months = array();
 						foreach($sales_items_by_month as $month_key => $month)
 						{
+							
 						  	$this->db->SELECT('simc_id,sales_date,sales_value');
 							$this->db->FROM(SALESITEMMONTHWISECHILD.' as SALESITEMMONTHWISECHILD');
 							$this->db->WHERE('SALESITEMMONTHWISECHILD.fk_sim_id',$item['sim_id']);
@@ -843,7 +844,13 @@ class PD_Model extends SPARQ_Model {
 							$this->db->WHERE('SALESITEMMONTHWISECHILD.isactive',1);
 							//$this->db->GROUP_BY('month(SALESITEMMONTHWISECHILD.sales_date)');
 							$sales_items_by_month_child = $this->db->GET()->result_array();
-							//print_r($this->db->last_query());die();
+							if(count($sales_items_by_month_child))
+							{
+								foreach($sales_items_by_month_child as $t_key => $child_item)
+								{
+									$sales_items_by_month_child[$t_key]['row_index'] = $t_key + 1;
+								}
+							}
 						    $sales_items_by_months[date("M-Y", strtotime($month['year'].'-'.$month['month']))] = $sales_items_by_month_child;
 						}
 						$sales_items_by_monthwise[$key]['items'] = $sales_items_by_months;
