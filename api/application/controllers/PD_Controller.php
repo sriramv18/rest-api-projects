@@ -1640,7 +1640,7 @@ class PD_Controller extends REST_Controller {
 			//$final_data = array_merge($final_data,$group);
 			if($pd_form_id == 17)
 			{
-				if(array_key_exists($final_data['rental_home']))
+				if(array_key_exists('rental_home',$final_data))
 				{
 					
 					for($i = 1;$i<=count($final_data['rental_home']);$i++)
