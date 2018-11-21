@@ -810,7 +810,10 @@ class PD_Model extends SPARQ_Model {
 			$sales_calculated_by_itemwise = $this->getJoinRecords($fields,$table,$joins,$where_condition_array);
 			
 		   
-		   //get sales_items_by_monthwise details
+		   //get sales_items_by_monthwise details 
+		   
+			$sales_items_by_months = array();
+			
 			$this->db->SELECT('sim_id,sales_item');
 			$this->db->FROM(SALESITEMMONTHWISE.' as SALESITEMMONTHWISE');
 			$this->db->WHERE('SALESITEMMONTHWISE.fk_pd_id',$pdid);
@@ -820,13 +823,31 @@ class PD_Model extends SPARQ_Model {
 			{
 				foreach($sales_items_by_monthwise as $key => $item)
 				{
-					$this->db->SELECT('simc_id,sales_date,sales_value');
+					$this->db->SELECT('month(sales_date) as month,year(sales_date) as year');
 					$this->db->FROM(SALESITEMMONTHWISECHILD.' as SALESITEMMONTHWISECHILD');
 					$this->db->WHERE('SALESITEMMONTHWISECHILD.fk_sim_id',$item['sim_id']);
 					$this->db->WHERE('SALESITEMMONTHWISECHILD.isactive',1);
-					//$this->db->GROUP_BY('SALESITEMMONTHWISECHILD.sales_date');
-					$sales_items_by_monthwise_child = $this->db->GET()->result_array();
-					$sales_items_by_monthwise[$key]['items'] = $sales_items_by_monthwise_child;
+					$this->db->GROUP_BY('month(SALESITEMMONTHWISECHILD.sales_date)');
+					$sales_items_by_month = $this->db->GET()->result_array();
+					//print_r($this->db->last_query());
+					
+					if(count($sales_items_by_month))
+					{
+						foreach($sales_items_by_month as $month_key => $month)
+						{
+						  	$this->db->SELECT('simc_id,sales_date,sales_value');
+							$this->db->FROM(SALESITEMMONTHWISECHILD.' as SALESITEMMONTHWISECHILD');
+							$this->db->WHERE('SALESITEMMONTHWISECHILD.fk_sim_id',$item['sim_id']);
+							$this->db->WHERE('month(SALESITEMMONTHWISECHILD.sales_date)',$month['month']);
+							$this->db->WHERE('SALESITEMMONTHWISECHILD.isactive',1);
+							//$this->db->GROUP_BY('month(SALESITEMMONTHWISECHILD.sales_date)');
+							$sales_items_by_month_child = $this->db->GET()->result_array();
+							//print_r($this->db->last_query());die();
+						    $sales_items_by_months[date("M-Y", strtotime($month['year'].'-'.$month['month']))] = $sales_items_by_month_child;
+						}
+					}
+					$sales_items_by_monthwise[$key]['items'] = $sales_items_by_months;
+					//print_r($sales_items_by_months);
 				}
 			}
 			
