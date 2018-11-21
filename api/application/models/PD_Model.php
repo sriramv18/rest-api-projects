@@ -833,6 +833,7 @@ class PD_Model extends SPARQ_Model {
 					
 					if(count($sales_items_by_month))
 					{
+						$sales_items_by_months = array();
 						foreach($sales_items_by_month as $month_key => $month)
 						{
 						  	$this->db->SELECT('simc_id,sales_date,sales_value');
@@ -845,10 +846,12 @@ class PD_Model extends SPARQ_Model {
 							//print_r($this->db->last_query());die();
 						    $sales_items_by_months[date("M-Y", strtotime($month['year'].'-'.$month['month']))] = $sales_items_by_month_child;
 						}
+						$sales_items_by_monthwise[$key]['items'] = $sales_items_by_months;
 					}
-					$sales_items_by_monthwise[$key]['items'] = $sales_items_by_months;
+					
 					//print_r($sales_items_by_months);
 				}
+				
 			}
 			
 		  
