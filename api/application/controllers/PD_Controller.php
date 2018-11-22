@@ -1875,7 +1875,8 @@ class PD_Controller extends REST_Controller {
 		
 		$final_data_to_response = array();
 		
-		$final_data_to_response['pd_master_details'] = $this->PD_Model->getPDMasterDetails($pd_id);
+		$pd_master_details = $this->PD_Model->getPDMasterDetails($pd_id);
+		$final_data_to_response = $pd_master_details[0];
 		$final_data_to_response['pd_applicant_details'] = $this->PD_Model->getApplicantsDetails($pd_id);
 		
 		//Get Template id 
@@ -1914,13 +1915,15 @@ class PD_Controller extends REST_Controller {
 					
 					$transformed_data = $this->transformKeyPairToQuestionAnswers($pd_form_raw_data,$template_form_detail['form_id']);
 					
-					$final_data_to_response['question_answers'][$template_form_detail['pd_form_name']] = $transformed_data;
+					$final_data_to_response['question_answers']['form_details'][$template_form_detail['pd_form_name']] = $transformed_data;
 					
 					
 				}
 			}
+			
 		}
 		
+		$final_data_to_response['question_answers']['general_questions'] = array();
 		if(count($final_data_to_response))
 		{
 			$data['dataStatus'] = true;
