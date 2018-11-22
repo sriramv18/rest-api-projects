@@ -1869,9 +1869,14 @@ class PD_Controller extends REST_Controller {
 		}
 	}
 	
-	public function getFinialPDReportQuestions_post()
+	public function getFinalPDReportQuestions_post()
 	{
 		$pd_id = $this->post('pd_id');
+		
+		$final_data_to_response = array();
+		
+		$final_data_to_response['pd_master_details'] = $this->PD_Model->getPDMasterDetails($pd_id);
+		$final_data_to_response['pd_applicant_details'] = $this->PD_Model->getApplicantsDetails($pd_id);
 		
 		//Get Template id 
 		$fields = array('fk_pd_template_id');
@@ -1899,20 +1904,36 @@ class PD_Controller extends REST_Controller {
 				foreach($template_form_details as $template_key => $template_form_detail)
 				{
 					$pd_form_raw_data = $this->PD_Model->getPDFormDetails($pd_id,$template_form_detail['form_id']);
+					//print_r($pd_form_raw_data);
+					// $pd_form_structured_data = GETPDFORMDETAILS::getPDFormDetailsStructured($pd_form_raw_data,$pd_id,$template_form_detail['form_id']);
 					
-					$pd_form_structured_data = GETPDFORMDETAILS::getPDFormDetailsStructured($pd_form_raw_data,$pd_id,$template_form_detail['form_id']);
+					// echo "\n\n";
+					// echo $template_form_detail['pd_form_name'].'-- details';
+					// print_r($pd_form_structured_data);
+					// echo "\n\n";
 					
-					echo "\n\n";
-					echo $template_form_detail['pd_form_name'].'-- details';
-					print_r($pd_form_structured_data);
-					echo "\n\n";
+					$transformed_data = $this->transformKeyPairToQuestionAnswers($pd_form_raw_data,$template_form_detail['form_id']);
 					
-					$transformed_data = "";
-					
+					$final_data_to_response['question_answers'][$template_form_detail['pd_form_name']] = $transformed_data;
 					
 					
 				}
 			}
+		}
+		
+		if(count($final_data_to_response))
+		{
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $final_data_to_response;
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+			$data['msg'] = 'Something went wrong! Try Later';
+			$this->response($data,REST_Controller::HTTP_OK);
 		}
 		
 		
@@ -1921,8 +1942,52 @@ class PD_Controller extends REST_Controller {
 	}
 	
 	
-	public function transformKeyPairToQuestionAnswers()
+	public function transformKeyPairToQuestionAnswers($pd_form_raw_data,$form_id)
 	{
+		//field name array holds - field name of each masters table 
+		$master_tables_field_names = array('INDUSTRYCLASSIFICATION' => 'name','UOM' => 'name','OCCUPATIONMEMBERS' => 'name','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'name','RELATIONSHIPS' => 'name','FREQUENCY' => 'name', 'CUSTOMERBEHAVIOUR' => 'description', 'CUSTOMERSEGMENT' => 'name','DESIGNATION' => 'short_name', 'EARNINGMEMBERSSTATUS' => 'earning_member_status','EDUQUALIFICATION' => 'qualification_name','ADDRESSTYPE' => 'address_type','LOCALITY' => 'locality_name','ASSETTYPE' => 'name','PROPERTIES' => 'name','INVESTMENTTYPE' => 'name','INSURANCETYPE' => 'name','PERSONSMET' => 'person_met_name','RESIDENCEOWNERSHIP' => 'name','PAYMENTMODE' => 'name','ACCOUNTTYPE' => 'name','SOURCEOFOTHERINCOME' => 'name','MORTAGEPROPERTYTYPE' => 'name','ENDUSEOFLOAN' => 'name','SOURCEOFBALANCETRANSFER' => 'name', 'STATUSOFCONSTRUCTION' => 'name');
 		
+		$master_tables_pkid = array('INDUSTRYCLASSIFICATION' => 'industry_classification_id','UOM' => 'uom_id','OCCUPATIONMEMBERS' => 'occupation_non_earning_member_id','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'type_of_activity_id','RELATIONSHIPS' => 'relationship_id','FREQUENCY' => 'frequency_id', 'CUSTOMERBEHAVIOUR' => 'customer_behaviour_id', 'CUSTOMERSEGMENT' => 'customer_segment_id','DESIGNATION' => 'designation_id', 'EARNINGMEMBERSSTATUS' => 'earning_member_status_id','EDUQUALIFICATION' => 'qualification_id','ADDRESSTYPE' => 'address_type_id','LOCALITY' => 'locality_id','ASSETTYPE' => 'id','PROPERTIES' => 'id','INVESTMENTTYPE' => 'id','INSURANCETYPE' => 'id','PERSONSMET' => 'person_met_id','RESIDENCEOWNERSHIP' => 'id','PAYMENTMODE' => 'id','ACCOUNTTYPE' => 'id','SOURCEOFOTHERINCOME' => 'id','MORTAGEPROPERTYTYPE' => 'id','ENDUSEOFLOAN' => 'id','SOURCEOFBALANCETRANSFER' => 'id', 'STATUSOFCONSTRUCTION' => 'id');
+		
+		//Get Question Key Mapping masters
+		$fields = array('question', 'key', 'ismaster', 'master_name');
+		$where_condition_array = array('fk_form_id' => $form_id,'isactive' => 1);
+		$question_key_master_data = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,QUESTIONKEYMAPPING);
+		//print_r($pd_form_raw_data);
+		$current_question_array  = array();
+		foreach($pd_form_raw_data as $raw_key => $raw_data)
+		{
+			$que_key = $raw_data['column_name'];
+			if($que_key != null || $que_key != "")
+			{
+				foreach($question_key_master_data as $master_key => $master)
+				{
+					if($master['key'] == $que_key)
+					{
+						if($master['ismaster'] != 1)
+						{
+							$current_question_array[] = array('question'=>$master['question'],'answer'=>$raw_data['column_value']);
+						}
+						else
+						{
+							$table = constant($master['master_name']);
+							$temp_fields =  array($master_tables_field_names[$master['master_name']]);
+							$where_condition_array = array($master_tables_pkid[$master['master_name']] => $raw_data['column_value']);
+							$result_data = $this->PD_Model->selectCustomRecords($temp_fields,$where_condition_array,$table);
+							if(count($result_data))
+							{
+								$current_question_array[] = array('question'=>$master['question'],'answer'=>$result_data[0]['name']);
+							}
+							// 
+						}
+					}
+				}
+			}
+		}
+		
+		return $current_question_array ;
+		
+		
+			
 	}
 }

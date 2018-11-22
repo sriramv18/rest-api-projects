@@ -161,7 +161,7 @@ $route['saveAssessedIncomeMonthwiseItems'] = 'PD_Controller/saveAssessedIncomeMo
 //PD Form Related
 $route['getPDFormDetails'] = 'PD_Controller/getPDFormDetails'; 
 $route['savePDFormDetails'] = 'PD_Controller/savePDFormDetails'; 
-$route['getFinialPDReportQuestions'] = 'PD_Controller/getFinialPDReportQuestions'; 
+$route['getFinalPDReportQuestions'] = 'PD_Controller/getFinalPDReportQuestions'; 
 
 //Dashboard and Reports Related routes
 //$route['getDashBoardMaster'] = 'Dash_Board_Controller/getDashBoardDetailsOfPDTypeAndPDStatusWithDayWeekMonth'; 

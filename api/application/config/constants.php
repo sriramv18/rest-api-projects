@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getFinialPDReportQuestions'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getFinalPDReportQuestions'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -401,6 +401,9 @@ defined('PDBUSINESSEXPENSESID') OR define('PDBUSINESSEXPENSESID','pd_expense_id'
 
 defined('PDHOUSEHOLDEXPENSES') OR define('PDHOUSEHOLDEXPENSES','t_pd_household_expense');
 defined('PDHOUSEHOLDEXPENSESID') OR define('PDHOUSEHOLDEXPENSESID','household_expense_id');
+
+defined('QUESTIONKEYMAPPING') OR define('QUESTIONKEYMAPPING','m_question_key_mapping');
+defined('QUESTIONKEYMAPPINGID') OR define('QUESTIONKEYMAPPINGID','question_key_mapping_id');
 
 
 
