@@ -111,7 +111,7 @@ class Common_Masters_Model extends SPARQ_Model {
 		 public function deleteRecords($record_data = array(),$table_name,$where_condition_array = array(),$print_query = '')
 		{		
 				$data =  $this->db->delete($table_name,$record_data,$where_condition_array);
-
+			
 				if($print_query == 1)
 				{
 					print_r($this->db->last_query());
