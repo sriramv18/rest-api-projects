@@ -673,21 +673,16 @@ class Common_Masters_Controller extends REST_Controller {
 	// 		}
 		
 	// }
-	public function deletePdTeamMapping_post()
+	
+     public function deletePdTeamMapping_post()
 	{
-		// print_r($this->post('pdteam_city_id'));
-		// die();
-		// $pk = $this->post('pdteam_city_id');
+		
 		$where_condition_array = array('pdteam_city_id'=>$this->post('pdteam_city_id'));
 		
-			// $pdTeamCity = array(
-			// 	'pdteam_city_id'=> $this->post('pdteam_city_id'));
-			
-
-			$pdTeamChild = array(
+		$pdTeamChild = array(
 				'pdteam_city_id'=>$this->post('pdteam_city_id'));
 			
-			$result = $this->Common_Masters_Model->deleteRecords($pdTeamChild,PDTEAMCITY,$where_condition_array);
+		$result = $this->Common_Masters_Model->deleteRecords($pdTeamChild,PDTEAMCITY,$where_condition_array);
 		
 			if($result == 1)
 			{
