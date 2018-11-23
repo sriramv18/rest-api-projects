@@ -1831,7 +1831,7 @@ class PD_Controller extends REST_Controller {
 							}
 							else
 							{
-								$child['fk_sim_id'] = $records['sim_id'];
+								$child['fk_sim_id'] = $record['sim_id'];
 								$child_id = $this->PD_Model->saveRecords($child,SALESITEMMONTHWISECHILD);
 							}
 						}
@@ -1874,6 +1874,7 @@ class PD_Controller extends REST_Controller {
 		$pd_id = $this->post('pd_id');
 		
 		$final_data_to_response = array();
+		$final_data_to_response['question_answers']['general_questions'] = "";
 		
 		$pd_master_details = $this->PD_Model->getPDMasterDetails($pd_id);
 		$final_data_to_response = $pd_master_details[0];
@@ -1902,6 +1903,7 @@ class PD_Controller extends REST_Controller {
 			//print_r($template_form_details);
 			if(count($template_form_details))
 			{
+				$temp_array = "";
 				foreach($template_form_details as $template_key => $template_form_detail)
 				{
 					$pd_form_raw_data = $this->PD_Model->getPDFormDetails($pd_id,$template_form_detail['form_id']);
@@ -1915,7 +1917,10 @@ class PD_Controller extends REST_Controller {
 					
 					$transformed_data = $this->transformKeyPairToQuestionAnswers($pd_form_raw_data,$template_form_detail['form_id']);
 					
-					$final_data_to_response['question_answers']['form_details'][$template_form_detail['pd_form_name']] = $transformed_data;
+					
+					$final_data_to_response['question_answers']['form_details'][] = array('name' =>[$template_form_detail['pd_form_name']],'details' => $transformed_data);
+					
+					//$final_data_to_response['question_answers']['form_details'] = array_merge($final_data_to_response['question_answers']['form_details'],array('name' =>[$template_form_detail['pd_form_name']],'details' => $transformed_data));
 					
 					
 				}
@@ -1924,6 +1929,13 @@ class PD_Controller extends REST_Controller {
 		}
 		
 		$final_data_to_response['question_answers']['general_questions'] = array();
+		//$final_data_to_response['question_answers']['form_details'] = array();
+		
+		$object = new stdClass();
+			foreach($final_data_to_response as $key => $value)
+			{
+			  $object->$key = $value;
+			}
 		if(count($final_data_to_response))
 		{
 			$data['dataStatus'] = true;
