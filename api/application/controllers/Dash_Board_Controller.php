@@ -48,7 +48,7 @@ class Dash_Board_Controller extends REST_Controller {
 		// print_r($city_arr);
 		// print_r($lender_arr);
 		// die();
-		$res = $this->Dash_Board_Model->getDetailsOfPDType($fdate,$tdate,$lenderarr,$cityarr);
+        $res = $this->Dash_Board_Model->getDetailsOfPDType($fdate,$tdate,$cityarr,$lenderarr);
 		
 						
 		$data['dataStatus'] = true;
