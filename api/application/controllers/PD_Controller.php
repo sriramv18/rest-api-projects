@@ -900,8 +900,9 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
 												$list_of_pd_officers[$key]['count'] = 0;
 												
-												$this->db->SELECT('COUNT(*) as count');
+												$this->db->SELECT('pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name');
 												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
+												$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
 												$this->db->OR_GROUP_START();
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
@@ -910,7 +911,9 @@ class PD_Controller extends REST_Controller {
 												$this->db->WHERE('PDTRIGGER.fk_pd_allocated_to',$pdofficer['fk_user_id']);
 												$pd_count = $this->db->GET()->result_array();
 												//print_r($this->db->last_query());
-												if(count($pd_count)){ $list_of_pd_officers[$key]['count'] = $pd_count[0]['count']; }
+												if(count($pd_count)){ 
+												$list_of_pd_officers[$key]['pd_details'] = $pd_count;
+												$list_of_pd_officers[$key]['count'] =count($pd_count); }
 												
 												// Get Profile Pic from S3
 												
@@ -995,8 +998,9 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
 												$list_of_pd_officers[$key]['count'] = 0;
 												
-												$this->db->SELECT('COUNT(*) as count');
+												$this->db->SELECT('pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name');
 												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
+												$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
 												$this->db->OR_GROUP_START();
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
@@ -1005,7 +1009,10 @@ class PD_Controller extends REST_Controller {
 												$this->db->WHERE('PDTRIGGER.fk_pd_allocated_to',$pdofficer['fk_user_id']);
 												$pd_count = $this->db->GET()->result_array();
 												//print_r($this->db->last_query());
-												if(count($pd_count)){ $list_of_pd_officers[$key]['count'] = $pd_count[0]['count']; }
+												if(count($pd_count)){ 
+												$list_of_pd_officers[$key]['pd_details'] = $pd_count;
+												$list_of_pd_officers[$key]['count'] =count($pd_count);
+												}
 												
 												// Get Profile Pic from S3
 												
@@ -1176,11 +1183,13 @@ class PD_Controller extends REST_Controller {
 	public function loadFullTemplate_get()
 	{
 		$pd_id = "";
+		$client = "";
 		if($this->get('pd_id')) { $pd_id = $this->get('pd_id'); }
+		if($this->get('client')) { $client = $this->get('client'); }
 		if($pd_id != "" || $pd_id != null)
 		{
 			
-			$template_details = $this->PD_Model->getTemplateForPD($pd_id);
+			$template_details = $this->PD_Model->getTemplateForPD($pd_id,$client);
 			 if(count($template_details))
 			 {
 				 $data['dataStatus'] = true;

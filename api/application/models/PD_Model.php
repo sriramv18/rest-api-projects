@@ -243,8 +243,18 @@ class PD_Model extends SPARQ_Model {
 			{
 				foreach($logs as $log_key => $log)
 				{
-					//print_r($log);
-					//echo $arrayForText[$log['field_name']].' Changed From "'. $log['old_value'] .'" To "'. $log['new_value'].'"';
+					
+					if($log_key == 0)
+					{
+						$log_string = 'PD Ctreated with '.$log['old_value'].'" status "'.'"';
+							$user = $log['createdby'];
+							$time = $log['createdon'];
+							$actual_logs[$log_key]['log']  = $log_string;
+							$actual_logs[$log_key]['user']  = $user;
+							$actual_logs[$log_key]['time']  = $time;
+					}
+					else
+					{
 					$field_name = $log['field_name'];
 					//print_r($field_name);
 					switch($field_name){
@@ -375,6 +385,7 @@ class PD_Model extends SPARQ_Model {
 							$actual_logs[$log_key]['time']  = $time;
 						
 					}
+				  }
 				}
 			}
 			
@@ -436,8 +447,9 @@ class PD_Model extends SPARQ_Model {
 	
 	
 	
-	public function getTemplateForPD($pdid)
+	public function getTemplateForPD($pdid,$client)
 	{
+		
 		
 			 $template_id = "";
 			 $categories = "";
@@ -446,7 +458,7 @@ class PD_Model extends SPARQ_Model {
 			 //Get PD Master Details including Template id @param $pd_id
 			 $pd_master_detials = $this->getPDMasterDetails($pdid);
 			 $pd_applicants_detials = $this->getApplicantsDetails($pdid);
-			//sprint_r($pd_master_detials);
+			//print_r($pd_master_detials);die();
 			if(count($pd_master_detials)){
 			 $template_id = $pd_master_detials[0]['fk_pd_template_id'];
 			}
@@ -573,7 +585,20 @@ class PD_Model extends SPARQ_Model {
 				
 			}
 			
+			if($pd_master_detials[0]['fk_pd_type'] == 2 && $client == 1)
+			{
 			
+              //$temp_array = array(3,5,10,13);
+			  foreach($template_forms as $key => $form)
+			  {
+				  if($form['form_id'] != 3 && $form['form_id'] != 5 && $form['form_id'] != 10 && $form['form_id'] != 13)
+				  {
+					unset($template_forms[$key])  ;
+				  }
+			  }
+			
+			
+			}
 	
 	
 	
@@ -589,7 +614,7 @@ class PD_Model extends SPARQ_Model {
 	return $result_data;
    }
    
-   
+  
    public function getAnswersForPD($question_id,$pd_id,$template_id,$category_id)
    {
 				$overalldata =array();
