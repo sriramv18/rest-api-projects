@@ -453,4 +453,131 @@ class Template_Management_Controller extends REST_Controller {
 		
 		
 	}
+	
+	
+	public function saveScoreCardQuestions_post()
+	{
+		$records = $this->post('records');
+		$answers = $records['answers'];
+		unset($records['answers']);
+		$id = "";
+		$count = 0;
+		
+		foreach($records as $rec_key => $record)
+		{
+			if($record['score_question_id'] != null || $record['score_question_id'] != "")
+			{
+				$where_condition_array = array('score_question_id' => $record['score_question_id']);
+				$id = $this->Template_Management_Model->updateRecords($record,SCORECARDQUESTIONS,$where_condition_array);
+				if($id != null || $id != "")
+				{
+					$count++;
+					foreach($answers as $ans_key => $answer)
+					{
+					  if($answer['score_answer_id'] != null || $answer['score_answer_id'] != "")
+					  {
+						 $where_condition_array = array('score_answer_id' => $answer['score_answer_id']);
+						 $ans_id = $this->Template_Management_Model->updateRecords($answer,SCORECARDANSWERS,$where_condition_array); 
+					  }
+					  else
+					  {
+						$answer['fk_score_question_id'] = $record['score_question_id'];
+						$ans_id = $this->Template_Management_Model->saveRecords($answer,SCORECARDANSWERS);	
+					  }
+					}
+				}
+			}
+			else
+			{
+				$id = $this->Template_Management_Model->saveRecords($record,SCORECARDQUESTIONS);
+				
+				if($id != null || $id != "")
+				{
+					$count++;
+					foreach($answers as $ans_key => $answer)
+					{
+					  $answer['fk_score_question_id'] = $id;
+					  $ans_id = $this->Template_Management_Model->saveRecords($answer,SCORECARDANSWERS);	
+					}
+				}
+			}
+		}
+		
+		if($count == count($records))
+		{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $id;
+						$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$data['msg'] = "Something Went Wrong!";
+						$this->response($data,REST_Controller::HTTP_OK);
+		}
+		
+	}
+	
+	
+	
+	public function getFormAndQuestionKeys_post()
+	{
+		$records = $this->post('records');
+		$formid = 0;
+		$templateid = $records['templateid'];
+		$formid = $records['formid'];
+		//*******************INTERNAL PURPOSE***************************************************
+		$master_tables_field_names = array('INDUSTRYCLASSIFICATION' => 'name','UOM' => 'name','OCCUPATIONMEMBERS' => 'name','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'name','RELATIONSHIPS' => 'name','FREQUENCY' => 'name', 'CUSTOMERBEHAVIOUR' => 'description', 'CUSTOMERSEGMENT' => 'name','DESIGNATION' => 'short_name', 'EARNINGMEMBERSSTATUS' => 'earning_member_status','EDUQUALIFICATION' => 'qualification_name','ADDRESSTYPE' => 'address_type','LOCALITY' => 'locality_name','ASSETTYPE' => 'name','PROPERTIES' => 'name','INVESTMENTTYPE' => 'name','INSURANCETYPE' => 'name','PERSONSMET' => 'person_met_name','RESIDENCEOWNERSHIP' => 'name','PAYMENTMODE' => 'name','ACCOUNTTYPE' => 'name','SOURCEOFOTHERINCOME' => 'name','MORTAGEPROPERTYTYPE' => 'name','ENDUSEOFLOAN' => 'name','SOURCEOFBALANCETRANSFER' => 'name', 'STATUSOFCONSTRUCTION' => 'name');
+		
+		$master_tables_pkid = array('INDUSTRYCLASSIFICATION' => 'industry_classification_id','UOM' => 'uom_id','OCCUPATIONMEMBERS' => 'occupation_non_earning_member_id','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'type_of_activity_id','RELATIONSHIPS' => 'relationship_id','FREQUENCY' => 'frequency_id', 'CUSTOMERBEHAVIOUR' => 'customer_behaviour_id', 'CUSTOMERSEGMENT' => 'customer_segment_id','DESIGNATION' => 'designation_id', 'EARNINGMEMBERSSTATUS' => 'earning_member_status_id','EDUQUALIFICATION' => 'qualification_id','ADDRESSTYPE' => 'address_type_id','LOCALITY' => 'locality_id','ASSETTYPE' => 'id','PROPERTIES' => 'id','INVESTMENTTYPE' => 'id','INSURANCETYPE' => 'id','PERSONSMET' => 'person_met_id','RESIDENCEOWNERSHIP' => 'id','PAYMENTMODE' => 'id','ACCOUNTTYPE' => 'id','SOURCEOFOTHERINCOME' => 'id','MORTAGEPROPERTYTYPE' => 'id','ENDUSEOFLOAN' => 'id','SOURCEOFBALANCETRANSFER' => 'id', 'STATUSOFCONSTRUCTION' => 'id');
+		//*******************INTERNAL PURPOSE***************************************************
+		
+		$fields = array('fk_form_id','question','key','ismaster','master_name');
+		$where_condition_array = array();
+		if($formid != "")
+		{
+		 $where_condition_array = array('isactive' => 1,'fk_form_id' => $formid);
+		}
+		else
+		{
+		 $where_condition_array = array('isactive' => 1);
+		}
+		$result_data = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,QUESTIONKEYMAPPING);
+		
+		if(count($result_data))
+		{
+			foreach($result_data as $res_key => $result)
+			{
+				if($result['master_name'] != null || $result['master_name'] != "")
+				{
+					//echo $result['master_name'];
+					$fields = array($master_tables_pkid[$result['master_name']].' as id',$master_tables_field_names[$result['master_name']].' as name');
+					
+					$table = constant($result['master_name']);
+					$where_condition_array = array('isactive' => 1);
+					$answers = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,$table);
+					$result_data[$res_key]['answers'] = $answers;
+				}
+			}
+		}
+		if(count($result_data))
+		{
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $result_data;
+						$this->response($data,REST_Controller::HTTP_OK);	
+		}
+		else
+		{
+						$data['dataStatus'] = false;
+						$data['status'] = REST_Controller::HTTP_NO_CONTENT;
+						$data['msg'] = "No Data Found!";
+						$this->response($data,REST_Controller::HTTP_OK);
+		}
+	}
+	
+	
+	
 }

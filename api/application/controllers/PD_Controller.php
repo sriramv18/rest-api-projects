@@ -1500,6 +1500,7 @@ class PD_Controller extends REST_Controller {
 		$pd_id = $this->post('pd_id');
 		$pd_form_id = $this->post('pd_form_id');
 		$result_array = $this->PD_Model->getPDFormDetails($pd_id,$pd_form_id);
+		//print_r($result_array);die();
 		$final_array = GETPDFORMDETAILS::getPDFormDetailsStructured($result_array,$pd_id,$pd_form_id);
 		
 		if($result_array)
@@ -2013,5 +2014,11 @@ class PD_Controller extends REST_Controller {
 		
 		
 			
+	}
+	
+	
+	public function calculateAssessedIncome()
+	{
+		
 	}
 }

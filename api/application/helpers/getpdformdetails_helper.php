@@ -126,10 +126,12 @@ class GETPDFORMDETAILS
 			  $final_data = array_merge($final_data,$group);
 			}
 			
-			
+			// print_r($final_data);
+			// echo "\n";
+			 //print_r($sub_group);
 			// Merge subgroup into main group for all forms except rendtal form (id = 17)
 			$i = 0;
-			if(count($sub_group) && $pd_form_id != 17)
+			if(count($sub_group) && $pd_form_id != 17 && $pd_form_id != 4)
 			{
 				
 				foreach($sub_group as $key => $value)
@@ -144,7 +146,7 @@ class GETPDFORMDETAILS
 						{
 							
 							$i++;
-							
+							echo $fkey.'-'.$i.'-'.$vkey;
 							if($i == $vkey)
 							{
 								
@@ -161,9 +163,19 @@ class GETPDFORMDETAILS
 			
 			if($pd_form_id == 4)// to merge assest form commom remarks at end of final data.
 			{
+				foreach($sub_group['details'] as $k => $value)
+				{
+					// echo $k;
+					// print_r($value);
+					if(array_key_exists($k,$final_data['assets_details']))
+					{
+						$final_data['assets_details'][$k] = array_merge($final_data['assets_details'][$k],array('details' => $value));
+					}
+					
+				}
 				$final_data = array_merge($final_data,$asset_remark);
 			}
-			
+			//die();
 			if($pd_form_id == 17)//merge subgroup of rental verification form with parent group, diff scenario not like other forms  
 			{
 				if(array_key_exists('rental_home',$final_data))

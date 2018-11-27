@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getFullPDDetails'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getFormAndQuestionKeys'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -404,6 +404,12 @@ defined('PDHOUSEHOLDEXPENSESID') OR define('PDHOUSEHOLDEXPENSESID','household_ex
 
 defined('QUESTIONKEYMAPPING') OR define('QUESTIONKEYMAPPING','m_question_key_mapping');
 defined('QUESTIONKEYMAPPINGID') OR define('QUESTIONKEYMAPPINGID','question_key_mapping_id');
+
+defined('SCORECARDANSWERS') OR define('SCORECARDANSWERS','m_scorecard_answers');
+defined('SCORECARDANSWERSID') OR define('SCORECARDANSWERSID','score_answer_id');
+
+defined('SCORECARDQUESTIONS') OR define('SCORECARDQUESTIONS','m_scorecard_questions');
+defined('SCORECARDQUESTIONSID') OR define('SCORECARDQUESTIONSID','score_question_id');
 
 
 
