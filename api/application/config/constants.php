@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getListPDOfficers'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'calculateAssessedIncome'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -410,6 +410,12 @@ defined('SCORECARDANSWERSID') OR define('SCORECARDANSWERSID','score_answer_id');
 
 defined('SCORECARDQUESTIONS') OR define('SCORECARDQUESTIONS','m_scorecard_questions');
 defined('SCORECARDQUESTIONSID') OR define('SCORECARDQUESTIONSID','score_question_id');
+
+defined('PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPE') OR define('PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPE','t_pd_assessed_income_estimation_of_gross_profit_type');
+defined('PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPEID') OR define('PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPEID','calc_type_id');
+
+defined('BTLENDERLIST') OR define('BTLENDERLIST','m_bt_lender_list');
+defined('BTLENDERLISTID') OR define('BTLENDERLISTID','bt_lender_list_id');
 
 
 

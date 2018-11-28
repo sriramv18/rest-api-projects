@@ -750,10 +750,10 @@ class PD_Controller extends REST_Controller {
 	{
 		$records = $this->post('records');
 		
-		if($records['fk_pd_allocated_to'] != "" || $records['fk_pd_allocated_to'] != null)
-		{
+		//if($records['fk_pd_allocated_to'] != "" || $records['fk_pd_allocated_to'] != null)
+		//{
 			$records['pd_status'] = ALLOCATED;
-		}
+		//}
 		$where_condition_array = array('pd_id' => $records['pd_id']);
 		$pd_id_modified = $this->PD_Model->updateRecords($records,PDTRIGGER,$where_condition_array);
 		
@@ -1774,7 +1774,7 @@ class PD_Controller extends REST_Controller {
 	{
 		$pd_id = $this->post('pd_id');
 		$pd_form_id = $this->post('pd_form_id');
-		$result_array = $this->PD_Model->getAssessedIncome($pd_id,$pd_form_id);
+		$result_array = $this->PD_Model->getAssessedIncome($pd_id);
 		
 		$data['dataStatus'] = true;
 		$data['status'] = REST_Controller::HTTP_OK;
@@ -2160,17 +2160,133 @@ class PD_Controller extends REST_Controller {
 	}
 	
 	
-	public function calculateAssessedIncome()
+	public function calculateAssessedIncome_get()
 	{
-		//Get all Master Details
 		
+		$pd_id = 1000;
 		$sales_declared_by_customer = array();
-		$sales_by_itemwise_annual = array();
-		$sales_by_item_monthwise = array();
+		$sales_declared_by_customer_flag = 0;
 		
-		// Get mode of calculation
+		$sales_calculated_by_itemwise = array();
+		$sales_calculated_by_itemwise_flag = 0;
+		
+		$sales_by_item_monthwise = array();
+		$sales_by_item_monthwise_flag = 0;
+		
 		$purchases = array();
+		$purchases_flag = 0;
+		
 		$business_expenses = array();
+		$business_expenses_flag = 0;
+		
 		$household_expenses = array();
+		$household_expenses_flag = 0;
+		
+		//Get all Master Details
+		$result_array = $this->PD_Model->getAssessedIncome($pd_id);
+		print_r($result_array);
+		$sales_declared_by_customer = $result_array['sales_declared_by_customer'];
+		$sales_calculated_by_itemwise = $result_array['sales_calculated_by_itemwise'];
+		$sales_by_item_monthwise = $result_array['sales_items_by_monthwise'];
+		$purchases = $result_array['purchase_details'];
+		$business_expenses = $result_array['business_expenses'];
+		$household_expenses = $result_array['house_hold_expenses'];
+		
+		if(count($sales_declared_by_customer)){$sales_declared_by_customer_flag = 1;}
+		if(count($sales_calculated_by_itemwise)){$sales_calculated_by_itemwise_flag = 1;}
+		if(count($sales_by_item_monthwise)){$sales_by_item_monthwise_flag = 1;}
+		if(count($purchases)){$purchases_flag = 1;}
+		if(count($business_expenses)){$business_expenses_flag = 1;}
+		if(count($household_expenses)){$household_expenses_flag = 1;}
+		
+		
+		if(($household_expenses_flag == 1 && $business_expenses_flag == 1) && ($sales_declared_by_customer_flag == 1 || $sales_calculated_by_itemwise_flag == 1 || $sales_by_item_monthwise_flag == 1))
+		{
+			$total_sales_itemwise = 0;
+			$sales_monthwise = array();
+			$total_sales_monthwise = 0;
+			$total_sales_declared_by_customer = 0;
+			
+			if($sales_calculated_by_itemwise_flag == 1)
+			{
+				foreach($sales_calculated_by_itemwise as $itemwise_key => $item)
+				{
+					$total_sales_itemwise = $total_sales_itemwise + $item['annual_sale_value'];
+				}
+				
+			}
+			
+			if($sales_by_item_monthwise_flag == 1)
+			{
+				foreach($sales_by_item_monthwise as $monthwise_key => $sales_by_item_month)
+				{
+					$month_total = 0;
+					$i = 0;
+					foreach($sales_by_item_month['items'] as $month_key => $month)
+					{
+					  $temp = 0;
+					  
+					  $i++;
+					  foreach($month as $key => $m)
+					  {
+						 $temp = $temp + $m['sales_value'];
+					  }
+					$month_total = $month_total + $temp; 				
+					}
+					$sales_monthwise[] = array('total' => $month_total,'no_of_months' => $i);
+				}
+				
+				foreach($sales_monthwise as $sale)
+				{
+					$annual_multuplier = 12 / $sale['no_of_months'];
+					$total_sales_monthwise = $total_sales_monthwise + ($sale['total'] * $annual_multuplier);
+				}
+				
+			}
+			
+			if($sales_declared_by_customer_flag == 1)
+			{
+				$total_sales_declared_by_customer = $sales_declared_by_customer[0]['sales_declared_by_customer'];
+			}
+			print_r($sales_monthwise);
+			//print_r($total_sales_monthwise);
+			$final_revenue = 0;
+			
+			//case 1 - (b:ref doc)  If the difference between the lowest and highest of the 3 revenue (sales) figures arrived at above in step 1, is > 50% of lowest, then the revenue considered would be 125% of the lowest revenue
+			
+			$temp_array = array();
+			
+			if($sales_declared_by_customer_flag != 0){ $temp_array = array_merge($temp_array,array($total_sales_declared_by_customer));}
+			if($sales_calculated_by_itemwise_flag != 0){ $temp_array = array_merge($temp_array,array($total_sales_itemwise));}
+			if($sales_by_item_monthwise_flag != 0){ $temp_array = array_merge($temp_array,array($total_sales_monthwise));}
+			$height_value = max($temp_array);
+			$lowest_vaule = min($temp_array);
+			
+			
+			if($lowest_vaule != 0)
+			{
+				$diff = $height_value - $lowest_vaule;
+				if($diff > ($lowest_vaule * 0.5))
+				{
+					$final_revenue = $lowest_vaule * 1.25;
+				}
+				
+			}
+			else //case 2 - (a) ref doc - Normally Average of the above 3 sales estimates is considered. There may be situations where sales information is available only from a or b or c or any
+			{
+				$average = array_sum($temp_array)/count($temp_array);
+				$final_revenue = $average;
+				
+			}
+			
+			// echo "\n\n".$final_revenue;
+			
+			
+		}
+		else
+		{
+			echo "Not calc";
+		}
+		
 	}
 }

@@ -814,7 +814,7 @@ class PD_Model extends SPARQ_Model {
 		  
 	  }	
 
-	 public function getAssessedIncome($pdid,$pd_form_id)
+	 public function getAssessedIncome($pdid)
 	 {
 		/********************************* Assessd Income Sections   *****************************************/
 			$assessed_income = array();
