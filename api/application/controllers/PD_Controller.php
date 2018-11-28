@@ -2182,6 +2182,8 @@ class PD_Controller extends REST_Controller {
 		$household_expenses = array();
 		$household_expenses_flag = 0;
 		
+		$overall_purchase_total = 0;
+		
 		//Get all Master Details
 		$result_array = $this->PD_Model->getAssessedIncome($pd_id);
 		print_r($result_array);
@@ -2286,6 +2288,12 @@ class PD_Controller extends REST_Controller {
 			if($gross_profit_calculation_type[0]['mode']  == 1)
 			{
 				//calculate overall purchase 
+				$overall_purchase_total = 0;
+				foreach()
+				{
+					
+				}
+				
 			}
 			else
 			{

@@ -543,7 +543,7 @@ class Template_Management_Controller extends REST_Controller {
 		if(!count($exits_questions))
 		{
 				
-			$fields = array('fk_form_id','question','key','ismaster','master_name');
+			$fields = array('question_key_mapping_id,fk_form_id','question','key','ismaster','master_name');
 			$where_condition_array = array();
 			if($formid != 0)
 			{
@@ -594,7 +594,7 @@ class Template_Management_Controller extends REST_Controller {
 					array_push($temp_array,$res['fk_key']);
 				}
 				//print_r($temp_array);
-			$this->db->SELECT('QUESTIONKEYMAPPING.fk_form_id,QUESTIONKEYMAPPING.question,QUESTIONKEYMAPPING.key,QUESTIONKEYMAPPING.master_name,SCORECARDQUESTIONS.score_question_id,SCORECARDQUESTIONS.fk_template_id,SCORECARDQUESTIONS.fk_form_id,SCORECARDQUESTIONS.fk_key,SCORECARDQUESTIONS.weightage,SCORECARDQUESTIONS.calc_type');
+			$this->db->SELECT('QUESTIONKEYMAPPING.question_key_mapping_id,QUESTIONKEYMAPPING.fk_form_id,QUESTIONKEYMAPPING.question,QUESTIONKEYMAPPING.key,QUESTIONKEYMAPPING.master_name,SCORECARDQUESTIONS.score_question_id,SCORECARDQUESTIONS.fk_template_id,SCORECARDQUESTIONS.fk_form_id,SCORECARDQUESTIONS.fk_key,SCORECARDQUESTIONS.weightage,SCORECARDQUESTIONS.calc_type');
 			$this->db->FROM(QUESTIONKEYMAPPING.' as QUESTIONKEYMAPPING');
 			$this->db->JOIN(SCORECARDQUESTIONS.' as SCORECARDQUESTIONS','QUESTIONKEYMAPPING.fk_form_id = SCORECARDQUESTIONS.fk_form_id AND QUESTIONKEYMAPPING.key = SCORECARDQUESTIONS.fk_key AND SCORECARDQUESTIONS.isactive = 1','LEFT');
 			
