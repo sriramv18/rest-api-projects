@@ -900,7 +900,7 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
 												$list_of_pd_officers[$key]['count'] = 0;
 												
-												$this->db->SELECT('pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
+												$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
 												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 												$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
 												$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
@@ -910,7 +910,14 @@ class PD_Controller extends REST_Controller {
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',ALLOCATED);
 												$this->db->GROUP_END();
-												$this->db->WHERE('PDTRIGGER.fk_pd_allocated_to',$pdofficer['fk_user_id']);
+												if($pdofficer['fk_pd_type_id'] == 1)
+												{
+													$this->db->WHERE('PDTRIGGER.fk_pd_allocated_to',$pdofficer['fk_user_id']);
+												}
+												else
+												{
+													$this->db->WHERE('PDTRIGGER.executive_id',$pdofficer['fk_user_id']);
+												}
 												$pd_count = $this->db->GET()->result_array();
 												//print_r($this->db->last_query());
 												if(count($pd_count)){ 
@@ -935,11 +942,33 @@ class PD_Controller extends REST_Controller {
 												$this->db->JOIN(ROLES.' as ROLES','USERPROFILEROLES.user_role = ROLES.role_id');
 												$this->db->WHERE('ROLES.role_id',2);
 												$central_pd_officers = $this->db->GET()->result_array();
-												
+												//print_r($central_pd_officers);
 											if(count($central_pd_officers))
 												{
 														foreach($central_pd_officers as $k => $central_pd_officer)
 														{
+															
+															//Get PD Details assigned to Central Officers
+																	$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
+														$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
+														$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
+														$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
+														
+														$this->db->OR_GROUP_START();
+														$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
+														$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
+														$this->db->OR_WHERE('PDTRIGGER.pd_status',ALLOCATED);
+														$this->db->GROUP_END();
+														$this->db->WHERE('PDTRIGGER.central_pd_officer_id',$central_pd_officer['fk_user_id']);
+														$pd_count = $this->db->GET()->result_array();
+														//print_r($this->db->last_query());
+														$central_pd_officers[$k]['count'] = 0;
+														if(count($pd_count)){ 
+														$central_pd_officers[$k]['pd_details'] = $pd_count;
+														$central_pd_officers[$k]['count'] = count($pd_count); }
+															//End Get PD Details assigned to Central Officers
+															
+															
 															$bucket_name = PROFILE_PICTURE_BUCKET_NAME;
 															$profilepics3path = 'sineedge/'.$central_pd_officer['profilepic'];
 															$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+10 minutes');
@@ -1000,7 +1029,7 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
 												$list_of_pd_officers[$key]['count'] = 0;
 												
-												$this->db->SELECT('pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
+												$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
 												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 												$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
 												$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
@@ -1009,7 +1038,14 @@ class PD_Controller extends REST_Controller {
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',ALLOCATED);
 												$this->db->GROUP_END();
-												$this->db->WHERE('PDTRIGGER.fk_pd_allocated_to',$pdofficer['fk_user_id']);
+												if($pdofficer['fk_pd_type_id'] == 1)
+												{
+													$this->db->WHERE('PDTRIGGER.fk_pd_allocated_to',$pdofficer['fk_user_id']);
+												}
+												else
+												{
+													$this->db->WHERE('PDTRIGGER.executive_id',$pdofficer['fk_user_id']);
+												}
 												$pd_count = $this->db->GET()->result_array();
 												//print_r($this->db->last_query());
 												if(count($pd_count)){ 
@@ -1043,6 +1079,29 @@ class PD_Controller extends REST_Controller {
 												{
 														foreach($central_pd_officers as $k => $central_pd_officer)
 														{
+															
+															
+															//Get PD Details assigned to Central Officers
+																	$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
+														$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
+														$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
+														$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
+														
+														$this->db->OR_GROUP_START();
+														$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
+														$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
+														$this->db->OR_WHERE('PDTRIGGER.pd_status',ALLOCATED);
+														$this->db->GROUP_END();
+														$this->db->WHERE('PDTRIGGER.central_pd_officer_id',$central_pd_officer['fk_user_id']);
+														$pd_count = $this->db->GET()->result_array();
+														//print_r($this->db->last_query());
+														$central_pd_officers[$k]['count'] = 0;
+														if(count($pd_count)){ 
+														$central_pd_officers[$k]['pd_details'] = $pd_count;
+														$central_pd_officers[$k]['count'] = count($pd_count); }
+															//End Get PD Details assigned to Central Officers
+															
+															
 															$bucket_name = PROFILE_PICTURE_BUCKET_NAME;
 															$profilepics3path = 'sineedge/'.$central_pd_officer['profilepic'];
 															$singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+10 minutes');
@@ -1502,8 +1561,36 @@ class PD_Controller extends REST_Controller {
 	{
 		$pd_id = $this->post('pd_id');
 		$pd_form_id = $this->post('pd_form_id');
+		
+		//Get Pd masters etails usng PD ID
+		$pd_details = $this->PD_Model->getPDMasterDetails($pd_id);
+		
 		$result_array = $this->PD_Model->getPDFormDetails($pd_id,$pd_form_id);
-		//print_r($result_array);die();
+		
+		// *****************************Get Docs from bucket 
+		 // Get Alredy stored Images
+							$fields = array('pd_document_title', 'pd_document_name');
+							 $where_condition_array = array('fk_pd_id' => $pd_id,'fk_form_id' => $pd_form_id);
+							 
+							 $pd_docs = $this->PD_Model->selectCustomRecords($fields,$where_condition_array,PDDOCUMENTS);
+							 
+							  if(count($pd_docs))
+							 {
+								 $bucket_name = LENDER_BUCKET_NAME_PREFIX.$pd_details[0]['fk_lender_id'];
+								 foreach($pd_docs as $doc_key => $doc)
+								 {
+									 if($doc['pd_document_name'] != "" || $doc['pd_document_name'] != null)
+									 {
+										 $profilepics3path = 'pd'.$pd_details[0]['pd_id'].'/'.$doc['pd_document_name'];
+										 $singed_uri = $this->aws_s3->getSingleObjectInaBucketAsSignedURI($bucket_name,$profilepics3path,'+30 minutes');
+										 $pd_docs[$doc_key]['pd_document_name'] = $singed_uri;
+									 }
+								 }
+							 }
+								
+							 
+		// *************************End Get Docs from bucket 
+		
 		$final_array = GETPDFORMDETAILS::getPDFormDetailsStructured($result_array,$pd_id,$pd_form_id);
 		
 		if($result_array)
@@ -1524,16 +1611,26 @@ class PD_Controller extends REST_Controller {
 	}
 	
 	
-	/********* Get Form Informations @param pd_id and pd_form_id ******/
+	/********* Save Form Informations @param pd_id and pd_form_id ******/
 	public function savePDFormDetails_post()
 	{
 		$records = $this->post('records');
 		
 		$pd_id = $records['pdid'];
+		
+		//Get Pd masters etails usng PD ID
+		$pd_details = $this->PD_Model->getPDMasterDetails($pd_id);
+		
+		
 		$pd_form_id = $records['formid'];
 		$fk_createdby = $records['fk_createdby'];
 		$i = 0;
-		
+		$base64images = array();
+		//seperate base64 images from records array
+		 if(array_key_exists('base64images',$records))	
+		 {
+			 $base64images = $records['base64images'];
+		 }
 		//Deactivate Old rec
 			$where_condition_array = array('fk_pd_id' => $pd_id,"fk_form_id"=>$pd_form_id);
 			$array = array('isactive'=>0);
@@ -1618,9 +1715,52 @@ class PD_Controller extends REST_Controller {
 					}// end of array of key value pairs
 				}
 			//}
-		   //**************** End of handle supplier form details logic***************//
+		   //**************** End of handle  form details logic***************//
 			
 		}
+		
+		//*****************************upload base64 images 
+		 if(count($base64images))
+			{	
+				
+				foreach($base64images as $iter => $doc)
+				{
+					$temp_base64_string = $doc['image'];
+					$title = $doc['Name'];
+					$output_file = APPPATH."/docs/temp_base64_image.png";
+					
+					//Generate Random File Name
+						$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+						$charactersLength = strlen($characters);
+						$randomString = '';
+							for ($i = 0; $i < 5; $i++) {
+								$randomString .= $characters[rand(0, $charactersLength - 1)];
+							}
+						$temp_file_name = $randomString.date('Y-m-d-H:m:s').'.png';
+						
+						
+					$ifp = fopen( $output_file, 'wb' ); 
+     				$temp_data = explode( ',', $temp_base64_string );
+					fwrite( $ifp, base64_decode( $temp_data[ 1 ] ) );
+     				fclose( $ifp ); 
+				    $tempdoc = $output_file;
+					$tempdocname = $temp_file_name;
+					$bucketname = LENDER_BUCKET_NAME_PREFIX.$pd_details['fk_lender_id'];
+					$key = 'pd'.$pd_id.'/'.$tempdocname ;
+					$sourcefile = $tempdoc;
+					
+					$bucket_data = array('bucket_name'=>$bucketname,'key'=>$key,'sourcefile'=>$sourcefile);
+					$s3result= $this->aws_s3->uploadFileToS3Bucket($bucket_data);
+					
+					if(is_object($s3result) && $s3result['ObjectURL'] != '' && $s3result['@metadata']['statusCode'] == 200)
+					{
+						$record_data = array('fk_pd_id' => $pd_id,'fk_form_id'=>$pd_form_id,'pd_document_title'=>$title,'pd_document_name'=>$tempdocname);
+						$this->PD_Model->saveRecords($record_data,PDDOCUMENTS);
+					}
+					
+				}
+			}
+		//*******************************upload base64 images 
 		
 							$data['dataStatus'] = true;
 							$data['status'] = REST_Controller::HTTP_OK;
@@ -2022,6 +2162,15 @@ class PD_Controller extends REST_Controller {
 	
 	public function calculateAssessedIncome()
 	{
+		//Get all Master Details
 		
+		$sales_declared_by_customer = array();
+		$sales_by_itemwise_annual = array();
+		$sales_by_item_monthwise = array();
+		
+		// Get mode of calculation
+		$purchases = array();
+		$business_expenses = array();
+		$household_expenses = array();
 	}
 }
