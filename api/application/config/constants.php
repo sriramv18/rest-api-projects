@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'calculateAssessedIncome'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getFormAndQuestionKeys'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -377,7 +377,7 @@ defined('SOURCEOFBALANCETRANSFER') OR define('SOURCEOFBALANCETRANSFER','m_source
 defined('STATUSOFCONSTRUCTION') OR define('STATUSOFCONSTRUCTION','m_status_of_construction');
 
 
-// Assessed Income related Tables
+// Assessed Income related Tables Not added in test DB
 defined('SALESDECLAREDBYCUSTOMER') OR define('SALESDECLAREDBYCUSTOMER','t_pd_sales_declared_by_customer');
 defined('SALESDECLAREDBYCUSTOMERID') OR define('SALESDECLAREDBYCUSTOMERID','sdc_id');
 

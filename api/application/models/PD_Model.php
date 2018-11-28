@@ -823,7 +823,10 @@ class PD_Model extends SPARQ_Model {
 			$fields = array('sdc_id','sales_declared_by_customer');	
 			$where_condition_array = array('fk_pd_id'=>$pdid,'isactive'=>1);	
 			$sales_declared_by_customer = $this->selectCustomRecords($fields,$where_condition_array,SALESDECLAREDBYCUSTOMER);
-			
+			//get Gross Profit calculatio Mode details
+			$fields = array('calc_type_id','mode','margin');	
+			$where_condition_array = array('fk_pd_id'=>$pdid);	
+			$gross_profit_calculation_type = $this->selectCustomRecords($fields,$where_condition_array,PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPE);
 			
 			//get sales_calculated_by_itemwise details
 			$fields = array('sci_id','sales_item','sales_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_sale_value');	
@@ -921,7 +924,7 @@ class PD_Model extends SPARQ_Model {
 			
 			/*********************************End of Assessd Income Sections   *****************************************/ 
 			
-			$assessed_income= array('sales_declared_by_customer'=>$sales_declared_by_customer,'sales_calculated_by_itemwise'=>$sales_calculated_by_itemwise,'sales_items_by_monthwise'=>$sales_items_by_monthwise,'purchase_details'=>$purchase_details,'business_expenses'=>$business_expenses,'house_hold_expenses'=>$house_hold_expenses);
+			$assessed_income= array('sales_declared_by_customer'=>$sales_declared_by_customer,'sales_calculated_by_itemwise'=>$sales_calculated_by_itemwise,'sales_items_by_monthwise'=>$sales_items_by_monthwise,'purchase_details'=>$purchase_details,'business_expenses'=>$business_expenses,'house_hold_expenses'=>$house_hold_expenses,'gross_profit_calculation_type' => $gross_profit_calculation_type);
 			
 			return $assessed_income;
 	 }

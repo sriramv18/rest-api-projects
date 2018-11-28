@@ -2191,7 +2191,7 @@ class PD_Controller extends REST_Controller {
 		$purchases = $result_array['purchase_details'];
 		$business_expenses = $result_array['business_expenses'];
 		$household_expenses = $result_array['house_hold_expenses'];
-		
+		$gross_profit_calculation_type = $result_array['gross_profit_calculation_type'];
 		if(count($sales_declared_by_customer)){$sales_declared_by_customer_flag = 1;}
 		if(count($sales_calculated_by_itemwise)){$sales_calculated_by_itemwise_flag = 1;}
 		if(count($sales_by_item_monthwise)){$sales_by_item_monthwise_flag = 1;}
@@ -2280,6 +2280,18 @@ class PD_Controller extends REST_Controller {
 			}
 			
 			// echo "\n\n".$final_revenue;
+			
+			/**************************Gross Profit calculation start***************/
+			print_r($gross_profit_calculation_type);
+			if($gross_profit_calculation_type[0]['mode']  == 1)
+			{
+				//calculate overall purchase 
+			}
+			else
+			{
+				
+			}
+			/**************************Gross Profit calculation end***************/
 			
 			
 		}

@@ -534,34 +534,109 @@ class Template_Management_Controller extends REST_Controller {
 		$master_tables_pkid = array('INDUSTRYCLASSIFICATION' => 'industry_classification_id','UOM' => 'uom_id','OCCUPATIONMEMBERS' => 'occupation_non_earning_member_id','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'type_of_activity_id','RELATIONSHIPS' => 'relationship_id','FREQUENCY' => 'frequency_id', 'CUSTOMERBEHAVIOUR' => 'customer_behaviour_id', 'CUSTOMERSEGMENT' => 'customer_segment_id','DESIGNATION' => 'designation_id', 'EARNINGMEMBERSSTATUS' => 'earning_member_status_id','EDUQUALIFICATION' => 'qualification_id','ADDRESSTYPE' => 'address_type_id','LOCALITY' => 'locality_id','ASSETTYPE' => 'id','PROPERTIES' => 'id','INVESTMENTTYPE' => 'id','INSURANCETYPE' => 'id','PERSONSMET' => 'person_met_id','RESIDENCEOWNERSHIP' => 'id','PAYMENTMODE' => 'id','ACCOUNTTYPE' => 'id','SOURCEOFOTHERINCOME' => 'id','MORTAGEPROPERTYTYPE' => 'id','ENDUSEOFLOAN' => 'id','SOURCEOFBALANCETRANSFER' => 'id', 'STATUSOFCONSTRUCTION' => 'id');
 		//*******************INTERNAL PURPOSE***************************************************
 		
-		$fields = array('fk_form_id','question','key','ismaster','master_name');
-		$where_condition_array = array();
-		if($formid != "")
+		//get Alreday assigned ques and kys from template
+		$fields = array('fk_key');
+		$where_condition_array = array('fk_template_id' =>$templateid,'isactive' => 1,'fk_form_id' =>$formid );
+		$exits_questions = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,SCORECARDQUESTIONS);
+		$result_data = array();
+		//print_r();
+		if(!count($exits_questions))
 		{
-		 $where_condition_array = array('isactive' => 1,'fk_form_id' => $formid);
-		}
-		else
-		{
-		 $where_condition_array = array('isactive' => 1);
-		}
-		$result_data = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,QUESTIONKEYMAPPING);
-		
-		if(count($result_data))
-		{
-			foreach($result_data as $res_key => $result)
+				
+			$fields = array('fk_form_id','question','key','ismaster','master_name');
+			$where_condition_array = array();
+			if($formid != 0)
 			{
-				if($result['master_name'] != null || $result['master_name'] != "")
+			 $where_condition_array = array('isactive' => 1,'fk_form_id' => $formid);
+			}
+			else
+			{
+			 $where_condition_array = array('isactive' => 1);
+			}
+			$result_data = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,QUESTIONKEYMAPPING);
+			
+			if(count($result_data))
+			{
+				foreach($result_data as $res_key => $result)
 				{
-					//echo $result['master_name'];
-					$fields = array($master_tables_pkid[$result['master_name']].' as id',$master_tables_field_names[$result['master_name']].' as name');
 					
-					$table = constant($result['master_name']);
-					$where_condition_array = array('isactive' => 1);
-					$answers = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,$table);
-					$result_data[$res_key]['answers'] = $answers;
+					$result_data[$res_key]['score_question_id'] = null;
+					$result_data[$res_key]['fk_template_id'] = null;
+					$result_data[$res_key]['fk_key'] = null;
+					$result_data[$res_key]['weightage'] = null;
+					$result_data[$res_key]['calc_type'] = null;
+					if($result['master_name'] != null || $result['master_name'] != "")
+					{
+						//echo $result['master_name'];
+						$fields = array($master_tables_pkid[$result['master_name']].' as id',$master_tables_field_names[$result['master_name']].' as name');
+						
+						$table = constant($result['master_name']);
+						$where_condition_array = array('isactive' => 1);
+						$answers = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,$table);
+						foreach($answers as $answer_key => $answer)
+						{
+							$answers[$answer_key]['answer'] = null;
+							$answers[$answer_key]['fk_score_question_id'] = null;
+							$answers[$answer_key]['score'] = null;
+							$answers[$answer_key]['score_answer_id'] = null;
+						}
+						$result_data[$res_key]['answers'] = $answers;
+					}
 				}
 			}
 		}
+		else
+		{
+			
+			$temp_array = array();
+				foreach($exits_questions as $res)
+				{
+					array_push($temp_array,$res['fk_key']);
+				}
+				//print_r($temp_array);
+			$this->db->SELECT('QUESTIONKEYMAPPING.fk_form_id,QUESTIONKEYMAPPING.question,QUESTIONKEYMAPPING.key,QUESTIONKEYMAPPING.master_name,SCORECARDQUESTIONS.score_question_id,SCORECARDQUESTIONS.fk_template_id,SCORECARDQUESTIONS.fk_form_id,SCORECARDQUESTIONS.fk_key,SCORECARDQUESTIONS.weightage,SCORECARDQUESTIONS.calc_type');
+			$this->db->FROM(QUESTIONKEYMAPPING.' as QUESTIONKEYMAPPING');
+			$this->db->JOIN(SCORECARDQUESTIONS.' as SCORECARDQUESTIONS','QUESTIONKEYMAPPING.fk_form_id = SCORECARDQUESTIONS.fk_form_id AND QUESTIONKEYMAPPING.key = SCORECARDQUESTIONS.fk_key AND SCORECARDQUESTIONS.isactive = 1','LEFT');
+			
+			if($formid != 0)
+			{
+			 $this->db->WHERE('QUESTIONKEYMAPPING.fk_form_id',$formid);
+			}
+			$this->db->WHERE_NOT_IN('QUESTIONKEYMAPPING.key',$temp_array);
+			$this->db->WHERE('QUESTIONKEYMAPPING.isactive',1);
+			//$this->db->WHERE('SCORECARDQUESTIONS.isactive',1);
+			
+			$result_data = $this->db->GET()->result_array();
+			if(count($result_data))
+			{
+				foreach($result_data as $res_key => $result)
+				{
+					if($result['master_name'] != null || $result['master_name'] != "")
+					{
+						//echo $result['master_name'];
+						$fields = array($master_tables_pkid[$result['master_name']].' as id',$master_tables_field_names[$result['master_name']].' as name');
+						
+						$table = constant($result['master_name']);
+						$where_condition_array = array('isactive' => 1);
+						$answers = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,$table);
+						foreach($answers as $answer_key => $answer)
+						{
+							$answers[$answer_key]['answer'] = null;
+							$answers[$answer_key]['fk_score_question_id'] = null;
+							$answers[$answer_key]['score'] = null;
+							$answers[$answer_key]['score_answer_id'] = null;
+						}
+						$result_data[$res_key]['answers'] = $answers;
+					}
+				}
+			}
+			
+			
+			
+			
+			
+		}
+	
 		if(count($result_data))
 		{
 						$data['dataStatus'] = true;
