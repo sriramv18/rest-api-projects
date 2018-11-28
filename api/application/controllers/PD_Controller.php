@@ -900,9 +900,11 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
 												$list_of_pd_officers[$key]['count'] = 0;
 												
-												$this->db->SELECT('pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name');
+												$this->db->SELECT('pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
 												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 												$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
+												$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
+												
 												$this->db->OR_GROUP_START();
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
@@ -998,9 +1000,10 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
 												$list_of_pd_officers[$key]['count'] = 0;
 												
-												$this->db->SELECT('pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name');
+												$this->db->SELECT('pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
 												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 												$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
+												$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
 												$this->db->OR_GROUP_START();
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);

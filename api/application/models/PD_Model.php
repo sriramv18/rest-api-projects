@@ -246,7 +246,7 @@ class PD_Model extends SPARQ_Model {
 					
 					if($log_key == 0)
 					{
-						$log_string = 'PD Ctreated with '.$log['old_value'].'" status "'.'"';
+						$log_string = 'PD Ctreated with '.$log['old_value'].'" status "';
 							$user = $log['createdby'];
 							$time = $log['createdon'];
 							$actual_logs[$log_key]['log']  = $log_string;
