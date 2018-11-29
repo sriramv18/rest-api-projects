@@ -535,6 +535,7 @@ class Template_Management_Controller extends REST_Controller {
 		$formid = 0;
 		$templateid = $records['templateid'];
 		$formid = $records['formid'];
+		$categoryid = $records['categoryid'];
 		//*******************INTERNAL PURPOSE***************************************************
 		$master_tables_field_names = array('INDUSTRYCLASSIFICATION' => 'name','UOM' => 'name','OCCUPATIONMEMBERS' => 'name','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'name','RELATIONSHIPS' => 'name','FREQUENCY' => 'name', 'CUSTOMERBEHAVIOUR' => 'description', 'CUSTOMERSEGMENT' => 'name','DESIGNATION' => 'short_name', 'EARNINGMEMBERSSTATUS' => 'earning_member_status','EDUQUALIFICATION' => 'qualification_name','ADDRESSTYPE' => 'address_type','LOCALITY' => 'locality_name','ASSETTYPE' => 'name','PROPERTIES' => 'name','INVESTMENTTYPE' => 'name','INSURANCETYPE' => 'name','PERSONSMET' => 'person_met_name','RESIDENCEOWNERSHIP' => 'name','PAYMENTMODE' => 'name','ACCOUNTTYPE' => 'name','SOURCEOFOTHERINCOME' => 'name','MORTAGEPROPERTYTYPE' => 'name','ENDUSEOFLOAN' => 'name','SOURCEOFBALANCETRANSFER' => 'name', 'STATUSOFCONSTRUCTION' => 'name','BTLENDERLIST'=>'lender_name','MORTAGEPROPERTIES'=>'property_name');
 		
@@ -550,11 +551,11 @@ class Template_Management_Controller extends REST_Controller {
 		if(!count($exits_questions))
 		{
 				
-			$fields = array('question_key_mapping_id','fk_form_id','question','key','ismaster','master_name');
+			$fields = array('question_key_mapping_id','fk_form_id','fk_category_id','question','key','ismaster','master_name');
 			$where_condition_array = array();
 			if($formid != 0)
 			{
-			 $where_condition_array = array('isactive' => 1,'fk_form_id' => $formid);
+			 $where_condition_array = array('isactive' => 1,'fk_form_id' => $formid,'fk_category_id' => $categoryid);
 			}
 			else
 			{
@@ -608,6 +609,7 @@ class Template_Management_Controller extends REST_Controller {
 			if($formid != 0)
 			{
 			 $this->db->WHERE('QUESTIONKEYMAPPING.fk_form_id',$formid);
+			 $this->db->WHERE('QUESTIONKEYMAPPING.fk_category_id',$categoryid);
 			}
 			$this->db->WHERE_NOT_IN('QUESTIONKEYMAPPING.key',$temp_array);
 			$this->db->WHERE('QUESTIONKEYMAPPING.isactive',1);
@@ -658,6 +660,33 @@ class Template_Management_Controller extends REST_Controller {
 						$data['msg'] = "No Data Found!";
 						$this->response($data,REST_Controller::HTTP_OK);
 		}
+	}
+	
+	public function getScorecardDetails_post()
+	{
+		$templateid = $this->post('templateid');
+		
+		//Get Categories assigned to this template$template_id = $this->post('template_id');
+		 $this->db->SELECT('QUESTIONCATEGORY.category_name,TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weightage, DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.createdon,"%d/%m/%Y") as createdon, TEMPLATECATEGORYWEIGHTAGE.fk_createdby,  DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.updatedon, "%d/%m/%Y") as updatedon, TEMPLATECATEGORYWEIGHTAGE.isactive, TEMPLATECATEGORYWEIGHTAGE.fk_updatedby');
+			  $this->db->FROM(TEMPLATECATEGORYWEIGHTAGE .' as TEMPLATECATEGORYWEIGHTAGE');
+			  $this->db->JOIN(QUESTIONCATEGORY.' as QUESTIONCATEGORY','TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id = QUESTIONCATEGORY.question_category_id');
+			 $this->db->WHERE('TEMPLATECATEGORYWEIGHTAGE.fk_template_id',$templateid);
+		 $template_categories = $this->db->GET()->result_array();
+		//print_r($template_categories);
+		foreach($template_categories as $cate_key => $category)
+		{
+			$this->db->SELECT('QUESTIONKEYMAPPING.question_key_mapping_id,QUESTIONKEYMAPPING.fk_form_id,QUESTIONKEYMAPPING.question,QUESTIONKEYMAPPING.key,QUESTIONKEYMAPPING.master_name,SCORECARDQUESTIONS.score_question_id,SCORECARDQUESTIONS.fk_template_id,SCORECARDQUESTIONS.fk_form_id,SCORECARDQUESTIONS.fk_key,SCORECARDQUESTIONS.weightage,SCORECARDQUESTIONS.calc_type');
+			$this->db->FROM(SCORECARDQUESTIONS.' as SCORECARDQUESTIONS');
+			$this->db->JOIN(QUESTIONKEYMAPPING.' as QUESTIONKEYMAPPING','SCORECARDQUESTIONS.fk_form_id = QUESTIONKEYMAPPING.fk_form_id AND QUESTIONKEYMAPPING.key = SCORECARDQUESTIONS.fk_key AND SCORECARDQUESTIONS.isactive = 1 AND QUESTIONKEYMAPPING.isactive = 1','LEFT');
+			$this->db->WHERE('QUESTIONKEYMAPPING.fk_category_id',$category['fk_question_category_id']);
+			$template_categories[$cate_key]['questions'] = $this->db->GET()->result_array();
+		}
+		
+						$data['dataStatus'] = true;
+						$data['status'] = REST_Controller::HTTP_OK;
+						$data['records'] = $template_categories;
+						$this->response($data,REST_Controller::HTTP_OK);
+		
 	}
 	
 	

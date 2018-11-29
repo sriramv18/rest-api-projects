@@ -111,6 +111,7 @@ $route['getQuestionsForTemplateCreation'] = 'Template_Management_Controller/getQ
 $route['getCategoryGroupCombinations'] = 'Template_Management_Controller/getCategoryGroupCombinations'; 
 $route['saveScoreCardQuestions'] = 'Template_Management_Controller/saveScoreCardQuestions'; 
 $route['getFormAndQuestionKeys'] = 'Template_Management_Controller/getFormAndQuestionKeys'; 
+$route['getScorecardDetails'] = 'Template_Management_Controller/getScorecardDetails'; 
 
 //QUESTION MANAGEMENT
 $route['(listAllQuestions/:any)'] = 'Question_Management_Controller/listAllQuestions/'; 
