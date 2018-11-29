@@ -713,10 +713,10 @@ class Template_Management_Controller extends REST_Controller {
 							//print_r($exact_answers);
 							if(count($exact_answers))
 							{
-								$answers[$answer_key]['answer'] = $exact_answers[0]['score_answer_id'];
+								$answers[$answer_key]['answer'] = $exact_answers[0]['answer'];
 								$answers[$answer_key]['fk_score_question_id'] = $exact_answers[0]['fk_score_question_id'];
-								$answers[$answer_key]['score'] = $exact_answers[0]['answer'];
-								$answers[$answer_key]['score_answer_id'] = $exact_answers[0]['score'];
+								$answers[$answer_key]['score'] = $exact_answers[0]['score'];
+								$answers[$answer_key]['score_answer_id'] = $exact_answers[0]['score_answer_id'];
 							}
 							else
 							{
