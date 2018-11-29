@@ -543,7 +543,7 @@ class Template_Management_Controller extends REST_Controller {
 		if(!count($exits_questions))
 		{
 				
-			$fields = array('question_key_mapping_id,fk_form_id','question','key','ismaster','master_name');
+			$fields = array('question_key_mapping_id','fk_form_id','question','key','ismaster','master_name');
 			$where_condition_array = array();
 			if($formid != 0)
 			{

@@ -900,10 +900,12 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
 												$list_of_pd_officers[$key]['count'] = 0;
 												
-												$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
+												$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode');
 												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 												$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
 												$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
+												$this->db->JOIN(STATE.' as STATE','PDTRIGGER.fk_state = STATE.state_id ','LEFT');
+												$this->db->JOIN(CITY.' as CITY','PDTRIGGER.fk_city = CITY.city_id','LEFT');
 												
 												$this->db->OR_GROUP_START();
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
@@ -949,10 +951,12 @@ class PD_Controller extends REST_Controller {
 														{
 															
 															//Get PD Details assigned to Central Officers
-																	$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
+																	$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode');
 														$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 														$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
 														$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
+														$this->db->JOIN(STATE.' as STATE','PDTRIGGER.fk_state = STATE.state_id ','LEFT');
+														$this->db->JOIN(CITY.' as CITY','PDTRIGGER.fk_city = CITY.city_id','LEFT');
 														
 														$this->db->OR_GROUP_START();
 														$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
@@ -1029,10 +1033,12 @@ class PD_Controller extends REST_Controller {
 												$list_of_pd_officers[$key]['mobile_no'] = $names[0]['mobile_no'];
 												$list_of_pd_officers[$key]['count'] = 0;
 												
-												$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
+												$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode');
 												$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 												$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
 												$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
+												$this->db->JOIN(STATE.' as STATE','PDTRIGGER.fk_state = STATE.state_id ','LEFT');
+												$this->db->JOIN(CITY.' as CITY','PDTRIGGER.fk_city = CITY.city_id','LEFT');
 												$this->db->OR_GROUP_START();
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
 												$this->db->OR_WHERE('PDTRIGGER.pd_status',INPROGRESS);
@@ -1082,10 +1088,12 @@ class PD_Controller extends REST_Controller {
 															
 															
 															//Get PD Details assigned to Central Officers
-																	$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name');
+																	$this->db->SELECT('pd_id,pd_status,fk_pd_type,DATE_FORMAT(PDTRIGGER.scheduled_on,"%d/%m/%Y %H:%i:%s %p") as scheduled_on,PDAPPLICANTSDETAILS.applicant_name,PDTYPE.type_name as pd_type_name,PDTRIGGER.addressline1,PDTRIGGER.addressline2,PDTRIGGER.addressline3,PDTRIGGER.fk_city,CITY.name as city_name,PDTRIGGER.fk_state,STATE.name as state_name,PDTRIGGER.pincode');
 														$this->db->FROM(PDTRIGGER.' as PDTRIGGER');
 														$this->db->JOIN(PDAPPLICANTSDETAILS.' as PDAPPLICANTSDETAILS','PDTRIGGER.pd_id = PDAPPLICANTSDETAILS.fk_pd_id AND PDAPPLICANTSDETAILS.applicant_type = 1');
 														$this->db->JOIN(PDTYPE.' as PDTYPE','PDTRIGGER.fk_pd_type = PDTYPE.pd_type_id AND PDTYPE.isactive = 1');
+														$this->db->JOIN(STATE.' as STATE','PDTRIGGER.fk_state = STATE.state_id ','LEFT');
+														$this->db->JOIN(CITY.' as CITY','PDTRIGGER.fk_city = CITY.city_id','LEFT');
 														
 														$this->db->OR_GROUP_START();
 														$this->db->OR_WHERE('PDTRIGGER.pd_status',SCHEDULED);
@@ -2285,19 +2293,27 @@ class PD_Controller extends REST_Controller {
 			
 			/**************************Gross Profit calculation start***************/
 			print_r($gross_profit_calculation_type);
+			$estimation_of_gross_profit = 0;
 			if($gross_profit_calculation_type[0]['mode']  == 1)
 			{
 				//calculate overall purchase 
 				$overall_purchase_total = 0;
-				foreach()
+				foreach($purchases as $purchase_key => $purchase)
 				{
-					
+					 $overall_purchase_total = $overall_purchase_total + $purchase['annual_purchase_value'];
 				}
-				
+				$estimation_of_gross_profit = $overall_purchase_total;
 			}
 			else
 			{
-				
+				if($gross_profit_calculation_type[0]['margin']  == 1)
+				{
+					
+				}
+				else
+				{
+					
+				}
 			}
 			/**************************Gross Profit calculation end***************/
 			
