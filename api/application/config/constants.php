@@ -417,6 +417,9 @@ defined('PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPEID') OR define('PDASSESSEDIN
 defined('BTLENDERLIST') OR define('BTLENDERLIST','m_bt_lender_list');
 defined('BTLENDERLISTID') OR define('BTLENDERLISTID','bt_lender_list_id');
 
+defined('MORTAGEPROPERTIES') OR define('MORTAGEPROPERTIES','m_mortage_properties');
+defined('MORTAGEPROPERTIESID') OR define('MORTAGEPROPERTIESID','mortage_property_id');
+
 
 
 
