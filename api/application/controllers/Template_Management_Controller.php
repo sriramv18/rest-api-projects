@@ -477,8 +477,8 @@ class Template_Management_Controller extends REST_Controller {
 					$count++;
 					foreach($answers as $ans_key => $answer)
 					{
-						unset($record['id']);
-						unset($record['name']);
+						unset($answer['id']);
+						unset($answer['name']);
 					  if($answer['score_answer_id'] != null || $answer['score_answer_id'] != "")
 					  {
 						 $where_condition_array = array('score_answer_id' => $answer['score_answer_id']);
@@ -501,8 +501,8 @@ class Template_Management_Controller extends REST_Controller {
 					$count++;
 					foreach($answers as $ans_key => $answer)
 					{
-					    unset($record['id']);
-						unset($record['name']);
+					    unset($answer['id']);
+						unset($answer['name']);
 					  $answer['fk_score_question_id'] = $id;
 					  $ans_id = $this->Template_Management_Model->saveRecords($answer,SCORECARDANSWERS);	
 					}
