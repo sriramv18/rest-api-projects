@@ -1783,7 +1783,7 @@ class PD_Controller extends REST_Controller {
 		$pd_id = $this->post('pd_id');
 		$pd_form_id = $this->post('pd_form_id');
 		$result_array = $this->PD_Model->getAssessedIncome($pd_id);
-		
+		$result_array['final_data'] = $this->calculateAssessedIncome($pd_id);
 		$data['dataStatus'] = true;
 		$data['status'] = REST_Controller::HTTP_OK;
 	    $data['records'] = $result_array;
@@ -2168,10 +2168,12 @@ class PD_Controller extends REST_Controller {
 	}
 	
 	
-	public function calculateAssessedIncome_get()
+	public function calculateAssessedIncome($pd_id)
 	{
 		
-		$pd_id = 1000;
+		
+		$calculated_data = array();
+		
 		$sales_declared_by_customer = array();
 		$sales_declared_by_customer_flag = 0;
 		
@@ -2191,10 +2193,14 @@ class PD_Controller extends REST_Controller {
 		$household_expenses_flag = 0;
 		
 		$overall_purchase_total = 0;
+		$overall_business_total = 0;
+		$overall_household_total = 0;
+		$net_profit = 0;
+		
 		
 		//Get all Master Details
 		$result_array = $this->PD_Model->getAssessedIncome($pd_id);
-		print_r($result_array);
+		//print_r($result_array);
 		$sales_declared_by_customer = $result_array['sales_declared_by_customer'];
 		$sales_calculated_by_itemwise = $result_array['sales_calculated_by_itemwise'];
 		$sales_by_item_monthwise = $result_array['sales_items_by_monthwise'];
@@ -2258,9 +2264,27 @@ class PD_Controller extends REST_Controller {
 			{
 				$total_sales_declared_by_customer = $sales_declared_by_customer[0]['sales_declared_by_customer'];
 			}
-			print_r($sales_monthwise);
+			//print_r($sales_monthwise);
 			//print_r($total_sales_monthwise);
 			$final_revenue = 0;
+			
+			foreach($business_expenses as $business_key => $business_expense)
+			{
+				$overall_business_total = $overall_business_total + $business_expense['annual_expenses_value'];
+			}
+			
+			foreach($household_expenses as $household_key => $household_expense)
+			{
+				$overall_household_total = $overall_household_total + $household_expense['annual_expense_value'];
+			}
+			
+			if($purchases_flag != 0)
+			{
+				foreach($purchases as $purchase_key => $purchase)
+				{
+					 $overall_purchase_total = $overall_purchase_total + $purchase['annual_purchase_value'];
+				}
+			}
 			
 			//case 1 - (b:ref doc)  If the difference between the lowest and highest of the 3 revenue (sales) figures arrived at above in step 1, is > 50% of lowest, then the revenue considered would be 125% of the lowest revenue
 			
@@ -2273,7 +2297,7 @@ class PD_Controller extends REST_Controller {
 			$lowest_vaule = min($temp_array);
 			
 			
-			if($lowest_vaule != 0)
+			if($lowest_vaule != 0 && count($temp_array) > 1)
 			{
 				$diff = $height_value - $lowest_vaule;
 				if($diff > ($lowest_vaule * 0.5))
@@ -2292,36 +2316,83 @@ class PD_Controller extends REST_Controller {
 			// echo "\n\n".$final_revenue;
 			
 			/**************************Gross Profit calculation start***************/
-			print_r($gross_profit_calculation_type);
+			//print_r($gross_profit_calculation_type);
 			$estimation_of_gross_profit = 0;
 			if($gross_profit_calculation_type[0]['mode']  == 1)
 			{
-				//calculate overall purchase 
-				$overall_purchase_total = 0;
-				foreach($purchases as $purchase_key => $purchase)
-				{
-					 $overall_purchase_total = $overall_purchase_total + $purchase['annual_purchase_value'];
-				}
-				$estimation_of_gross_profit = $overall_purchase_total;
+				$estimation_of_gross_profit = $overall_purchase_total - $final_revenue;
 			}
 			else
 			{
 				if($gross_profit_calculation_type[0]['margin']  == 1)
 				{
+					if($sales_calculated_by_itemwise_flag != 0)
+					{
+						foreach($sales_calculated_by_itemwise as $sci_key => $sci)
+						{
+							$net_profit =  $net_profit+$sci['margin_final_value'];
+						}
+					}
+					else if($sales_by_item_monthwise_flag != 0)
+					{
+						foreach($sales_by_item_monthwise as $sim_key => $sim)
+						{
+							$net_profit =  $net_profit+$sim['margin_final_value'];
+						}
+					}
 					
+					$net_profit = $net_profit - $overall_business_total;
 				}
 				else
 				{
+					if($sales_calculated_by_itemwise_flag != 0)
+					{
+						foreach($sales_calculated_by_itemwise as $sci_key => $sci)
+						{
+							$net_profit =  $net_profit+$sci['margin_final_value'];
+						}
+					}
+					else if($sales_by_item_monthwise_flag != 0)
+					{
+						foreach($sales_by_item_monthwise as $sim_key => $sim)
+						{
+							$net_profit =  $net_profit+$sim['margin_final_value'];
+						}
+					}
 					
+					$overall_purchase_total = $final_revenue - $overall_business_total;
 				}
 			}
 			/**************************Gross Profit calculation end***************/
+			$calculated_data['sales_revenue'] = $final_revenue;
+			$calculated_data['purchase'] = $overall_purchase_total;
+			if($gross_profit_calculation_type[0]['mode']  == 1)
+			{
+				$calculated_data['gross_profit'] = $estimation_of_gross_profit;
+			}
+			else
+			{
+				$calculated_data['gross_profit'] = $final_value;
+			}
+			$calculated_data['business_expense'] = $overall_business_total;
+			$calculated_data['net_profit_loss'] = $calculated_data['gross_profit'] - $overall_business_total;
+			$calculated_data['net_magin'] = $calculated_data['net_profit_loss'] / $final_revenue;
 			
 			
+			
+			// $data['dataStatus'] = true;
+			// $data['status'] = REST_Controller::HTTP_OK;
+			// $data['records'] = $calculated_data;
+			// $this->response($data,REST_Controller::HTTP_OK);
+			return $calculated_data;
 		}
 		else
 		{
-			echo "Not calc";
+			// $data['dataStatus'] = false;
+			// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+			// $data['msg'] = 'Not enough Data to Calculate Assessed Income';
+			// $this->response($data,REST_Controller::HTTP_OK);
+			return $calculated_data;
 		}
 		
 	}
