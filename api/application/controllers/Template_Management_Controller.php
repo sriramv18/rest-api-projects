@@ -699,16 +699,17 @@ class Template_Management_Controller extends REST_Controller {
 						$table = constant($result['master_name']);
 						$where_condition_array = array('isactive' => 1);
 						$answers = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,$table);
-						
+						//print_r($answers);
 						foreach($answers as $answer_key => $answer)
 						{
 							
 							$this->db->SELECT('SCORECARDANSWERS.score_answer_id, SCORECARDANSWERS.fk_score_question_id, SCORECARDANSWERS.answer, SCORECARDANSWERS.score');
 							$this->db->FROM(SCORECARDANSWERS.' as SCORECARDANSWERS');
 							$this->db->WHERE('SCORECARDANSWERS.fk_score_question_id',$result['score_question_id']);
-							$this->db->WHERE('SCORECARDANSWERS.isactive',1);
+							//$this->db->WHERE('SCORECARDANSWERS.isactive',1);
 							$this->db->WHERE('SCORECARDANSWERS.answer',$answer['id']);
 							$exact_answers = $this->db->GET()->result_array();
+							//print_r($this->db->last_query());
 							//print_r($exact_answers);
 							if(count($exact_answers))
 							{
