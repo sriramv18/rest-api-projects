@@ -466,6 +466,8 @@ class Template_Management_Controller extends REST_Controller {
 		{
 			$answers = $record['answers'];
 			unset($record['answers']);
+			unset($record['question_key_mapping_id']);
+			unset($record['question']);
 			if($record['score_question_id'] != null || $record['score_question_id'] != "")
 			{
 				$where_condition_array = array('score_question_id' => $record['score_question_id']);
@@ -475,6 +477,8 @@ class Template_Management_Controller extends REST_Controller {
 					$count++;
 					foreach($answers as $ans_key => $answer)
 					{
+						unset($record['id']);
+						unset($record['name']);
 					  if($answer['score_answer_id'] != null || $answer['score_answer_id'] != "")
 					  {
 						 $where_condition_array = array('score_answer_id' => $answer['score_answer_id']);
@@ -497,6 +501,8 @@ class Template_Management_Controller extends REST_Controller {
 					$count++;
 					foreach($answers as $ans_key => $answer)
 					{
+					    unset($record['id']);
+						unset($record['name']);
 					  $answer['fk_score_question_id'] = $id;
 					  $ans_id = $this->Template_Management_Model->saveRecords($answer,SCORECARDANSWERS);	
 					}
