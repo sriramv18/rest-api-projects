@@ -666,6 +666,14 @@ class Template_Management_Controller extends REST_Controller {
 	{
 		$templateid = $this->post('templateid');
 		
+		//*******************INTERNAL PURPOSE***************************************************
+		$master_tables_field_names = array('INDUSTRYCLASSIFICATION' => 'name','UOM' => 'name','OCCUPATIONMEMBERS' => 'name','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'name','RELATIONSHIPS' => 'name','FREQUENCY' => 'name', 'CUSTOMERBEHAVIOUR' => 'description', 'CUSTOMERSEGMENT' => 'name','DESIGNATION' => 'short_name', 'EARNINGMEMBERSSTATUS' => 'earning_member_status','EDUQUALIFICATION' => 'qualification_name','ADDRESSTYPE' => 'address_type','LOCALITY' => 'locality_name','ASSETTYPE' => 'name','PROPERTIES' => 'name','INVESTMENTTYPE' => 'name','INSURANCETYPE' => 'name','PERSONSMET' => 'person_met_name','RESIDENCEOWNERSHIP' => 'name','PAYMENTMODE' => 'name','ACCOUNTTYPE' => 'name','SOURCEOFOTHERINCOME' => 'name','MORTAGEPROPERTYTYPE' => 'name','ENDUSEOFLOAN' => 'name','SOURCEOFBALANCETRANSFER' => 'name', 'STATUSOFCONSTRUCTION' => 'name','BTLENDERLIST'=>'lender_name','MORTAGEPROPERTIES'=>'property_name');
+		
+		$master_tables_pkid = array('INDUSTRYCLASSIFICATION' => 'industry_classification_id','UOM' => 'uom_id','OCCUPATIONMEMBERS' => 'occupation_non_earning_member_id','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'type_of_activity_id','RELATIONSHIPS' => 'relationship_id','FREQUENCY' => 'frequency_id', 'CUSTOMERBEHAVIOUR' => 'customer_behaviour_id', 'CUSTOMERSEGMENT' => 'customer_segment_id','DESIGNATION' => 'designation_id', 'EARNINGMEMBERSSTATUS' => 'earning_member_status_id','EDUQUALIFICATION' => 'qualification_id','ADDRESSTYPE' => 'address_type_id','LOCALITY' => 'locality_id','ASSETTYPE' => 'id','PROPERTIES' => 'id','INVESTMENTTYPE' => 'id','INSURANCETYPE' => 'id','PERSONSMET' => 'person_met_id','RESIDENCEOWNERSHIP' => 'id','PAYMENTMODE' => 'id','ACCOUNTTYPE' => 'id','SOURCEOFOTHERINCOME' => 'id','MORTAGEPROPERTYTYPE' => 'id','ENDUSEOFLOAN' => 'id','SOURCEOFBALANCETRANSFER' => 'id', 'STATUSOFCONSTRUCTION' => 'id','MORTAGEPROPERTIES' => 'mortage_property_id','BTLENDERLIST'=>'bt_lender_list_id');
+		//*******************INTERNAL PURPOSE***************************************************
+		
+		
+		
 		//Get Categories assigned to this template$template_id = $this->post('template_id');
 		 $this->db->SELECT('QUESTIONCATEGORY.category_name,TEMPLATECATEGORYWEIGHTAGE.template_category_weightage_id, TEMPLATECATEGORYWEIGHTAGE.fk_question_category_id, TEMPLATECATEGORYWEIGHTAGE.fk_template_id, TEMPLATECATEGORYWEIGHTAGE.weightage, DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.createdon,"%d/%m/%Y") as createdon, TEMPLATECATEGORYWEIGHTAGE.fk_createdby,  DATE_FORMAT(TEMPLATECATEGORYWEIGHTAGE.updatedon, "%d/%m/%Y") as updatedon, TEMPLATECATEGORYWEIGHTAGE.isactive, TEMPLATECATEGORYWEIGHTAGE.fk_updatedby');
 			  $this->db->FROM(TEMPLATECATEGORYWEIGHTAGE .' as TEMPLATECATEGORYWEIGHTAGE');
@@ -679,7 +687,49 @@ class Template_Management_Controller extends REST_Controller {
 			$this->db->FROM(SCORECARDQUESTIONS.' as SCORECARDQUESTIONS');
 			$this->db->JOIN(QUESTIONKEYMAPPING.' as QUESTIONKEYMAPPING','SCORECARDQUESTIONS.fk_form_id = QUESTIONKEYMAPPING.fk_form_id AND QUESTIONKEYMAPPING.key = SCORECARDQUESTIONS.fk_key AND SCORECARDQUESTIONS.isactive = 1 AND QUESTIONKEYMAPPING.isactive = 1','LEFT');
 			$this->db->WHERE('QUESTIONKEYMAPPING.fk_category_id',$category['fk_question_category_id']);
-			$template_categories[$cate_key]['questions'] = $this->db->GET()->result_array();
+			$ques_keys = $this->db->GET()->result_array();
+			//print_r($ques_keys);
+			foreach($ques_keys as $res_key => $result)
+				{
+					if($result['master_name'] != null || $result['master_name'] != "")
+					{
+						//echo $result['master_name'];
+						$fields = array($master_tables_pkid[$result['master_name']].' as id',$master_tables_field_names[$result['master_name']].' as name');
+						
+						$table = constant($result['master_name']);
+						$where_condition_array = array('isactive' => 1);
+						$answers = $this->Template_Management_Model->selectCustomRecords($fields,$where_condition_array,$table);
+						
+						foreach($answers as $answer_key => $answer)
+						{
+							
+							$this->db->SELECT('SCORECARDANSWERS.score_answer_id, SCORECARDANSWERS.fk_score_question_id, SCORECARDANSWERS.answer, SCORECARDANSWERS.score');
+							$this->db->FROM(SCORECARDANSWERS.' as SCORECARDANSWERS');
+							$this->db->WHERE('SCORECARDANSWERS.fk_score_question_id',$result['score_question_id']);
+							$this->db->WHERE('SCORECARDANSWERS.isactive',1);
+							$this->db->WHERE('SCORECARDANSWERS.answer',$answer['id']);
+							$exact_answers = $this->db->GET()->result_array();
+							//print_r($exact_answers);
+							if(count($exact_answers))
+							{
+								$answers[$answer_key]['answer'] = $exact_answers[0]['score_answer_id'];
+								$answers[$answer_key]['fk_score_question_id'] = $exact_answers[0]['fk_score_question_id'];
+								$answers[$answer_key]['score'] = $exact_answers[0]['answer'];
+								$answers[$answer_key]['score_answer_id'] = $exact_answers[0]['score'];
+							}
+							else
+							{
+								$answers[$answer_key]['answer'] = null;
+								$answers[$answer_key]['fk_score_question_id'] = null;
+								$answers[$answer_key]['score'] = null;
+								$answers[$answer_key]['score_answer_id'] = null;
+							}
+							
+						}
+						$ques_keys[$res_key]['answers'] = $answers;
+					}
+				}
+			$template_categories[$cate_key]['questions'] = $ques_keys;
 		}
 		
 						$data['dataStatus'] = true;
