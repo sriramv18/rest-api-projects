@@ -2386,6 +2386,7 @@ class PD_Controller extends REST_Controller {
 						}
 						
 						$net_profit = $estimation_of_gross_profit - $overall_business_total;
+						$overall_purchase_total = $net_profit + $overall_business_total;
 					}
 					else
 					{
