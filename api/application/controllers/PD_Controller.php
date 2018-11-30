@@ -2319,7 +2319,7 @@ class PD_Controller extends REST_Controller {
 				
 			}
 			
-			// echo "\n\n".$final_revenue;
+			 //echo "\n\n".$final_purchase_avg_value;
 			
 			/**************End of Purchase Calculations************************/
 			
@@ -2349,7 +2349,7 @@ class PD_Controller extends REST_Controller {
 						}
 					}
 					
-					$estimation_of_gross_profit = $estimation_of_gross_profit - $overall_business_total;
+					$net_profit = $estimation_of_gross_profit - $overall_business_total;
 				}
 				else
 				{
@@ -2357,36 +2357,36 @@ class PD_Controller extends REST_Controller {
 					{
 						foreach($sales_calculated_by_itemwise as $sci_key => $sci)
 						{
-							$estimation_of_gross_profit =  $estimation_of_gross_profit+$sci['margin_final_value'];
+							$net_profit =  $net_profit+$sci['margin_final_value'];
 						}
 					}
 					else if($sales_by_item_monthwise_flag != 0)
 					{
 						foreach($sales_by_item_monthwise as $sim_key => $sim)
 						{
-							$estimation_of_gross_profit =  $estimation_of_gross_profit+ $sim['margin_value'];
+							$net_profit =  $net_profit+ $sim['margin_value'];
 							
 						}
 						
 					}
 					
-					$overall_purchase_total = $final_purchase_avg_value - $overall_business_total;
+					$overall_purchase_total = $final_purchase_avg_value - ($overall_business_total+$net_profit);
 				}
 			}
 			/**************************Gross Profit calculation end***************/
 			$calculated_data['sales_revenue'] = $final_purchase_avg_value;
 			$calculated_data['purchase'] = $overall_purchase_total;
-			if($gross_profit_calculation_type[0]['mode']  == 1)
+			if($gross_profit_calculation_type[0]['mode']  == 1 || $gross_profit_calculation_type[0]['margin']  == 1)
 			{
 				$calculated_data['gross_profit'] = $estimation_of_gross_profit;
 			}
 			else
 			{
-				$calculated_data['gross_profit'] = $estimation_of_gross_profit;
+				$calculated_data['gross_profit'] =( $net_profit + $overall_business_total);
 			}
 			$calculated_data['business_expense'] = $overall_business_total;
-			$calculated_data['net_profit_loss'] = $calculated_data['gross_profit'] - $overall_business_total;
-			$calculated_data['net_margin'] = $calculated_data['net_profit_loss'] / $final_purchase_avg_value;
+			$calculated_data['net_profit_loss'] = $net_profit;
+			$calculated_data['net_margin'] = $calculated_data['net_profit_loss'] / $calculated_data['sales_revenue'];
 			
 			
 			

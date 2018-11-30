@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 // define login route name for token verification
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listLessPDDetails/:any)'); // no errors
 //defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', '(listAllTemplates/:any)'); // no errors
-defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getAssessedIncome'); // no errors
+defined('ROUTE_LOGIN')        OR define('ROUTE_LOGIN', 'getFullPDDetails'); // no errors
 
 /*********************AWS resources Constants*************************************************/
 defined('PROFILE_PICTURE_BUCKET_NAME') OR define('PROFILE_PICTURE_BUCKET_NAME','sineedgedevprofilepic');
@@ -419,6 +419,9 @@ defined('BTLENDERLISTID') OR define('BTLENDERLISTID','bt_lender_list_id');
 
 defined('MORTAGEPROPERTIES') OR define('MORTAGEPROPERTIES','m_mortage_properties');
 defined('MORTAGEPROPERTIESID') OR define('MORTAGEPROPERTIESID','mortage_property_id');
+
+defined('BOUNCEMASTER') OR define('BOUNCEMASTER','m_bounce_reasaon');
+defined('BOUNCEMASTERID') OR define('BOUNCEMASTERID','bounce_id');
 
 
 
