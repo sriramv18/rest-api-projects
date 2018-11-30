@@ -163,15 +163,17 @@ class GETPDFORMDETAILS
 			
 			if($pd_form_id == 4)// to merge assest form commom remarks at end of final data.
 			{
-				foreach($sub_group['details'] as $k => $value)
+				if(array_key_exists('details',$sub_group))
 				{
-					// echo $k;
-					// print_r($value);
-					if(array_key_exists($k,$final_data['assets_details']))
-					{
-						$final_data['assets_details'][$k] = array_merge($final_data['assets_details'][$k],array('details' => $value));
-					}
-					
+						foreach($sub_group['details'] as $k => $value)
+						{
+							// echo $k;
+							// print_r($value);
+							if(array_key_exists($k,$final_data['assets_details']))
+							{
+								$final_data['assets_details'][$k] = array_merge($final_data['assets_details'][$k],array('details' => $value));
+							}
+						}
 				}
 				$final_data = array_merge($final_data,$asset_remark);
 			}

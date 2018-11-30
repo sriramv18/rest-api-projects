@@ -829,7 +829,7 @@ class PD_Model extends SPARQ_Model {
 			$gross_profit_calculation_type = $this->selectCustomRecords($fields,$where_condition_array,PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPE);
 			
 			//get sales_calculated_by_itemwise details
-			$fields = array('sci_id','sales_item','sales_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_sale_value');	
+			$fields = array('sci_id','sales_item','sales_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_sale_value','margin_final_value');	
 			$table = SALESCALCULATEDBYITEMWISE.' as SALESCALCULATEDBYITEMWISE';
 			$where_condition_array = array('fk_pd_id'=>$pdid,'SALESCALCULATEDBYITEMWISE.isactive'=>1);
 			$joins = array(
@@ -842,7 +842,7 @@ class PD_Model extends SPARQ_Model {
 		   
 			$sales_items_by_months = array();
 			
-			$this->db->SELECT('sim_id,sales_item');
+			$this->db->SELECT('sim_id,sales_item,margin_value');
 			$this->db->FROM(SALESITEMMONTHWISE.' as SALESITEMMONTHWISE');
 			$this->db->WHERE('SALESITEMMONTHWISE.fk_pd_id',$pdid);
 			$this->db->WHERE('SALESITEMMONTHWISE.isactive',1);
