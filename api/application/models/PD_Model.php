@@ -437,12 +437,14 @@ class PD_Model extends SPARQ_Model {
 							{
 								if($pd_master_detials[0]['fk_pd_type'] == 1)//FULL PD
 								{
-									$actual_logs[$log_key]['meta_data']['Allocated to PD Officer'] = $pd_master_detials[0]['pd_allocated_to'];
+									$actual_logs[$log_key]['meta_data'][] = array('display_name' => 'Allocated to PD Officer','display_value' => $pd_master_detials[0]['pd_allocated_to']);
 								}
 								else if($pd_master_detials[0]['fk_pd_type'] == 2)//SMART PD							
 								{
-									$actual_logs[$log_key]['meta_data']['Allocated to Central PD Officer'] = $pd_master_detials[0]['centralofficer'];
-									$actual_logs[$log_key]['meta_data']['Allocated to Executive PD Officer'] = $pd_master_detials[0]['executive_name'];
+									
+									$actual_logs[$log_key]['meta_data'][] = array('display_name' => 'Allocated to Central PD Officer','display_value' => $pd_master_detials[0]['centralofficer']);
+									$actual_logs[$log_key]['meta_data'][] = array('display_name' => 'Allocated to Executive PD Officer','display_value' => $pd_master_detials[0]['executive_name']);
+									
 								}
 								else //Tele PD
 								{
@@ -451,14 +453,14 @@ class PD_Model extends SPARQ_Model {
 							}
 							else if($log['new_value'] == SCHEDULED)
 							{
-								$actual_logs[$log_key]['meta_data']['Scheduled On'] = $pd_master_detials[0]['scheduled_on'];
+								$actual_logs[$log_key]['meta_data'][] = array('display_name' => 'Schedule On','display_value' => $pd_master_detials[0]['scheduled_on']);					
 							}
 							else if($log['new_value'] == BOUNCED)
 							{
-							$actual_logs[$log_key]['meta_data']['Rejected Reason']  = $pd_master_detials[0]['bounce_reason_name'];
+							$actual_logs[$log_key]['meta_data'][]  = array('display_name'=>'Rejected Reason','display_value' => $pd_master_detials[0]['bounce_reason_name']);
 							 if($pd_master_detials[0]['bounce_reason_others'] != "" || $pd_master_detials[0]['bounce_reason_others'] != null)
 							 {
-								$actual_logs[$log_key]['meta_data']['Rejected Reason Others']  = $pd_master_detials[0]['bounce_reason_others'];
+								$actual_logs[$log_key]['meta_data'][]  = array('display_name'=>'Rejected Reason Others','display_value'=> $pd_master_detials[0]['bounce_reason_others']);
 							 }
 							}
 							
