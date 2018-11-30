@@ -2167,6 +2167,40 @@ class PD_Controller extends REST_Controller {
 			
 	}
 	
+	public function saveAssessedIncomeCalculateMode_post()
+	{
+		$records = $this->post('records');
+		$id = 0;
+		if($records['calc_type_id'] != "" || $records['calc_type_id'] != null)
+		{
+			
+			$where_condition_array = array("calc_type_id" => $records['calc_type_id']);
+			$id = $this->PD_Model->updateRecords($records,PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPE,$where_condition_array);
+		}
+		else
+		{
+			
+			$id = $this->PD_Model->saveRecords($records,PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPE);
+		}
+		
+		if($id != 0)
+		{
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $id;
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
+			$data['msg'] = 'Something went wrong! Try Later';
+			$this->response($data,REST_Controller::HTTP_OK);
+		}			
+		
+		
+		
+	}
 	
 	public function calculateAssessedIncome($pd_id)
 	{
@@ -2326,64 +2360,70 @@ class PD_Controller extends REST_Controller {
 			/**************************Gross Profit calculation start***************/
 			//print_r($gross_profit_calculation_type);
 			$estimation_of_gross_profit = 0;
-			if($gross_profit_calculation_type[0]['mode']  == 1)
+			if(isset($gross_profit_calculation_type[0]))
 			{
-				$estimation_of_gross_profit = $final_purchase_avg_value - $overall_purchase_total;
-			}
-			else
-			{
-				if($gross_profit_calculation_type[0]['margin']  == 1)
+				if($gross_profit_calculation_type[0]['mode']  == 1)
 				{
-					if($sales_calculated_by_itemwise_flag != 0)
-					{
-						foreach($sales_calculated_by_itemwise as $sci_key => $sci)
-						{
-							$estimation_of_gross_profit =  $estimation_of_gross_profit+$sci['margin_final_value'];
-						}
-					}
-					else if($sales_by_item_monthwise_flag != 0)
-					{
-						foreach($sales_by_item_monthwise as $sim_key => $sim)
-						{
-							$estimation_of_gross_profit =  $estimation_of_gross_profit+$sim['margin_value'];
-						}
-					}
-					
-					$net_profit = $estimation_of_gross_profit - $overall_business_total;
+					$estimation_of_gross_profit = $final_purchase_avg_value - $overall_purchase_total;
 				}
 				else
 				{
-					if($sales_calculated_by_itemwise_flag != 0)
+					if($gross_profit_calculation_type[0]['margin']  == 1)
 					{
-						foreach($sales_calculated_by_itemwise as $sci_key => $sci)
+						if($sales_calculated_by_itemwise_flag != 0)
 						{
-							$net_profit =  $net_profit+$sci['margin_final_value'];
+							foreach($sales_calculated_by_itemwise as $sci_key => $sci)
+							{
+								$estimation_of_gross_profit =  $estimation_of_gross_profit+$sci['margin_final_value'];
+							}
 						}
-					}
-					else if($sales_by_item_monthwise_flag != 0)
-					{
-						foreach($sales_by_item_monthwise as $sim_key => $sim)
+						else if($sales_by_item_monthwise_flag != 0)
 						{
-							$net_profit =  $net_profit+ $sim['margin_value'];
+							foreach($sales_by_item_monthwise as $sim_key => $sim)
+							{
+								$estimation_of_gross_profit =  $estimation_of_gross_profit+$sim['margin_value'];
+							}
+						}
+						
+						$net_profit = $estimation_of_gross_profit - $overall_business_total;
+					}
+					else
+					{
+						if($sales_calculated_by_itemwise_flag != 0)
+						{
+							foreach($sales_calculated_by_itemwise as $sci_key => $sci)
+							{
+								$net_profit =  $net_profit+$sci['margin_final_value'];
+							}
+						}
+						else if($sales_by_item_monthwise_flag != 0)
+						{
+							foreach($sales_by_item_monthwise as $sim_key => $sim)
+							{
+								$net_profit =  $net_profit+ $sim['margin_value'];
+								
+							}
 							
 						}
 						
+						$overall_purchase_total = $final_purchase_avg_value - ($overall_business_total+$net_profit);
 					}
-					
-					$overall_purchase_total = $final_purchase_avg_value - ($overall_business_total+$net_profit);
 				}
-			}
+		}
 			/**************************Gross Profit calculation end***************/
 			$calculated_data['sales_revenue'] = $final_purchase_avg_value;
 			$calculated_data['purchase'] = $overall_purchase_total;
-			if($gross_profit_calculation_type[0]['mode']  == 1 || $gross_profit_calculation_type[0]['margin']  == 1)
-			{
-				$calculated_data['gross_profit'] = $estimation_of_gross_profit;
-			}
-			else
-			{
-				$calculated_data['gross_profit'] =( $net_profit + $overall_business_total);
-			}
+		if(isset($gross_profit_calculation_type[0]))
+		{			
+				if($gross_profit_calculation_type[0]['mode']  == 1 || $gross_profit_calculation_type[0]['margin']  == 1)
+				{
+					$calculated_data['gross_profit'] = $estimation_of_gross_profit;
+				}
+				else
+				{
+					$calculated_data['gross_profit'] =( $net_profit + $overall_business_total);
+				}
+		}
 			$calculated_data['business_expense'] = $overall_business_total;
 			$calculated_data['net_profit_loss'] = $net_profit;
 			$calculated_data['net_margin'] = $calculated_data['net_profit_loss'] / $calculated_data['sales_revenue'];

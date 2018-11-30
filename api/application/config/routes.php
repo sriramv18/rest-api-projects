@@ -161,6 +161,7 @@ $route['saveAssessedIncomeBusinessExpenses'] = 'PD_Controller/saveAssessedIncome
 $route['saveAssessedIncomeHouseholdExpenses'] = 'PD_Controller/saveAssessedIncomeHouseholdExpenses'; 
 $route['saveAssessedIncomeMonthwiseItems'] = 'PD_Controller/saveAssessedIncomeMonthwiseItems'; 
 $route['calculateAssessedIncome'] = 'PD_Controller/calculateAssessedIncome'; 
+$route['saveAssessedIncomeCalculateMode'] = 'PD_Controller/saveAssessedIncomeCalculateMode'; 
 
 //PD Form Related
 $route['getPDFormDetails'] = 'PD_Controller/getPDFormDetails'; 
