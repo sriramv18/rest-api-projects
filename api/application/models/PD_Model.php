@@ -912,7 +912,7 @@ class PD_Model extends SPARQ_Model {
 			$assessed_income = array();
 				
 			//get sales_declared_by_customer details
-			$fields = array('sdc_id','sales_declared_by_customer');	
+			$fields = array('sdc_id','sales_declared_by_customer','margin_per','margin_value');	
 			$where_condition_array = array('fk_pd_id'=>$pdid,'isactive'=>1);	
 			$sales_declared_by_customer = $this->selectCustomRecords($fields,$where_condition_array,SALESDECLAREDBYCUSTOMER);
 			//get Gross Profit calculatio Mode details

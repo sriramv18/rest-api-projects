@@ -377,7 +377,7 @@ defined('SOURCEOFBALANCETRANSFER') OR define('SOURCEOFBALANCETRANSFER','m_source
 defined('STATUSOFCONSTRUCTION') OR define('STATUSOFCONSTRUCTION','m_status_of_construction');
 
 
-// Assessed Income related Tables Not added in test DB
+// Assessed Income related Tables 
 defined('SALESDECLAREDBYCUSTOMER') OR define('SALESDECLAREDBYCUSTOMER','t_pd_sales_declared_by_customer');
 defined('SALESDECLAREDBYCUSTOMERID') OR define('SALESDECLAREDBYCUSTOMERID','sdc_id');
 
