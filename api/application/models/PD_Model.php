@@ -921,7 +921,7 @@ class PD_Model extends SPARQ_Model {
 			$gross_profit_calculation_type = $this->selectCustomRecords($fields,$where_condition_array,PDASSESSEDINCOMEESTIMATIONOFGROSSPROFITTYPE);
 			
 			//get sales_calculated_by_itemwise details
-			$fields = array('sci_id','sales_item','sales_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_sale_value','margin_final_value');	
+			$fields = array('sci_id','sales_item','sales_qty','UOM.name as uom_name','fk_uom_id','FREQUENCY.name as frequency_name','rate_per_unit','fk_frequency_id','annual_sale_value','margin_final_value','margin_per','margin_per_uom');	
 			$table = SALESCALCULATEDBYITEMWISE.' as SALESCALCULATEDBYITEMWISE';
 			$where_condition_array = array('fk_pd_id'=>$pdid,'SALESCALCULATEDBYITEMWISE.isactive'=>1);
 			$joins = array(
