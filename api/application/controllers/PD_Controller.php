@@ -1783,11 +1783,23 @@ class PD_Controller extends REST_Controller {
 		$pd_id = $this->post('pd_id');
 		$pd_form_id = $this->post('pd_form_id');
 		$result_array = $this->PD_Model->getAssessedIncome($pd_id);
-		$result_array['final_data'] = $this->calculateAssessedIncome($pd_id);
-		$data['dataStatus'] = true;
-		$data['status'] = REST_Controller::HTTP_OK;
-	    $data['records'] = $result_array;
-		$this->response($data,REST_Controller::HTTP_OK);
+		//print_r($result_array);die();
+		$result_array['final_data'][] = $this->calculateAssessedIncome($pd_id);
+		
+		if(count($result_array['sales_declared_by_customer']) == 0 && count($result_array['sales_calculated_by_itemwise']) == 0 && count($result_array['sales_items_by_monthwise']) == 0 && count($result_array['purchase_details']) == 0 && count($result_array['business_expenses']) == 0 && count($result_array['house_hold_expenses']) == 0 && count($result_array['gross_profit_calculation_type']) == 0)
+		{
+			$data['dataStatus'] = false;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $result_array;
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
+		else
+		{
+			$data['dataStatus'] = true;
+			$data['status'] = REST_Controller::HTTP_OK;
+			$data['records'] = $result_array;
+			$this->response($data,REST_Controller::HTTP_OK);
+		}
 	}
 		
 	public function saveAssessedIncomeSalesDeclaredByCustomer_post()
@@ -2365,12 +2377,17 @@ class PD_Controller extends REST_Controller {
 				if($gross_profit_calculation_type[0]['mode']  == 1)
 				{
 					$estimation_of_gross_profit = $final_purchase_avg_value - $overall_purchase_total;
+					$net_profit = $estimation_of_gross_profit - $overall_business_total;
 				}
 				else
 				{
 					if($gross_profit_calculation_type[0]['margin']  == 1)
 					{
-						if($sales_calculated_by_itemwise_flag != 0)
+						if($sales_declared_by_customer_flag != 0)
+						{
+							$estimation_of_gross_profit =  $sales_declared_by_customer[0]['margin_value'];
+						}
+						else if($sales_calculated_by_itemwise_flag != 0)
 						{
 							foreach($sales_calculated_by_itemwise as $sci_key => $sci)
 							{
@@ -2390,7 +2407,11 @@ class PD_Controller extends REST_Controller {
 					}
 					else
 					{
-						if($sales_calculated_by_itemwise_flag != 0)
+						if($sales_declared_by_customer_flag != 0)
+						{
+							$net_profit =  $sales_declared_by_customer[0]['margin_value'];
+						}
+						else if($sales_calculated_by_itemwise_flag != 0)
 						{
 							foreach($sales_calculated_by_itemwise as $sci_key => $sci)
 							{
@@ -2412,8 +2433,8 @@ class PD_Controller extends REST_Controller {
 				}
 		}
 			/**************************Gross Profit calculation end***************/
-			$calculated_data['sales_revenue'] = $final_purchase_avg_value;
-			$calculated_data['purchase'] = $overall_purchase_total;
+			$calculated_data['income']['sales_revenue'] = $final_purchase_avg_value;
+			$calculated_data['expense']['purchase'] = $overall_purchase_total;
 		if(isset($gross_profit_calculation_type[0]))
 		{			
 				if($gross_profit_calculation_type[0]['mode']  == 1 || $gross_profit_calculation_type[0]['margin']  == 1)
@@ -2425,9 +2446,9 @@ class PD_Controller extends REST_Controller {
 					$calculated_data['gross_profit'] =( $net_profit + $overall_business_total);
 				}
 		}
-			$calculated_data['business_expense'] = $overall_business_total;
-			$calculated_data['net_profit_loss'] = $net_profit;
-			$calculated_data['net_margin'] = $calculated_data['net_profit_loss'] / $calculated_data['sales_revenue'];
+			$calculated_data['expense']['business_expense'] = $overall_business_total;
+			$calculated_data['expense']['net_profit'] = $net_profit;
+			$calculated_data['net_margin'] = $net_profit / $final_purchase_avg_value;
 			
 			
 			
