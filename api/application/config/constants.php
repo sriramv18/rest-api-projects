@@ -423,6 +423,8 @@ defined('MORTAGEPROPERTIESID') OR define('MORTAGEPROPERTIESID','mortage_property
 defined('BOUNCEMASTER') OR define('BOUNCEMASTER','m_bounce_reasaon');
 defined('BOUNCEMASTERID') OR define('BOUNCEMASTERID','bounce_id');
 
+defined('EXISTINGLOANTYPES') OR define('EXISTINGLOANTYPES','m_existing_loan_types');
+defined('EXISTINGLOANTYPESID') OR define('EXISTINGLOANTYPESID','existing_loan_type_id');
 
 
 
