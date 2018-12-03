@@ -1791,7 +1791,12 @@ class PD_Controller extends REST_Controller {
 		$pd_form_id = $this->post('pd_form_id');
 		$result_array = $this->PD_Model->getAssessedIncome($pd_id);
 		//print_r($result_array);die();
-		$result_array['final_data'][] = $this->calculateAssessedIncome($pd_id);
+		$result_array['final_data'] = array();
+		$fine = $this->calculateAssessedIncome($pd_id);
+		if($fine != null)
+		{
+			$result_array['final_data'][] = $fine;
+		}
 		
 		if(count($result_array['sales_declared_by_customer']) == 0 && count($result_array['sales_calculated_by_itemwise']) == 0 && count($result_array['sales_items_by_monthwise']) == 0 && count($result_array['purchase_details']) == 0 && count($result_array['business_expenses']) == 0 && count($result_array['house_hold_expenses']) == 0 && count($result_array['gross_profit_calculation_type']) == 0)
 		{
@@ -2140,9 +2145,9 @@ class PD_Controller extends REST_Controller {
 	public function transformKeyPairToQuestionAnswers($pd_form_raw_data,$form_id)
 	{
 		//field name array holds - field name of each masters table 
-		$master_tables_field_names = array('INDUSTRYCLASSIFICATION' => 'name','UOM' => 'name','OCCUPATIONMEMBERS' => 'name','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'name','RELATIONSHIPS' => 'name','FREQUENCY' => 'name', 'CUSTOMERBEHAVIOUR' => 'description', 'CUSTOMERSEGMENT' => 'name','DESIGNATION' => 'short_name', 'EARNINGMEMBERSSTATUS' => 'earning_member_status','EDUQUALIFICATION' => 'qualification_name','ADDRESSTYPE' => 'address_type','LOCALITY' => 'locality_name','ASSETTYPE' => 'name','PROPERTIES' => 'name','INVESTMENTTYPE' => 'name','INSURANCETYPE' => 'name','PERSONSMET' => 'person_met_name','RESIDENCEOWNERSHIP' => 'name','PAYMENTMODE' => 'name','ACCOUNTTYPE' => 'name','SOURCEOFOTHERINCOME' => 'name','MORTAGEPROPERTYTYPE' => 'name','ENDUSEOFLOAN' => 'name','SOURCEOFBALANCETRANSFER' => 'name', 'STATUSOFCONSTRUCTION' => 'name','BTLENDERLIST'=>'lender_name','MORTAGEPROPERTIES'=>'property_name');
+		$master_tables_field_names = array('INDUSTRYCLASSIFICATION' => 'name','UOM' => 'name','OCCUPATIONMEMBERS' => 'name','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'name','RELATIONSHIPS' => 'name','FREQUENCY' => 'name', 'CUSTOMERBEHAVIOUR' => 'description', 'CUSTOMERSEGMENT' => 'name','DESIGNATION' => 'short_name', 'EARNINGMEMBERSSTATUS' => 'earning_member_status','EDUQUALIFICATION' => 'qualification_name','ADDRESSTYPE' => 'address_type','LOCALITY' => 'locality_name','ASSETTYPE' => 'name','PROPERTIES' => 'name','INVESTMENTTYPE' => 'name','INSURANCETYPE' => 'name','PERSONSMET' => 'person_met_name','RESIDENCEOWNERSHIP' => 'name','PAYMENTMODE' => 'name','ACCOUNTTYPE' => 'name','SOURCEOFOTHERINCOME' => 'name','MORTAGEPROPERTYTYPE' => 'name','ENDUSEOFLOAN' => 'name','SOURCEOFBALANCETRANSFER' => 'name', 'STATUSOFCONSTRUCTION' => 'name','BTLENDERLIST'=>'lender_name','MORTAGEPROPERTIES'=>'property_name','EXISTINGLOANTYPES'=>'loan_type_name');
 		
-		$master_tables_pkid = array('INDUSTRYCLASSIFICATION' => 'industry_classification_id','UOM' => 'uom_id','OCCUPATIONMEMBERS' => 'occupation_non_earning_member_id','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'type_of_activity_id','RELATIONSHIPS' => 'relationship_id','FREQUENCY' => 'frequency_id', 'CUSTOMERBEHAVIOUR' => 'customer_behaviour_id', 'CUSTOMERSEGMENT' => 'customer_segment_id','DESIGNATION' => 'designation_id', 'EARNINGMEMBERSSTATUS' => 'earning_member_status_id','EDUQUALIFICATION' => 'qualification_id','ADDRESSTYPE' => 'address_type_id','LOCALITY' => 'locality_id','ASSETTYPE' => 'id','PROPERTIES' => 'id','INVESTMENTTYPE' => 'id','INSURANCETYPE' => 'id','PERSONSMET' => 'person_met_id','RESIDENCEOWNERSHIP' => 'id','PAYMENTMODE' => 'id','ACCOUNTTYPE' => 'id','SOURCEOFOTHERINCOME' => 'id','MORTAGEPROPERTYTYPE' => 'id','ENDUSEOFLOAN' => 'id','SOURCEOFBALANCETRANSFER' => 'id', 'STATUSOFCONSTRUCTION' => 'id','MORTAGEPROPERTIES' => 'mortage_property_id','BTLENDERLIST'=>'bt_lender_list_id');
+		$master_tables_pkid = array('INDUSTRYCLASSIFICATION' => 'industry_classification_id','UOM' => 'uom_id','OCCUPATIONMEMBERS' => 'occupation_non_earning_member_id','EDUQUALIFICATION' => 'qualification_name', 'TYPEOFACTIVITY' => 'type_of_activity_id','RELATIONSHIPS' => 'relationship_id','FREQUENCY' => 'frequency_id', 'CUSTOMERBEHAVIOUR' => 'customer_behaviour_id', 'CUSTOMERSEGMENT' => 'customer_segment_id','DESIGNATION' => 'designation_id', 'EARNINGMEMBERSSTATUS' => 'earning_member_status_id','EDUQUALIFICATION' => 'qualification_id','ADDRESSTYPE' => 'address_type_id','LOCALITY' => 'locality_id','ASSETTYPE' => 'id','PROPERTIES' => 'id','INVESTMENTTYPE' => 'id','INSURANCETYPE' => 'id','PERSONSMET' => 'person_met_id','RESIDENCEOWNERSHIP' => 'id','PAYMENTMODE' => 'id','ACCOUNTTYPE' => 'id','SOURCEOFOTHERINCOME' => 'id','MORTAGEPROPERTYTYPE' => 'id','ENDUSEOFLOAN' => 'id','SOURCEOFBALANCETRANSFER' => 'id', 'STATUSOFCONSTRUCTION' => 'id','MORTAGEPROPERTIES' => 'mortage_property_id','BTLENDERLIST'=>'bt_lender_list_id','EXISTINGLOANTYPES'=>'master_tables_field_names');
 		
 		//Get Question Key Mapping masters
 		$fields = array('question', 'key', 'ismaster', 'master_name');
@@ -2471,7 +2476,7 @@ class PD_Controller extends REST_Controller {
 			// $data['status'] = REST_Controller::HTTP_NOT_MODIFIED;
 			// $data['msg'] = 'Not enough Data to Calculate Assessed Income';
 			// $this->response($data,REST_Controller::HTTP_OK);
-			return $calculated_data;
+			return null;
 		}
 		
 	}
