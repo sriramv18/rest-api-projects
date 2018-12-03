@@ -934,7 +934,7 @@ class PD_Model extends SPARQ_Model {
 		   
 			$sales_items_by_months = array();
 			
-			$this->db->SELECT('sim_id,sales_item,margin_value');
+			$this->db->SELECT('sim_id,sales_item,margin_value,margin_per');
 			$this->db->FROM(SALESITEMMONTHWISE.' as SALESITEMMONTHWISE');
 			$this->db->WHERE('SALESITEMMONTHWISE.fk_pd_id',$pdid);
 			$this->db->WHERE('SALESITEMMONTHWISE.isactive',1);
