@@ -1575,6 +1575,8 @@ class PD_Controller extends REST_Controller {
 		
 		$result_array = $this->PD_Model->getPDFormDetails($pd_id,$pd_form_id);
 		
+		//call helper function for get structured key,value pairs
+		$final_array = GETPDFORMDETAILS::getPDFormDetailsStructured($result_array,$pd_id,$pd_form_id);
 		// *****************************Get Docs from bucket 
 		 // Get Alredy stored Images
 							$fields = array('pd_document_title', 'pd_document_name');
@@ -1594,12 +1596,16 @@ class PD_Controller extends REST_Controller {
 										 $pd_docs[$doc_key]['pd_document_name'] = $singed_uri;
 									 }
 								 }
+								 
+								 
+								  $final_array['base64images'] = $pd_docs;
 							 }
+							
 								
 							 
 		// *************************End Get Docs from bucket 
 		
-		$final_array = GETPDFORMDETAILS::getPDFormDetailsStructured($result_array,$pd_id,$pd_form_id);
+		
 		
 		if($result_array)
 		{
@@ -1638,6 +1644,7 @@ class PD_Controller extends REST_Controller {
 		 if(array_key_exists('base64images',$records))	
 		 {
 			 $base64images = $records['base64images'];
+			 unset($records['base64images']);
 		 }
 		//Deactivate Old rec
 			$where_condition_array = array('fk_pd_id' => $pd_id,"fk_form_id"=>$pd_form_id);
